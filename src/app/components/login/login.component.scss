@@ -1,0 +1,50 @@
+.location-title{
+  text-align: center;
+  color: gray;
+  padding-top: 50px;
+}
+.location{
+  padding: 0 500px;
+
+}
+.example-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+}
+
+.example-container > * {
+  width: 100%;
+}
+.example-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.example-container > * {
+  width: 100%;
+}
+
+.example-right-align {
+  text-align: right;
+
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+
+}
+
+input.example-right-align {
+  -moz-appearance: textfield;
+}
+.button-style{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  background-color: #36a5ed;
+  padding: 4px 234px;
+  color: #ffffff;
+  margin-top: 50px;
+}
