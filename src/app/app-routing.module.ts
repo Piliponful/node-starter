@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from 'src/app/components/login/login.component';
+import { RootAdminComponent } from 'src/app/components/root-admin/root-admin.component';
 
 const routes: Routes = [
   { path: '',
@@ -10,8 +11,11 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent,
-    data: { title: 'Heroes List' }
+    component: LoginComponent
+  },
+  {
+    path: 'root-admin-dashboard',
+    component: RootAdminComponent
   },
 ];
 
