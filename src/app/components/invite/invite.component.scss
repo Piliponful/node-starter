@@ -1,0 +1,50 @@
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-selected-value {
+  margin: 15px 0;
+}
+
+.invite-container {
+  padding: 1% 2%;
+
+  & .invite-header {
+    display: flex;
+    justify-content: space-between;
+
+    & .filter {
+      & .mat-icon {
+        height: 30px;
+        width: 30px;
+        font-size: 30px;
+      }
+    }
+  }
+
+  & mat-form-field {
+    font-size: 10px;
+  }
+
+  & table {
+    width: 100%;
+
+    & td,
+    th {
+      width: 16.66%;
+    }
+
+    & .mat-header-row {
+      background: #f5f5f5;
+    }
+
+    & tr:hover {
+      background: #f5f5f5;
+    }
+  }
+}

@@ -1,0 +1,102 @@
+<h1 mat-dialog-title>Invite user</h1>
+<mat-dialog-content>
+  <mat-horizontal-stepper [linear]="false" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Add Details</ng-template>
+        <h3>Who would you like to invite?</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput formControlName="firstCtrl" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput formControlName="lastCtrl" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input matInput formControlName="emailCtrl" required>
+        </mat-form-field>
+        <div class="tenant">
+          <h3>Which tenant they belong to</h3>
+          <div class="tenant-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Tenant filled by default and can be changed</mat-label>
+              <input matInput formControlName="tenantCtrl" required>
+            </mat-form-field>
+            <h4>as</h4>
+            <mat-form-field appearance="outline">
+              <mat-select placeholder="Role" formControlName="roleCtrl" required>
+                <mat-option value="admin">Admin</mat-option>
+                <mat-option value="standart user">Standart User</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+          <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Choose Group</ng-template>
+        <div class="add-user-header">
+          <h3>Add this user to group</h3>
+          <div class="search">
+            <mat-form-field appearance="outline">
+              <mat-label>Search...</mat-label>
+              <input matInput>
+            </mat-form-field>
+            <button mat-stroked-button>Go!</button>
+          </div>
+        </div>
+        <div class="add-user-content">
+          <mat-radio-group class="example-radio-group" formControlName="groupCtrl">
+            <mat-radio-button class="example-radio-button" *ngFor="let group of groups" [value]="group">
+              {{ group }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="permissions">
+          <h3>Permissions</h3>
+          <div class="permissions-content">
+            <mat-slide-toggle class="example-margin" [color]="accent" formControlName="addUsersCtrl">
+              Can add user
+            </mat-slide-toggle>
+            <mat-slide-toggle class="example-margin" [color]="accent" formControlName="addGroupsCtrl">
+              Can add groups
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="btn-container">
+          <div class="left-container">
+            <button mat-raised-button color="warn" [mat-dialog-close]>Close</button>
+            <button mat-raised-button color="primary">Add New Group</button>
+          </div>
+          <div class="right-container">
+            <button mat-raised-button matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" matStepperNext>Next, write a message</button>
+          </div>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="thirdFormGroup">
+      <form [formGroup]="thirdFormGroup">
+        <ng-template matStepLabel>Send Invite</ng-template>
+        <div class="send-invite-container">
+          <mat-form-field appearance="outline">
+            <textarea matInput formControlName="textareaCtrl" required></textarea>
+          </mat-form-field>
+          <div class="btns-container">
+            <button mat-raised-button color="warn" [mat-dialog-close]>Close</button>
+            <div class="control-btns">
+              <button mat-raised-button matStepperPrevious>Back</button>
+              <button mat-raised-button color="primary" (click)="submit()">Send Invite</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+</mat-dialog-content>

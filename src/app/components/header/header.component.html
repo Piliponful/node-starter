@@ -1,0 +1,10 @@
+<mat-sidenav-container>
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>keyboard_arrow_down</mat-icon>
+    <span>Root Admin</span>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>Edit Profile</button>
+    <button mat-menu-item>Logout</button>
+  </mat-menu>
+</mat-sidenav-container>

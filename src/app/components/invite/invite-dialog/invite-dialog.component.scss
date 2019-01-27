@@ -1,0 +1,62 @@
+mat-form-field {
+  font-size: 10px;
+}
+
+.tenant {
+  & .tenant-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  & mat-form-field {
+    width: 40%;
+  }
+}
+
+.add-user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.add-user-content {
+  & mat-radio-group {
+    display: flex;
+    flex-direction: column;
+    & mat-radio-button {
+      margin: 5px 0;
+    }
+  }
+}
+.permissions {
+  padding-bottom: 10px;
+  & mat-slide-toggle {
+    margin-right: 20px;
+  }
+}
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  & .left-container {
+    & button:first-child {
+      margin-right: 10px;
+    }
+  }
+  & .right-container {
+    & button:last-child {
+      margin-left: 10px;
+    }
+  }
+}
+.send-invite-container {
+  & mat-form-field {
+    width: 100%;
+  }
+  & .btns-container {
+    display: flex;
+    justify-content: space-between;
+    & button:last-child {
+      margin-left: 10px;
+    }
+  }
+}

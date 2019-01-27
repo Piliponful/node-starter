@@ -1,12 +1,46 @@
 <app-header></app-header>
 
-<div class="content-section implementation">
-  <h3 class="first">Invite</h3>
-  <div class="ui-g ui-fluid">
-    <div class="ui-g-12 ui-md-12">
-        <div class="ui-inputgroup">
-            <input class="ui-g-5 ui-md-5" type="email" pInputText placeholder="Username email" [(ngModel)]="email">         
-        </div>
-    </div>
-  </div>
-</div>
+<!-- <div class="container">
+  <mat-grid-list cols="3">
+    <mat-grid-tile [rowspan]="1" [colspan]="1">
+      <h3>Invite:</h3>
+    </mat-grid-tile>
+    <mat-grid-tile [rowspan]="1" [colspan]="2">
+      <mat-radio-group class="example-radio-group" [(ngModel)]="invite">
+        <mat-radio-button class="example-radio-button" *ngFor="let item of inviteVariants" [value]="item">
+          {{item}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-grid-tile>
+  </mat-grid-list>
+  {{invite}}
+
+  <mat-select placeholder="Favorite animal" [formControl]="animalControl" required>
+    <mat-option>--</mat-option>
+    <mat-option *ngFor="let animal of animals" [value]="animal">
+      {{animal.name}}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error>
+  <mat-hint>{{animalControl.value?.sound}}</mat-hint>
+</div> -->
+
+<mat-tab-group>
+  <mat-tab label="Invite Member">
+    <ng-template matTabContent>
+      <app-invite></app-invite>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Tenants">
+    <ng-template matTabContent>
+      <app-tenant-groups></app-tenant-groups>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Login History" matBadge="8" matBadgeOverlap="false">
+    <ng-template matTabContent>
+      <p>
+        <span matBadge="12" matBadgeOverlap="false">Text with a badge</span>
+      </p>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

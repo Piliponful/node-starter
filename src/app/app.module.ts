@@ -4,14 +4,34 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 import { LoginComponent } from './components/login/login.component';
 import { RootAdminComponent } from './components/root-admin/root-admin.component';
 import { HeaderComponent } from './components/header/header.component';
+import { InviteComponent } from './components/invite/invite.component';
+import { TenantGroupsComponent } from './components/tenant-groups/tenant-groups.component';
 
-import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatIconModule, MatInputModule} from "@angular/material";
-import { MatButtonModule } from '@angular/material/button';
-
+import {
+  MatInputModule,
+  MatSidenavModule,
+  MatMenuModule,
+  MatIconModule,
+  MatSelectModule,
+  MatRadioModule,
+  MatGridListModule,
+  MatButtonModule,
+  MatTabsModule,
+  MatBadgeModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatDialogModule,
+  MatStepperModule,
+  MatSlideToggleModule,
+  MatFormFieldModule
+} from '@angular/material';
+import { InviteDialogComponent } from './components/invite/invite-dialog/invite-dialog.component';
 
 @NgModule({
   declarations: [
@@ -19,23 +39,41 @@ import { MatButtonModule } from '@angular/material/button';
     LoginComponent,
     RootAdminComponent,
     HeaderComponent,
+    InviteComponent,
+    TenantGroupsComponent,
+    InviteDialogComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
-      MatIconModule
+    MatInputModule,
+    MatSidenavModule,
+    MatMenuModule,
+    MatIconModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatGridListModule,
+    MatTabsModule,
+    MatBadgeModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDialogModule,
+    MatStepperModule,
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    NoopAnimationsModule
   ],
-    exports: [
-        MatFormFieldModule
-    ],
-    schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-    providers: [],
-    bootstrap: [AppComponent]
+  exports: [
+    MatFormFieldModule
+  ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  providers: [],
+  entryComponents: [ InviteDialogComponent ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

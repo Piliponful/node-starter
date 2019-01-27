@@ -1,15 +1,16 @@
-
-<h1 class="location-title"> Login ArialPoint</h1>
+<h1 class="location-title">Login AerialPoint</h1>
 <form class="location">
     <div class="example-container">
-        <mat-form-field>
-            <input matInput placeholder="Enter your email" [formControl]="email" required>
+        <mat-form-field appearance="outline">
+            <mat-label>Enter your email</mat-label>
+            <input matInput [formControl]="email" required>
             <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
         </mat-form-field>
     </div>
     <div class="example-container">
-        <mat-form-field>
-            <input matInput placeholder="Enter your password" [type]="hide ? 'password' : 'text'">
+        <mat-form-field appearance="outline">
+            <mat-label>Enter your password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'">
             <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </mat-form-field>
     </div>

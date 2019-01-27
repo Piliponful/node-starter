@@ -6,14 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./root-admin.component.scss']
 })
 export class RootAdminComponent implements OnInit {
-  email: String = '';
-
-  constructor() {
-    // this.tenantRoles = [
-    //   {label: 'tenant admin', value: 'admin'},
-    //   {label: 'tenant user', value: 'user'}
-    // ];
-  }
+  // email: String = '';
+  // animalControl = new FormControl('', [Validators.required]);
+  // selectFormControl = new FormControl('', Validators.required);
+  // animals: Animal[] = [
+  //   {name: 'Dog', sound: 'Woof!'},
+  //   {name: 'Cat', sound: 'Meow!'},
+  //   {name: 'Cow', sound: 'Moo!'},
+  //   {name: 'Fox', sound: 'Wa-pa-pa-pa-pa-pa-pow!'},
+  // ];
+  constructor() {}
 
   ngOnInit() {
   }

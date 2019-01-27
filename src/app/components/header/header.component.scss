@@ -1,0 +1,12 @@
+/deep/ mat-sidenav-content.mat-drawer-content {
+  height: 50px;
+  display: flex;
+  justify-content: flex-end;
+  background-color: rgb(7, 71, 166);
+  color: rgb(222, 235, 255);
+  padding-right: 10px;
+  align-items: center;
+  & button {
+    width: 100px;
+  }
+}
