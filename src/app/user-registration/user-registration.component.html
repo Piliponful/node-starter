@@ -1,0 +1,51 @@
+<h1 class="location-title">Registration Form</h1>
+<form class="example-form location" (ngSubmit)="onSubmit()" [formGroup]="contactForm">
+  <mat-form-field class="example-full-width" appearance="outline">
+    <input matInput placeholder="First Name*" [formControl]="fullname" required>
+
+  </mat-form-field>
+  <mat-form-field class="example-full-width" appearance="outline">
+    <input matInput placeholder="Last Name" required>
+  </mat-form-field>
+  <div class="example-container">
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Enter your email*" [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field class="example-full-width" appearance="outline">
+    <span matPrefix >+ &nbsp;</span>
+    <input type="tel" matInput placeholder="Telephone*" [formControl]="tel" required >
+    <mat-error *ngIf="tel.invalid">{{getErrorPhoneNumber()}}</mat-error>
+    <mat-icon matSuffix>mode_edit</mat-icon>
+  </mat-form-field>
+  <p>
+  <mat-form-field class="example-full-width" appearance="outline">
+    <input matInput placeholder="Address">
+  </mat-form-field>
+  </p>
+
+  <table class="example-full-width" cellspacing="0">
+    <tr>
+    <td><mat-form-field class="example-full-width" appearance="outline">
+      <input matInput placeholder="City">
+    </mat-form-field></td>
+    <td><mat-form-field class="example-full-width" appearance="outline">
+      <input matInput placeholder="State">
+    </mat-form-field ></td>
+    </tr>
+  </table>
+  <mat-form-field  appearance="outline">
+    <mat-select placeholder="Secret Question" disableRipple>
+      <mat-option value="1">Option 1</mat-option>
+      <mat-option value="2">Option 2</mat-option>
+      <mat-option value="3">Option 3</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="example-full-width" appearance="outline">
+    <input matInput placeholder="Answer"  required>
+  </mat-form-field>
+<button type="submit" class="button-style" mat-button>Log in</button>
+
+</form>

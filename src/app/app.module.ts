@@ -11,7 +11,6 @@ import { RootAdminComponent } from './components/root-admin/root-admin.component
 import { HeaderComponent } from './components/header/header.component';
 import { InviteComponent } from './components/invite/invite.component';
 import { TenantGroupsComponent } from './components/tenant-groups/tenant-groups.component';
-
 import {
   MatInputModule,
   MatSidenavModule,
@@ -32,12 +31,15 @@ import {
   MatFormFieldModule,
   MatTreeModule,
   MatProgressBarModule,
-  MatListModule
+  MatListModule,
+    MatAutocompleteModule
 } from '@angular/material';
 import { InviteDialogComponent } from './components/invite/invite-dialog/invite-dialog.component';
 import { LoginHistoryComponent } from './components/login-history/login-history.component';
 import { UserRegistrationComponent } from './user-registration/user-registration.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
+
 
 @NgModule({
   declarations: [
