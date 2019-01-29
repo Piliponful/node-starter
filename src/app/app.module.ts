@@ -36,6 +36,7 @@ import {
 } from '@angular/material';
 import { InviteDialogComponent } from './components/invite/invite-dialog/invite-dialog.component';
 import { LoginHistoryComponent } from './components/login-history/login-history.component';
+import { UserRegistrationComponent } from './user-registration/user-registration.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { LoginHistoryComponent } from './components/login-history/login-history.
     TenantGroupsComponent,
     InviteDialogComponent,
     LoginHistoryComponent,
+    UserRegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,7 +79,9 @@ import { LoginHistoryComponent } from './components/login-history/login-history.
     NoopAnimationsModule
   ],
   exports: [
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatIconModule,
+    MatSelectModule
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [],
