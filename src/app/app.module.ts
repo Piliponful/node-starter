@@ -32,12 +32,12 @@ import {
   MatTreeModule,
   MatProgressBarModule,
   MatListModule,
-    MatAutocompleteModule
+  MatAutocompleteModule
 } from '@angular/material';
 import { InviteDialogComponent } from './components/invite/invite-dialog/invite-dialog.component';
 import { LoginHistoryComponent } from './components/login-history/login-history.component';
-import { UserRegistrationComponent } from './user-registration/user-registration.component';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
+
 
 
 
@@ -79,13 +79,14 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatTreeModule,
     MatProgressBarModule,
     MatListModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
-    MatAutocompleteModule
+
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [],

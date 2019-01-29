@@ -7,6 +7,8 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./user-registration.component.scss']
 })
 export class UserRegistrationComponent implements OnInit {
+    myControl = new FormControl();
+    options: string[] = ['One', 'Two', 'Three'];
 
     contactForm = new FormControl({
         fullname: ['', Validators.required],
