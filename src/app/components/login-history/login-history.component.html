@@ -1,0 +1,5 @@
+<div class="login-history-container">
+  <mat-list-item *ngFor="let message of messages" [ngClass]="{'unreadable': !message.isRead}">
+    <h4 mat-line>{{message.text}}</h4>
+  </mat-list-item>
+</div>

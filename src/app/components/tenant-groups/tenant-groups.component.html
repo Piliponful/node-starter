@@ -1,3 +1,32 @@
-<p>
-  tenant-groups works!
-</p>
+<div class="tenant-container">
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="Tenant Name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant Name </th>
+        <td mat-cell *matCellDef="let row"> {{row.tenantName}} </td>
+      </ng-container>
+      <ng-container matColumnDef="Tenant Admin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant Admin </th>
+        <td mat-cell *matCellDef="let row" (click)="onEditTenantAdmin(row)"> {{row.tenantAdmin}} <mat-icon color="primary" class="create">create</mat-icon></td>
+      </ng-container>
+      <ng-container matColumnDef="Accounts">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Accounts </th>
+        <td mat-cell *matCellDef="let row"> {{row.account}} </td>
+      </ng-container>
+      <ng-container matColumnDef="DXF File">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> DXF File </th>
+        <td mat-cell *matCellDef="let row"> {{row.dxfFile}} <mat-icon color="primary" class="publish">publish</mat-icon></td>
+      </ng-container>
+      <ng-container matColumnDef="Annotation Files">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Annotation Files </th>
+        <td mat-cell *matCellDef="let row"> {{row.annotationFiles}} <mat-icon color="primary" class="publish">publish</mat-icon></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+</div>

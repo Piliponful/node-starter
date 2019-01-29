@@ -1,0 +1,19 @@
+.login-history-container {
+  margin: 0 3%;
+  width: 94%;
+  /deep/ & mat-list-item {
+    & .mat-list-item-content {
+      margin: 5px 0;
+      border-radius: 40px;
+      background-color: #f5f5f5;
+      & .mat-list-text {
+        padding: 1px 10px;
+      }
+    }
+  }
+  /deep/ & mat-list-item.unreadable {
+    & .mat-list-item-content {
+      background-color: red;
+    }
+  }
+}

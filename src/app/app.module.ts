@@ -29,9 +29,13 @@ import {
   MatDialogModule,
   MatStepperModule,
   MatSlideToggleModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatTreeModule,
+  MatProgressBarModule,
+  MatListModule
 } from '@angular/material';
 import { InviteDialogComponent } from './components/invite/invite-dialog/invite-dialog.component';
+import { LoginHistoryComponent } from './components/login-history/login-history.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +46,7 @@ import { InviteDialogComponent } from './components/invite/invite-dialog/invite-
     InviteComponent,
     TenantGroupsComponent,
     InviteDialogComponent,
+    LoginHistoryComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +71,9 @@ import { InviteDialogComponent } from './components/invite/invite-dialog/invite-
     MatStepperModule,
     MatSlideToggleModule,
     MatFormFieldModule,
+    MatTreeModule,
+    MatProgressBarModule,
+    MatListModule,
     NoopAnimationsModule
   ],
   exports: [

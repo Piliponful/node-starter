@@ -1,7 +1,10 @@
 mat-form-field {
   font-size: 10px;
 }
-
+.invite-content {
+  display: flex;
+  justify-content: space-between;
+}
 .tenant {
   & .tenant-form {
     display: flex;

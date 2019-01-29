@@ -1,0 +1,25 @@
+.tenant-container {
+  padding: 1% 2%;
+
+  & table {
+    width: 100%;
+
+    & td,
+    th {
+      width: 20%;
+    }
+
+    & .mat-header-row {
+      background: #f5f5f5;
+    }
+
+    & tr:hover {
+      background: #f5f5f5;
+    }
+    & .create, .publish {
+      vertical-align: middle;
+      float: right;
+      margin-right: 30px;
+    }
+  }
+}
