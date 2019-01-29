@@ -1,30 +1,5 @@
 <app-header></app-header>
 
-<!-- <div class="container">
-  <mat-grid-list cols="3">
-    <mat-grid-tile [rowspan]="1" [colspan]="1">
-      <h3>Invite:</h3>
-    </mat-grid-tile>
-    <mat-grid-tile [rowspan]="1" [colspan]="2">
-      <mat-radio-group class="example-radio-group" [(ngModel)]="invite">
-        <mat-radio-button class="example-radio-button" *ngFor="let item of inviteVariants" [value]="item">
-          {{item}}
-        </mat-radio-button>
-      </mat-radio-group>
-    </mat-grid-tile>
-  </mat-grid-list>
-  {{invite}}
-
-  <mat-select placeholder="Favorite animal" [formControl]="animalControl" required>
-    <mat-option>--</mat-option>
-    <mat-option *ngFor="let animal of animals" [value]="animal">
-      {{animal.name}}
-    </mat-option>
-  </mat-select>
-  <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error>
-  <mat-hint>{{animalControl.value?.sound}}</mat-hint>
-</div> -->
-
 <mat-tab-group>
   <mat-tab label="Invite Member">
     <ng-template matTabContent>

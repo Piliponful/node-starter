@@ -1,0 +1,65 @@
+<app-header></app-header>
+
+<div class="edit-profile">
+  <div class="user-pii">
+    <h3>TestName TestSurname User Account</h3>
+  </div>
+  <form class="edit-form" [formGroup]="editProfileFormGroup">
+    <div class="col-2">
+      <div class="row">
+        <label>Email</label>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Email address" formControlName="emailCtrl" required>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <label>Name</label>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="TestName" formControlName="firstNameCtrl" required>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="TestSurname" formControlName="surnameCtrl" required>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <label>Tenant</label>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="TestTenant Name" formControlName="tenantCtrl" required>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <label>Group</label>
+        <mat-form-field appearance="outline">
+          <mat-select placeholder="Group" formControlName="groupCtrl" required>
+            <mat-option value="group 1">Group 1</mat-option>
+            <mat-option value="group 2">Group 2</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <label>Role</label>
+        <mat-form-field appearance="outline">
+          <mat-select placeholder="Role" formControlName="roleCtrl" required>
+            <mat-option value="tenant admin">Tenant Admin</mat-option>
+            <mat-option value="standart user">Standart User</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-1">
+      <div class="image-container">
+        <img src="http://i.pravatar.cc/150">
+      </div>
+    </div>
+  </form>
+  <div class="controls-panel">
+    <div class="control-side">
+      <button mat-raised-button color="accent">Close</button>
+      <button mat-raised-button color="warn">Delete User</button>
+    </div>
+    <div class="control-side">
+      <button mat-raised-button>Resend Invite</button>
+      <button mat-raised-button color="primary">Update</button>
+    </div>
+  </div>
+</div>

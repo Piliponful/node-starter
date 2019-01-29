@@ -1,0 +1,46 @@
+mat-form-field {
+  font-size: 10px;
+}
+.edit-profile {
+  padding: 1% 2%;
+  .edit-form {
+    display: flex;
+    & .col-2 {
+      width: 80%;
+      padding-right: 3%;
+      & .row {
+        display: flex;
+        align-items: baseline;
+        & label {
+          width: 25%;
+        }
+        & mat-form-field {
+          margin-right: 30px;
+          width: 100%;
+          max-width: 330px;
+        }
+      }
+    }
+    & .col-1 {
+      width: 20%;
+      padding-right: 3%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      & .image-container {
+        & img {
+          border-radius: 100px;
+        }
+      }
+    }
+  }
+  .controls-panel {
+    display: flex;
+    justify-content: space-between;
+    .control-side {
+      width: 200px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

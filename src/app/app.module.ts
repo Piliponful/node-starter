@@ -37,9 +37,7 @@ import {
 import { InviteDialogComponent } from './components/invite/invite-dialog/invite-dialog.component';
 import { LoginHistoryComponent } from './components/login-history/login-history.component';
 import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
-
-
-
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +50,7 @@ import { UserRegistrationComponent } from './components/user-registration/user-r
     InviteDialogComponent,
     LoginHistoryComponent,
     UserRegistrationComponent,
+    EditProfileComponent,
   ],
   imports: [
     BrowserModule,
