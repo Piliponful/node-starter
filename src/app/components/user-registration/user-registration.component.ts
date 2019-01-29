@@ -7,11 +7,14 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./user-registration.component.scss']
 })
 export class UserRegistrationComponent implements OnInit {
+    myControl = new FormControl();
+    options: string[] = ['Your favorite animal?', 'Your favorite color?', 'Three'];
 
     contactForm = new FormControl({
         fullname: ['', Validators.required],
         tel: ['[ 0-9]+$', Validators.required],
-        email: [Validators.required, Validators.email]
+        email: [Validators.required, Validators.email],
+        answer: [Validators.required]
     });
 
     ngOnInit() {
@@ -21,6 +24,7 @@ export class UserRegistrationComponent implements OnInit {
     email = new FormControl('', [Validators.required, Validators.email]);
     tel = new FormControl('', [Validators.required,Validators.pattern('[ 0-9]+$')]);
     fullname = new FormControl('', [Validators.required]);
+    answer = new FormControl('', [Validators.required]);
 
 
         getErrorMessage() {

@@ -36,15 +36,17 @@
     </mat-form-field ></td>
     </tr>
   </table>
-  <mat-form-field  appearance="outline">
-    <mat-select placeholder="Secret Question" disableRipple>
-      <mat-option value="1">Option 1</mat-option>
-      <mat-option value="2">Option 2</mat-option>
-      <mat-option value="3">Option 3</mat-option>
-    </mat-select>
+  <mat-form-field class="example-full-width" appearance="outline">
+    <input type="text" placeholder="Secret Question*" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" required>
+    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
   <mat-form-field class="example-full-width" appearance="outline">
-    <input matInput placeholder="Answer"  required>
+    <input matInput placeholder="Answer*" [formControl]="answer" required>
   </mat-form-field>
 <button type="submit" class="button-style" mat-button>Log in</button>
 
