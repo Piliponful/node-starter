@@ -1,0 +1,35 @@
+mat-form-field {
+  font-size: 10px;
+}
+
+.delete-user-contant {
+  padding: 1% 2%;
+  mat-list {
+    mat-list-item {
+      .checkbox-column {
+        width: 50px;
+      }
+      .name-column,
+      .surname-column,
+      .email-column {
+        width: 20%;
+      }
+      .date-column {
+        width: 100%;
+        & p {
+          text-align: end;
+        }
+      }
+    }
+  }
+  span {
+    color: #90949c;
+    font-size: 13px;
+  }
+  .controls-panel {
+    margin-top: 20px;
+    button {
+      margin: 0 5px;
+    }
+  }
+}

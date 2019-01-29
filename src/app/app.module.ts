@@ -32,12 +32,14 @@ import {
   MatTreeModule,
   MatProgressBarModule,
   MatListModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatCheckboxModule
 } from '@angular/material';
 import { InviteDialogComponent } from './components/invite/invite-dialog/invite-dialog.component';
 import { LoginHistoryComponent } from './components/login-history/login-history.component';
 import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { DeleteUserComponent } from './components/delete-user/delete-user.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,7 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     LoginHistoryComponent,
     UserRegistrationComponent,
     EditProfileComponent,
+    DeleteUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,13 +82,10 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     MatProgressBarModule,
     MatListModule,
     NoopAnimationsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatCheckboxModule
   ],
   exports: [
-    MatFormFieldModule,
-    MatIconModule,
-    MatSelectModule,
-
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [],

@@ -5,6 +5,7 @@ import { LoginComponent } from 'src/app/components/login/login.component';
 import { RootAdminComponent } from 'src/app/components/root-admin/root-admin.component';
 import { UserRegistrationComponent } from 'src/app/components/user-registration/user-registration.component';
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
+import { DeleteUserComponent } from 'src/app/components/delete-user/delete-user.component';
 
 const routes: Routes = [
   { path: '',
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'edit-profile',
     component: EditProfileComponent
+  },
+  {
+    path: 'delete-user',
+    component: DeleteUserComponent
   }
 ];
 
