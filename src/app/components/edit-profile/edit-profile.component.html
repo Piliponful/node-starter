@@ -7,26 +7,38 @@
   <form class="edit-form" [formGroup]="editProfileFormGroup">
     <div class="col-2">
       <div class="row">
-        <label>Email</label>
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="Email address" formControlName="emailCtrl" required>
-        </mat-form-field>
-      </div>
-      <div class="row">
         <label>Name</label>
         <mat-form-field appearance="outline">
           <input matInput placeholder="TestName" formControlName="firstNameCtrl" required>
         </mat-form-field>
+        <label>PII</label>
         <mat-form-field appearance="outline">
           <input matInput placeholder="TestSurname" formControlName="surnameCtrl" required>
         </mat-form-field>
       </div>
       <div class="row">
-        <label>Tenant</label>
+        <label>Email</label>
         <mat-form-field appearance="outline">
-          <input matInput placeholder="TestTenant Name" formControlName="tenantCtrl" required>
+          <input matInput placeholder="Email address" formControlName="emailCtrl" required>
+        </mat-form-field>
+        <label>Adress</label>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Test Address" formControlName="addressCtrl" required>
         </mat-form-field>
       </div>
+      <div class="row">
+        <label>Phone</label>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="Telephone number" formControlName="phoneCtrl" required>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-1">
+      <div class="image-container">
+        <img src="http://i.pravatar.cc/150">
+      </div>
+    </div>
+    <div class="edit-footer">
       <div class="row">
         <label>Group</label>
         <mat-form-field appearance="outline">
@@ -34,6 +46,10 @@
             <mat-option value="group 1">Group 1</mat-option>
             <mat-option value="group 2">Group 2</mat-option>
           </mat-select>
+        </mat-form-field>
+        <label>Tenant</label>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="TestTenant Name" formControlName="tenantCtrl" required>
         </mat-form-field>
       </div>
       <div class="row">
@@ -44,11 +60,10 @@
             <mat-option value="standart user">Standart User</mat-option>
           </mat-select>
         </mat-form-field>
-      </div>
-    </div>
-    <div class="col-1">
-      <div class="image-container">
-        <img src="http://i.pravatar.cc/150">
+        <label>Question</label>
+        <mat-form-field appearance="outline">
+          <input matInput placeholder="challenge response question for PW reset" formControlName="secretQuestionCtrl" required>
+        </mat-form-field>
       </div>
     </div>
   </form>

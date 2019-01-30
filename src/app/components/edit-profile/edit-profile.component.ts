@@ -19,6 +19,9 @@ export class EditProfileComponent implements OnInit {
       tenantCtrl: ['', Validators.required],
       groupCtrl: ['', Validators.required],
       roleCtrl: ['', Validators.required],
+      addressCtrl: ['', Validators.required],
+      phoneCtrl: ['', Validators.required],
+      secretQuestionCtrl: ['', Validators.required],
     });
   }
 
