@@ -12,6 +12,7 @@ export class UserRegistrationComponent implements OnInit {
 
     contactForm = new FormControl({
         fullname: ['', Validators.required],
+        lastname: ['', Validators.required],
         tel: ['[ 0-9]+$', Validators.required],
         email: [Validators.required, Validators.email],
         answer: [Validators.required]
@@ -20,11 +21,11 @@ export class UserRegistrationComponent implements OnInit {
     ngOnInit() {
     }
 
-
+    fullname = new FormControl('', [Validators.required]);
+    lastname = new FormControl('', [Validators.required]);
     email = new FormControl('', [Validators.required, Validators.email]);
     tel = new FormControl('', [Validators.required,Validators.pattern('[ 0-9]+$')]);
-    fullname = new FormControl('', [Validators.required]);
-    answer = new FormControl('', [Validators.required]);
+    answer  = new FormControl('', [Validators.required]);
 
 
         getErrorMessage() {
