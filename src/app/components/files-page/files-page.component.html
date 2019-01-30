@@ -68,7 +68,7 @@
           <p>Added By:</p>
           <mat-form-field class="chip-list">
             <mat-chip-list #chipList>
-              <mat-chip *ngFor="let user of users" [selectable]="selectable" [removable]="removable" (removed)="remove(fruit)">
+              <mat-chip *ngFor="let user of users" [selectable]="selectable" [removable]="removable" (removed)="remove(user)">
                 {{ user }}
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
               </mat-chip>

@@ -64,8 +64,10 @@ export class FilesPageComponent implements OnInit {
     }
   }
 
-  remove(fruit: string): void {
-    const index = this.users.indexOf(fruit);
+  remove(user: string): void {
+    const index = this.allUsers.indexOf(user);
+    console.log(user);
+    console.log(this.allUsers.indexOf(user));
 
     if (index >= 0) {
       this.users.splice(index, 1);
@@ -81,10 +83,6 @@ export class FilesPageComponent implements OnInit {
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.allUsers.filter(user => user.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  onSetRadioVal(date) {
-    console.log(date);
   }
 }
 
