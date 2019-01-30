@@ -5,12 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
-import { LoginComponent } from './components/login/login.component';
-import { RootAdminComponent } from './components/root-admin/root-admin.component';
-import { HeaderComponent } from './components/header/header.component';
-import { InviteComponent } from './components/invite/invite.component';
-import { TenantGroupsComponent } from './components/tenant-groups/tenant-groups.component';
+/** Material Modules */
 import {
   MatInputModule,
   MatSidenavModule,
@@ -33,13 +28,23 @@ import {
   MatProgressBarModule,
   MatListModule,
   MatAutocompleteModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatCardModule,
+  MatChipsModule,
+  MatExpansionModule
 } from '@angular/material';
+/** Components */
+import { LoginComponent } from './components/login/login.component';
+import { RootAdminComponent } from './components/root-admin/root-admin.component';
+import { HeaderComponent } from './components/header/header.component';
+import { InviteComponent } from './components/invite/invite.component';
+import { TenantGroupsComponent } from './components/tenant-groups/tenant-groups.component';
 import { InviteDialogComponent } from './components/invite/invite-dialog/invite-dialog.component';
 import { LoginHistoryComponent } from './components/login-history/login-history.component';
 import { UserRegistrationComponent } from './components/user-registration/user-registration.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { DeleteUserComponent } from './components/delete-user/delete-user.component';
+import { FilesPageComponent } from './components/files-page/files-page.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +59,7 @@ import { DeleteUserComponent } from './components/delete-user/delete-user.compon
     UserRegistrationComponent,
     EditProfileComponent,
     DeleteUserComponent,
+    FilesPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,9 +87,12 @@ import { DeleteUserComponent } from './components/delete-user/delete-user.compon
     MatTreeModule,
     MatProgressBarModule,
     MatListModule,
-    NoopAnimationsModule,
     MatAutocompleteModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatCardModule,
+    MatChipsModule,
+    MatExpansionModule,
+    NoopAnimationsModule
   ],
   exports: [
   ],

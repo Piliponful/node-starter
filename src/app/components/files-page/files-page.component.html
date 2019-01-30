@@ -1,0 +1,107 @@
+<app-header></app-header>
+
+<div class="files-page-container">
+  <mat-tab-group class="page-tab">
+    <mat-tab label="DXF Files">
+      <ng-template matTabContent>
+        <div class="container">
+          <div class="container-header">
+            <span>{{ dxfFiles.length }} results</span>
+            <div class="control-btns">
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Sort By:">
+                  <mat-option value="date">Sort By: Date</mat-option>
+                  <mat-option value="name">Sort By: Name</mat-option>
+                  <mat-option value="size">Sort By: Size</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-raised-button color="primary">Upload Files</button>
+            </div>
+          </div>
+          <div class="container-list">
+            <mat-list>
+              <mat-list-item *ngFor="let file of dxfFiles">
+                <div class="file-header">
+                  <h3>{{ file.uploadDate }}</h3>
+                </div>
+                <div class="file-content">
+                  <div class="file-description">
+                    <mat-icon mat-list-icon>note</mat-icon>
+                    <div class="col">
+                      <h4 mat-line>{{ file.name }}</h4>
+                      <p mat-line> By {{ file.author }} {{ file.uploadDate }}, {{ file.size }}</p>
+                    </div>
+                  </div>
+                  <div class="control-btns">
+                    <button mat-raised-button>Edit</button>
+                    <button mat-raised-button color="primary">Preview</button>
+                    <button mat-icon-button color="primary">
+                      <mat-icon>publish</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary">
+                      <mat-icon>get_app</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary">
+                      <mat-icon>done</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Annotation Files">
+      <ng-template matTabContent>
+        <div class="container">
+          <p>Annotation Files</p>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+
+  <mat-card class="example-card">
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab label="Filters">
+          <p>Added By:</p>
+          <mat-form-field class="chip-list">
+            <mat-chip-list #chipList>
+              <mat-chip *ngFor="let user of users" [selectable]="selectable" [removable]="removable" (removed)="remove(fruit)">
+                {{ user }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input placeholder="New user..." #usersInput [formControl]="usersCtrl" [matAutocomplete]="auto"
+                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                {{ user }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <mat-accordion>
+            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Date Uploaded
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{ selectedRadio }}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-radio-group class="radio-group" [(ngModel)]="selectedRadio">
+                <mat-radio-button class="radio-button" *ngFor="let date of dateUploaded" [value]="date">
+                  {{ date }}
+                </mat-radio-button>
+              </mat-radio-group>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-tab>
+        <mat-tab label="Saved Filters"> Content 2 </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -6,9 +6,11 @@ import { RootAdminComponent } from 'src/app/components/root-admin/root-admin.com
 import { UserRegistrationComponent } from 'src/app/components/user-registration/user-registration.component';
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
 import { DeleteUserComponent } from 'src/app/components/delete-user/delete-user.component';
+import { FilesPageComponent } from 'src/app/components/files-page/files-page.component';
 
 const routes: Routes = [
-  { path: '',
+  {
+    path: '',
     redirectTo: '/login',
     pathMatch: 'full'
   },
@@ -21,8 +23,8 @@ const routes: Routes = [
     component: RootAdminComponent
   },
   {
-      path: 'user-registration',
-      component: UserRegistrationComponent
+    path: 'user-registration',
+    component: UserRegistrationComponent
   },
   {
     path: 'edit-profile',
@@ -31,11 +33,15 @@ const routes: Routes = [
   {
     path: 'delete-user',
     component: DeleteUserComponent
+  },
+  {
+    path: 'files-page',
+    component: FilesPageComponent
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
