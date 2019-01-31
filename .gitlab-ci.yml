@@ -14,7 +14,7 @@ deploy_staging:
     - ssh-add <(echo "$AWS_EC2_STAGING_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - ssh ubuntu@AWS_EC2_STAGING_IP "if [[ -d \"~/arialpoint\" ]]; then git clone git@gitlab.com:code-care/arialpoint.git; fi && cd arialpoint && git checkout develop && git pull origin develop && exit"
+    - ssh ubuntu@AWS_EC2_STAGING_IP "cd arialpoint && git checkout develop && git pull origin develop && exit"
   environment:
     name: staging
     url: 18.223.88.144
