@@ -59,6 +59,13 @@
               {{ group }}
             </mat-radio-button>
           </mat-radio-group>
+          <div *ngIf="showAddNewGroupField">
+            <mat-form-field appearance="outline">
+              <mat-label>Add new group</mat-label>
+              <input matInput [(ngModel)]="newGroupName" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="onAddNewGroup()">Ok</button>
+          </div>
         </div>
         <div class="permissions">
           <h3>Permissions</h3>
@@ -74,7 +81,7 @@
         <div class="btn-container">
           <div class="left-container">
             <button mat-raised-button color="warn" [mat-dialog-close]>Close</button>
-            <button mat-raised-button color="primary">Add New Group</button>
+            <button mat-raised-button color="primary" (click)="onShowNewGroupField()">Add New Group</button>
           </div>
           <div class="right-container">
             <button mat-raised-button matStepperPrevious>Back</button>

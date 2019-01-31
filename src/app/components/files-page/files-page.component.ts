@@ -66,8 +66,6 @@ export class FilesPageComponent implements OnInit {
 
   remove(user: string): void {
     const index = this.allUsers.indexOf(user);
-    console.log(user);
-    console.log(this.allUsers.indexOf(user));
 
     if (index >= 0) {
       this.users.splice(index, 1);

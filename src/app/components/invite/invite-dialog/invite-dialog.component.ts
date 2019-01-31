@@ -16,6 +16,8 @@ export class InviteDialogComponent implements OnInit {
   selectedGroup: string;
   groups: string[] = ['All groups', 'Group 1', 'Group 2', 'Group 3', 'Group 4'];
   dialogResult: IDialogData;
+  showAddNewGroupField = false;
+  newGroupName: string;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -66,5 +68,15 @@ export class InviteDialogComponent implements OnInit {
       message: this.thirdFormGroup.controls['textareaCtrl'].value
     };
     this.dialogRef.close(this.dialogResult);
+  }
+
+  onShowNewGroupField() {
+    this.showAddNewGroupField = true;
+  }
+
+  onAddNewGroup() {
+    this.groups.push(this.newGroupName);
+    this.showAddNewGroupField = false;
+    this.newGroupName = '';
   }
 }
