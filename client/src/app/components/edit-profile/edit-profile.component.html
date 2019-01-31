@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="edit-footer">
-      <div class="row">
+      <div class="row" *ngIf="userRole!='Root Admin'">
         <label>Group</label>
         <mat-form-field appearance="outline">
           <mat-select placeholder="Group" formControlName="groupCtrl" required>

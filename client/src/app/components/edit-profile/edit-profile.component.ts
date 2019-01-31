@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 })
 export class EditProfileComponent implements OnInit {
   editProfileFormGroup: FormGroup;
+  userRole = 'Root Admin';
 
   constructor(private _formBuilder: FormBuilder, private location: Location) { }
 
