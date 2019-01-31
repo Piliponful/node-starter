@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-edit-profile',
@@ -9,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class EditProfileComponent implements OnInit {
   editProfileFormGroup: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private _formBuilder: FormBuilder, private location: Location) { }
 
   ngOnInit() {
     this.editProfileFormGroup = this._formBuilder.group({
@@ -25,4 +26,7 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
+  back() {
+    this.location.back();
+  }
 }

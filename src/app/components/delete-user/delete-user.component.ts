@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-delete-user',
@@ -13,11 +14,14 @@ export class DeleteUserComponent implements OnInit {
     { name: 'Name 4', surname: 'Surname 4', email: 'Email 4', accepted: '8 days ago', select: false },
   ];
 
-  constructor() { }
+  constructor(private location: Location) { }
 
   ngOnInit() {
   }
 
+  back() {
+    this.location.back();
+  }
 }
 
 export interface DeleteUser {
