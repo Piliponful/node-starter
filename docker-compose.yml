@@ -1,0 +1,20 @@
+version: "3.2"
+services:
+  client:
+    build: ./client
+    volumes:
+      - type: volume
+        source: dist
+        target: /root/app/client/dist
+ 
+  server:
+    build: ./server
+    volumes:
+      - type: volume
+        source: dist
+        target: /root/app/server/dist
+    ports:
+      - "80:80"
+
+volumes:
+  dist:
