@@ -15,7 +15,7 @@ services:
     volumes:
       - type: volume
         source: dist
-        target: /root/app/assets
+        target: /usr/share/nginx/html
     ports:
       - 80:80
       - 443:443
