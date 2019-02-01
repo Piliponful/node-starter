@@ -45,6 +45,7 @@ import { UserRegistrationComponent } from './components/user-registration/user-r
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { DeleteUserComponent } from './components/delete-user/delete-user.component';
 import { FilesPageComponent } from './components/files-page/files-page.component';
+import { ViewPageComponent } from './components/view-page/view-page.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { FilesPageComponent } from './components/files-page/files-page.component
     EditProfileComponent,
     DeleteUserComponent,
     FilesPageComponent,
+    ViewPageComponent
   ],
   imports: [
     BrowserModule,

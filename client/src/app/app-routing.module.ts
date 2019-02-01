@@ -7,6 +7,7 @@ import { UserRegistrationComponent } from 'src/app/components/user-registration/
 import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profile.component';
 import { DeleteUserComponent } from 'src/app/components/delete-user/delete-user.component';
 import { FilesPageComponent } from 'src/app/components/files-page/files-page.component';
+import { ViewPageComponent } from 'src/app/components/view-page/view-page.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path: 'files-page',
     component: FilesPageComponent
+  },
+  {
+    path: 'view-page',
+    component: ViewPageComponent
   }
 ];
 
