@@ -6,15 +6,33 @@ services:
       - type: volume
         source: dist
         target: /root/app/client/dist
- 
+
   server:
     build: ./server
+
+  nginx:
+    build: ./nginx
     volumes:
       - type: volume
         source: dist
-        target: /root/app/server/dist
+        target: /root/app/assets
     ports:
-      - "80:80"
+      - 80:80
+      - 443:443
+
+  mongodb:
+    image: bitnami/mongodb
+    container_name: mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGODB_USERNAME=root
+      - MONGODB_PASSWORD=password
+      - MONGODB_DATABASE=staging
+      - MONGODB_ROOT_PASSWORD=password
+    volumes:
+      - mongo:/data/db
 
 volumes:
   dist:
+  mongo:
