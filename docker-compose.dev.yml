@@ -1,0 +1,7 @@
+version: "3.2"
+
+services:
+  server:
+    volumes:
+      - ./server:/root/app/server
+    command: npm run dev
