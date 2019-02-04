@@ -1,5 +1,6 @@
 mat-form-field {
   font-size: 10px;
+  margin: 0 18px;
 }
 
 .delete-user-contant {
@@ -22,6 +23,11 @@ mat-form-field {
       }
     }
   }
+  .accent{
+    background-color: #6cbf50;
+    color: white;
+  }
+
   span {
     color: #90949c;
     font-size: 13px;

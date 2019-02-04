@@ -4,13 +4,15 @@ mat-form-field {
 .invite-content {
   display: flex;
   justify-content: space-between;
-}
+  }
+
 .tenant {
   & .tenant-form {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
   }
+
 
   & mat-form-field {
     width: 40%;
@@ -31,6 +33,7 @@ mat-form-field {
     }
   }
 }
+
 .permissions {
   padding-bottom: 10px;
   & mat-slide-toggle {

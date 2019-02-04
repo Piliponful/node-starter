@@ -8,6 +8,8 @@ import { EditProfileComponent } from 'src/app/components/edit-profile/edit-profi
 import { DeleteUserComponent } from 'src/app/components/delete-user/delete-user.component';
 import { FilesPageComponent } from 'src/app/components/files-page/files-page.component';
 import { ViewPageComponent } from 'src/app/components/view-page/view-page.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -39,9 +41,17 @@ const routes: Routes = [
     path: 'files-page',
     component: FilesPageComponent
   },
+    {
+        path: 'view-page',
+        component: ViewPageComponent
+    },
   {
-    path: 'view-page',
-    component: ViewPageComponent
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  {
+     path: 'reset-password',
+     component: ResetPasswordComponent
   }
 ];
 

@@ -1,8 +1,9 @@
 <h1 mat-dialog-title>Invite user</h1>
 <mat-dialog-content>
-  <mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <div class="yellow-theme">
+  <mat-horizontal-stepper  [linear]="isLinear" #stepper>
     <mat-step [stepControl]="firstFormGroup">
-      <form [formGroup]="firstFormGroup">
+      <form  [formGroup]="firstFormGroup">
         <ng-template matStepLabel>Add Details</ng-template>
         <h3>Who would you like to invite?</h3>
         <div class="invite-content">
@@ -36,7 +37,7 @@
           </div>
         </div>
         <div>
-          <button mat-raised-button color="primary" matStepperNext>Next</button>
+          <button mat-raised-button color="accent" matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -64,7 +65,7 @@
               <mat-label>Add new group</mat-label>
               <input matInput [(ngModel)]="newGroupName" [ngModelOptions]="{standalone: true}">
             </mat-form-field>
-            <button mat-raised-button color="primary" (click)="onAddNewGroup()">Ok</button>
+            <button mat-raised-button color="accent" (click)="onAddNewGroup()">Ok</button>
           </div>
         </div>
         <div class="permissions">
@@ -81,11 +82,11 @@
         <div class="btn-container">
           <div class="left-container">
             <button mat-raised-button color="warn" [mat-dialog-close]>Close</button>
-            <button mat-raised-button color="primary" (click)="onShowNewGroupField()">Add New Group</button>
+            <button mat-raised-button color="accent" (click)="onShowNewGroupField()">Add New Group</button>
           </div>
           <div class="right-container">
             <button mat-raised-button matStepperPrevious>Back</button>
-            <button mat-raised-button color="primary" matStepperNext>Next, write a message</button>
+            <button mat-raised-button color="accent" matStepperNext>Next, write a message</button>
           </div>
         </div>
       </form>
@@ -101,11 +102,12 @@
             <button mat-raised-button color="warn" [mat-dialog-close]>Close</button>
             <div class="control-btns">
               <button mat-raised-button matStepperPrevious>Back</button>
-              <button mat-raised-button color="primary" (click)="submit()">Send Invite</button>
+              <button mat-raised-button color="accent" (click)="submit()">Send Invite</button>
             </div>
           </div>
         </div>
       </form>
     </mat-step>
   </mat-horizontal-stepper>
+  </div>
 </mat-dialog-content>

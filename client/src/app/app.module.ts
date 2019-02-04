@@ -46,6 +46,8 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
 import { DeleteUserComponent } from './components/delete-user/delete-user.component';
 import { FilesPageComponent } from './components/files-page/files-page.component';
 import { ViewPageComponent } from './components/view-page/view-page.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,9 @@ import { ViewPageComponent } from './components/view-page/view-page.component';
     EditProfileComponent,
     DeleteUserComponent,
     FilesPageComponent,
-    ViewPageComponent
+    ViewPageComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

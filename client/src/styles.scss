@@ -12,6 +12,16 @@
 $candy-app-primary: mat-palette($mat-indigo);
 $candy-app-accent:  mat-palette($mat-blue, 600, A100, A400);
 
+.yellow-theme {
+  $yellow-theme-primary: mat-palette($mat-blue, 600);
+  $yellow-theme-accent:  mat-palette($mat-blue, 600);
+
+  $yellow-theme: mat-light-theme($yellow-theme-primary, $yellow-theme-accent);
+
+  @include angular-material-theme($yellow-theme);
+}
+
+
 // The warn palette is optional (defaults to red).
 $candy-app-warn:    mat-palette($mat-red);
 
@@ -24,4 +34,4 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent, $candy-
 @include angular-material-theme($candy-app-theme);
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
