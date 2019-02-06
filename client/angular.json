@@ -24,12 +24,24 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/assets/images/looper.gif"
             ],
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/cadviewer/cadviewerjs_min.js",
+              "src/assets/cadviewer/stackBlur.js",
+              "src/assets/cadviewer/cvlicense.js",
+              "src/assets/cadviewer/cadviewerjs_min.js",
+              "src/assets/cadviewer/cadviewerjs_setup_min.js",
+              "src/assets/cadviewer/cvjs_api_styles_2_0_22.js",
+              "src/assets/cadviewer/snap.svg-min.js",
+              "src/assets/cadviewer/rgbcolor.js",
+              "src/assets/cadviewer/canvg.js",
+              "src/assets/cadviewer/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {

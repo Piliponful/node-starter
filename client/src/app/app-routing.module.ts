@@ -41,10 +41,10 @@ const routes: Routes = [
     path: 'files-page',
     component: FilesPageComponent
   },
-    {
-        path: 'view-page',
-        component: ViewPageComponent
-    },
+  {
+      path: 'view-page',
+      component: ViewPageComponent
+  },
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent

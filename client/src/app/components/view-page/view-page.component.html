@@ -1,5 +1,37 @@
 <app-header></app-header>
 
-<p>
-  view-page works!
-</p>
+<svg id="floorPlan"  style="border:0px none;width:1000;height:400;">
+</svg>
+
+<map name="cvjsToolbarMap_1">
+  <area shape="rect" alt="" title="Layers" coords="5,6,29,30" href="javascript:cvjs_layerList();"/>
+  <area shape="rect" alt="" title="Print" coords="32,6,57,30" href="javascript:cvjs_printCanvasPaperSize();"/>
+  <area shape="rect" alt="" title="Zoom In" coords="5,33,29,57" href="javascript:cvjs_zoomIn();"/>
+  <area shape="rect" alt="" title="Zoom Out" coords="32,33,56,57" href="javascript:cvjs_zoomOut();"/>
+  <area shape="rect" alt="" title="Zoom Extents" coords="6,60,29,85" href="javascript:cvjs_resetZoomPan();"/>
+  <area shape="rect" alt="" title="Zoom Window" coords="33,61,57,85" href="javascript:cvjs_zoomWindow();"/>
+  <area shape="rect" alt="" title="Load Previous Page" coords="5,87,29,111" href="javascript:cvjs_previousPage();"/>
+  <area shape="rect" alt="" title="Load Next Page" coords="32,88,57,111" href="javascript:cvjs_nextPage();"/>
+  <area shape="rect" alt="" title="Load First Page" coords="5,114,29,139" href="javascript:cvjs_firstPage();"/>
+  <area shape="rect" alt="" title="Load Last Page" coords="32,114,56,138" href="javascript:cvjs_lastPage();"/>
+</map>
+
+
+
+<map name="PanZoomMap" >
+  <area shape="rect" alt="" title="Zoom Extents" coords="16,6,69,58" href="javascript:cvjs_resetZoomPan();"/>
+  <area shape="rect" alt="" title="Zoom In" coords="16,66,69,115" href="javascript:cvjs_zoomIn();"/>
+  <area shape="rect" alt="" title="Zoom Out" coords="16,116,69,161" href="javascript:cvjs_zoomOut();"/>
+  <area shape="rect" alt="" title="Zoom Window" coords="16,162,69,210" href="javascript:cvjs_zoomWindow();"/>
+  <area shape="rect" alt="" title="Load Last Page" coords="16,220,69,255" href="javascript:cvjs_lastPage();"/>
+  <area shape="rect" alt="" title="Load Next Page" coords="16,256,69,289" href="javascript:cvjs_nextPage();"/>
+  <area shape="rect" alt="" title="Load Previous Page" coords="16,290,69,324" href="javascript:cvjs_previousPage();"/>
+  <area shape="rect" alt="" title="Load First Page" coords="16,325,69,360" href="javascript:cvjs_firstPage();"/>
+</map>
+
+
+
+<div id="gMenu"></div>
+<div id="tip" ></div>
+<div id="wait_looper"></div>
+<canvas id="floorPlanCanvasObject" width="10" height="10"></canvas>
