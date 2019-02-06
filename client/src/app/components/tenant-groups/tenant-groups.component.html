@@ -7,7 +7,7 @@
       </ng-container>
       <ng-container matColumnDef="Tenant Admin">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant Admin </th>
-        <td mat-cell *matCellDef="let row" routerLink="/edit-profile"> {{row.tenantAdmin}} <mat-icon color="primary" class="create">create</mat-icon></td>
+        <td mat-cell *matCellDef="let row" routerLink="/edit-profile"> {{row.tenantAdmin}} <mat-icon color="accent" class="create">create</mat-icon></td>
       </ng-container>
       <ng-container matColumnDef="Accounts">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Accounts </th>
@@ -15,11 +15,11 @@
       </ng-container>
       <ng-container matColumnDef="DXF File">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> DXF File </th>
-        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.dxfFile}} <mat-icon color="primary" class="publish">publish</mat-icon></td>
+        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.dxfFile}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
       </ng-container>
       <ng-container matColumnDef="Annotation Files">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Annotation Files </th>
-        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.annotationFiles}} <mat-icon color="primary" class="publish">publish</mat-icon></td>
+        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.annotationFiles}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

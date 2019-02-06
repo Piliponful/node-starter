@@ -1,15 +1,24 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Inject } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { FilesPageDialogComponent } from './files-page-dialog//files-page-dialog.component';
 
+
+
+export interface DialogData {
+    animal: string;
+    name: string;
+}
 @Component({
   selector: 'app-files-page',
   templateUrl: './files-page.component.html',
   styleUrls: ['./files-page.component.scss']
 })
+
+
 export class FilesPageComponent implements OnInit {
   dxfFiles: DXFFiles[] = [
     new DXFFiles('DXF File Example 1.dxf', 'Maksim Pilipenko', 'January 13', '62 KB'),
@@ -34,11 +43,17 @@ export class FilesPageComponent implements OnInit {
   @ViewChild('usersInput') usersInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  constructor() {
+
+
+  constructor(public dialog: MatDialog) {
     this.filteredUsers = this.usersCtrl.valueChanges.pipe(
       startWith(null),
       map((fruit: string | null) => fruit ? this._filter(fruit) : this.allUsers.slice()));
   }
+
+
+
+
 
   ngOnInit() {
   }
@@ -82,6 +97,23 @@ export class FilesPageComponent implements OnInit {
     const filterValue = value.toLowerCase();
     return this.allUsers.filter(user => user.toLowerCase().indexOf(filterValue) === 0);
   }
+    animal: string;
+    name: string;
+
+
+
+    openDialog(): void {
+        const dialogRef = this.dialog.open(FilesPageDialogComponent, {
+            width: '500px',
+            data: {name: this.name, animal: this.animal}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            this.animal = result;
+        });
+    }
+
 }
 
 export class DXFFiles {
@@ -92,3 +124,5 @@ export class DXFFiles {
     private size: string
   ) {}
 }
+
+
