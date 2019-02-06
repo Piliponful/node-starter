@@ -43,56 +43,6 @@
     </mat-step>
     <mat-step [stepControl]="secondFormGroup">
       <form [formGroup]="secondFormGroup">
-        <ng-template matStepLabel>Choose Group</ng-template>
-        <div class="add-user-header">
-          <h3>Add this user to group</h3>
-          <div class="search">
-            <mat-form-field appearance="outline">
-              <mat-label>Search...</mat-label>
-              <input matInput>
-            </mat-form-field>
-            <button mat-stroked-button>Go!</button>
-          </div>
-        </div>
-        <div class="add-user-content">
-          <mat-radio-group class="example-radio-group" formControlName="groupCtrl">
-            <mat-radio-button class="example-radio-button" *ngFor="let group of groups" [value]="group">
-              {{ group }}
-            </mat-radio-button>
-          </mat-radio-group>
-          <div *ngIf="showAddNewGroupField">
-            <mat-form-field appearance="outline">
-              <mat-label>Add new group</mat-label>
-              <input matInput [(ngModel)]="newGroupName" [ngModelOptions]="{standalone: true}">
-            </mat-form-field>
-            <button mat-raised-button color="accent" (click)="onAddNewGroup()">Ok</button>
-          </div>
-        </div>
-        <div class="permissions">
-          <h3>Permissions</h3>
-          <div class="permissions-content">
-            <mat-slide-toggle class="example-margin" [color]="accent" formControlName="addUsersCtrl">
-              Can add user
-            </mat-slide-toggle>
-            <mat-slide-toggle class="example-margin" [color]="accent" formControlName="addGroupsCtrl">
-              Can add groups
-            </mat-slide-toggle>
-          </div>
-        </div>
-        <div class="btn-container">
-          <div class="left-container">
-            <button mat-raised-button color="warn" [mat-dialog-close]>Close</button>
-            <button mat-raised-button color="accent" (click)="onShowNewGroupField()">Add New Group</button>
-          </div>
-          <div class="right-container">
-            <button mat-raised-button matStepperPrevious>Back</button>
-            <button mat-raised-button color="accent" matStepperNext>Next, write a message</button>
-          </div>
-        </div>
-      </form>
-    </mat-step>
-    <mat-step [stepControl]="thirdFormGroup">
-      <form [formGroup]="thirdFormGroup">
         <ng-template matStepLabel>Send Invite</ng-template>
         <div class="send-invite-container">
           <mat-form-field appearance="outline">

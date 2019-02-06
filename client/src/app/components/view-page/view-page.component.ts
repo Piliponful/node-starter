@@ -17,7 +17,7 @@ export class ViewPageComponent implements OnInit, AfterViewInit {
   fileNameNoExtension = 'E02_rotated'; // DWG NAME OF THE FILE TO BE LOADED INTO CADVIEWER JS!!!!!
   fileNamePath = '../../assets/drawings/viewing_sample/'; // PATH OF THE FILE TO BE LOADED INTO CADVIEWER JS!!!!!
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
   }
@@ -49,5 +49,4 @@ export class ViewPageComponent implements OnInit, AfterViewInit {
     cvjs_LoadDrawing('floorPlan', this.fileNamePath, this.fileNameNoExtension);
     cvjs_windowResize_position(false, 'floorPlan');
   }
-
 }

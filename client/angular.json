@@ -97,7 +97,12 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "./node_modules/dxf-parser/dist/dxf-parser.js",
+              "./node_modules/three-dxf/dist/three-dxf.js",
+              "src/assets/libs/js/three.min.js",
+              "./node_modules/jquery/dist/jquery.min.js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"

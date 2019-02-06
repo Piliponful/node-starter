@@ -1,0 +1,17 @@
+
+<h1 mat-dialog-title>Save Filter {{data.name}}</h1>
+<div mat-dialog-content class="example-form">
+  <p>Give the filter a name</p>
+    <mat-form-field  class="example-full-width" appearance="outline">
+      <mat-label>Filter title...</mat-label>
+    <input matInput [(ngModel)]="data.animal">
+  </mat-form-field>
+  <p>Give this filter a description(Optional)</p>
+  <mat-form-field class="example-full-width" appearance="outline">
+    <textarea matInput></textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-button class="button-save" [mat-dialog-close]="data.animal" cdkFocusInitial>Save</button>
+</div>

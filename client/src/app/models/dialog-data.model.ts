@@ -4,8 +4,5 @@ export interface IDialogData {
   email: string;
   tenant: string;
   role: string;
-  group: string;
-  addUsers: boolean;
-  addGroups: boolean;
   message: string;
 }

@@ -15,7 +15,7 @@
                   <mat-option value="size">Sort By: Size</mat-option>
                 </mat-select>
               </mat-form-field>
-              <button mat-raised-button color="primary">Upload Files</button>
+              <button mat-raised-button color="accent">Upload Files</button>
             </div>
           </div>
           <div class="container-list">
@@ -34,15 +34,18 @@
                   </div>
                   <div class="control-btns">
                     <button mat-raised-button>Edit</button>
-                    <button mat-raised-button color="primary">Preview</button>
-                    <button mat-icon-button color="primary">
+                    <button mat-raised-button color="accent">Preview</button>
+                    <button mat-icon-button color="accent">
                       <mat-icon>publish</mat-icon>
                     </button>
-                    <button mat-icon-button color="primary">
+                    <button mat-icon-button color="accent">
                       <mat-icon>get_app</mat-icon>
                     </button>
-                    <button mat-icon-button color="primary">
+                    <button mat-icon-button color="accent">
                       <mat-icon>done</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn">
+                      <mat-icon>close</mat-icon>
                     </button>
                   </div>
                 </div>
@@ -62,6 +65,7 @@
   </mat-tab-group>
 
   <mat-card class="example-card">
+    <div class="yellow-theme">
     <mat-card-content>
       <mat-tab-group>
         <mat-tab label="Filters">
@@ -100,11 +104,17 @@
             </mat-expansion-panel>
           </mat-accordion>
         </mat-tab>
-        <mat-tab label="Saved Filters"> Content 2 </mat-tab>
+        <mat-tab label="Saved Filters">
+            <a mat-button class="button-new" *ngIf="animal">
+             <i>{{animal}}</i>
+              <mat-icon class="button-new-icon">more_vert</mat-icon>
+            </a>
+        </mat-tab>
       </mat-tab-group>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary">Save</button>
+      <button mat-raised-button class="button-save" (click)="openDialog()">Save</button>
     </mat-card-actions>
+    </div>
   </mat-card>
 </div>
