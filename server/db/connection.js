@@ -1,7 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
-const path = require('path')
-const bunyan = require('bunyan')
-const log = bunyan.createLogger({ name: 'arialpoint-server', streams: [{ path: path.resolve(__dirname, 'log') }] })
+const log = require('../logger')
 
 const url = 'mongodb://mongodb:27017'
 const dbName = 'arialpoint'

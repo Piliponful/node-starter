@@ -12,7 +12,6 @@ export class InviteDialogComponent implements OnInit {
   isLinear = true;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
   selectedGroup: string;
   groups: string[] = ['All groups', 'Group 1', 'Group 2', 'Group 3', 'Group 4'];
   dialogResult: IDialogData;
@@ -34,11 +33,6 @@ export class InviteDialogComponent implements OnInit {
       roleCtrl: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      groupCtrl: [''],
-      addUsersCtrl: [''],
-      addGroupsCtrl: ['']
-    });
-    this.thirdFormGroup = this._formBuilder.group({
       textareaCtrl: ['', Validators.required]
     });
 
@@ -48,11 +42,8 @@ export class InviteDialogComponent implements OnInit {
     this.firstFormGroup.controls['tenantCtrl'].setValue(this.data.tenant);
     this.firstFormGroup.controls['roleCtrl'].setValue(this.data.role);
 
-    this.secondFormGroup.controls['groupCtrl'].setValue(this.data.group);
-    this.secondFormGroup.controls['addUsersCtrl'].setValue(this.data.addUsers);
-    this.secondFormGroup.controls['addGroupsCtrl'].setValue(this.data.addGroups);
+    this.secondFormGroup.controls['textareaCtrl'].setValue(this.data.message);
 
-    this.thirdFormGroup.controls['textareaCtrl'].setValue(this.data.message);
   }
 
   submit(): void {
@@ -62,10 +53,7 @@ export class InviteDialogComponent implements OnInit {
       email: this.firstFormGroup.controls['emailCtrl'].value,
       tenant: this.firstFormGroup.controls['tenantCtrl'].value,
       role: this.firstFormGroup.controls['roleCtrl'].value,
-      group: this.secondFormGroup.controls['groupCtrl'].value,
-      addUsers: this.secondFormGroup.controls['addUsersCtrl'].value,
-      addGroups: this.secondFormGroup.controls['addGroupsCtrl'].value,
-      message: this.thirdFormGroup.controls['textareaCtrl'].value
+      message: this.secondFormGroup.controls['textareaCtrl'].value
     };
     this.dialogRef.close(this.dialogResult);
   }

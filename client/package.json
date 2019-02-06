@@ -23,8 +23,11 @@
     "@angular/platform-browser-dynamic": "~7.0.0",
     "@angular/router": "~7.0.0",
     "core-js": "^2.5.4",
+    "dxf-parser": "^0.6.1",
     "hammerjs": "^2.0.8",
+    "jquery": "^3.3.1",
     "rxjs": "~6.3.3",
+    "three-dxf": "^0.3.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
