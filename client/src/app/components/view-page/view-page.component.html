@@ -1,5 +1,20 @@
 <app-header></app-header>
 
-<p>
-  view-page works!
-</p>
+<div class="container">
+  <div role="form">
+      <div class="form-group">
+          <label for="exampleInputFile">Choose a DXF file</label>
+          <input type="file" accept=".dxf" id="dxf" name="file" (change)="fileChangeEvent($event)">
+          <div class="progress progress-striped" style="width: 300px;">
+              <div id="file-progress-bar" class="progress-bar progress-bar-success" role="progressbar" style="width: 0">
+              </div>
+          </div>
+          <div id="file-description" #fileDescription class="help-block"></div>
+      </div>
+
+      <p>While hovering over the canvas: Right click to pan. Mouse wheel to zoom in an out.</p>
+  </div>
+  <div id="cad-view" #cadView>
+
+  </div>
+</div>
