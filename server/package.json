@@ -17,6 +17,7 @@
     "bunyan": "^1.8.12",
     "config": "^3.0.1",
     "joi": "13.7.0",
+    "joi-phone-number": "^2.1.1",
     "jwt-simple": "^0.5.5",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",

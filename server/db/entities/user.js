@@ -1,4 +1,4 @@
-const joi = require('joi')
+const joi = require('joi').extend(require('joi-phone-number'))
 const { hashSync, compareSync } = require('bcrypt-nodejs')
 const { decode, encode } = require('jwt-simple')
 const config = require('config')
@@ -11,9 +11,17 @@ const userFields = {
   lastname: joi.string().alphanum().min(3).max(20).required(),
   password: joi.string().min(6).max(50).required(),
   email: joi.string().email({ minDomainAtoms: 2 }).required(),
+  tenantId: joi.number().required(),
+
+  phoneNumber: joi.string().phoneNumber(),
+  address: joi.string().min(5).max(200),
+  city: joi.string().min(5).max(200),
+  state: joi.string().min(5).max(200),
+  secretQuestionId: joi.number(),
+  secretQuestionAnswer: joi.string(),
+
   tenantAdmin: joi.boolean().default(false),
-  rootAdmin: joi.boolean().default(false),
-  tenantId: joi.number().optional()
+  rootAdmin: joi.boolean().default(false)
 }
 const userSchema = joi.object().keys(userFields)
 
