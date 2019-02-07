@@ -33,5 +33,11 @@
 
 <div id="gMenu"></div>
 <div id="tip" ></div>
-<div id="wait_looper"></div>
 <canvas id="floorPlanCanvasObject" width="10" height="10"></canvas>
+<mat-progress-spinner *ngIf="showSpinner"
+  class="example-margin"
+  style="margin: auto"
+  [color]="primary"
+  [mode]="indeterminate"
+  [value]="50">
+</mat-progress-spinner>
