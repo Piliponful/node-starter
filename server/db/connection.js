@@ -1,19 +1,24 @@
 const MongoClient = require('mongodb').MongoClient
-const log = require('../logger')
 
-const url = 'mongodb://mongodb:27017'
-const dbName = 'arialpoint'
+const log = require('../logger')
+const { createIndexes } = require('./indexes')
+
+const url = 'mongodb://root:password@mongodb:27017'
+const dbName = 'staging'
 
 const client = new MongoClient(url)
 
-const initDB = async () => {
+const initializeDB = async () => {
   try {
     await client.connect()
-  } catch (e) {
-    log.error({ url, error: e }, 'Error connecting to the database')
+    const db = client.db(dbName)
+    const index = await createIndexes(db)
+    console.log(index)
+    return db
+  } catch (error) {
+    log.error(error, 'Database initialization error')
     process.exit(1)
   }
-  return client.db(dbName)
 }
 
-module.exports = initDB()
+module.exports = { initializeDB }

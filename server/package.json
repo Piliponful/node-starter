@@ -6,20 +6,21 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "logs": "tail -f log | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@steemit/koa-jsonrpc": "git+https://github.com/steemit/koa-jsonrpc.git",
     "bcrypt-nodejs": "0.0.3",
     "bunyan": "^1.8.12",
     "config": "^3.0.1",
-    "joi": "^14.3.1",
+    "joi": "13.7.0",
     "jwt-simple": "^0.5.5",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
+    "koa-respond": "^2.1.0",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "mongodb": "^3.1.13",

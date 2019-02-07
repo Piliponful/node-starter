@@ -3,5 +3,15 @@ version: "3.2"
 services:
   server:
     volumes:
-      - ./server:/root/app/server
+      - type: bind
+        source: ./server
+        target: /root/app/server
+      - type: volume
+        source: node_modules
+        target: /root/app/server/node_modules
     command: npm run dev
+    ports:
+      - 3000:80
+
+volumes:
+  node_modules:
