@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 /** Material Modules */
 import {
   MatInputModule,
@@ -50,6 +51,8 @@ import { ViewPageComponent } from './components/view-page/view-page.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { FilesPageDialogComponent } from './components/files-page/files-page-dialog/files-page-dialog.component';
+import { DatasourceService } from './services/datasource.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -102,12 +105,16 @@ import { FilesPageDialogComponent } from './components/files-page/files-page-dia
     MatChipsModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    HttpClientModule
   ],
   exports: [
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  providers: [],
+  providers: [
+    DatasourceService,
+    AuthService
+  ],
   entryComponents: [ InviteDialogComponent, FilesPageDialogComponent ],
   bootstrap: [AppComponent]
 })
