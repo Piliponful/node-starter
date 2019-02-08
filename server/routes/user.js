@@ -45,11 +45,13 @@ router.post('/user/login', async ctx => {
   const passwordMatchRes = await User.doesPasswordMatch(email, password)
 
   if (passwordMatchRes.error.external) {
+    ctx.response.status = 400
     ctx.body = passwordMatchRes.error.external
     return
   }
 
   if (!passwordMatchRes.value) {
+    ctx.response.status = 400
     ctx.body = 'Your password doesn\'t match'
     return
   }
@@ -57,6 +59,7 @@ router.post('/user/login', async ctx => {
   const getJWTRes = await User.getJWTFromUser(email)
 
   if (getJWTRes.error.external) {
+    ctx.response.status = 400
     ctx.body = getJWTRes.error.external
     return
   }
