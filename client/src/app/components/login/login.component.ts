@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,18 +12,15 @@ export class LoginComponent implements OnInit {
     password = new FormControl('', [Validators.required]);
     hide = true;
     form: FormGroup;
-    constructor(public formBuilder: FormBuilder) {}
+
+    constructor(public formBuilder: FormBuilder, private authService: AuthService ) {}
 
     ngOnInit() {
         this.form = this.formBuilder.group({
             email: ['', [Validators.minLength(3)]],
-            // remember to replace RegisterComponent with YOUR class name
             password: ['', [Validators.minLength(3)]],
-
-        })
+        });
     }
-
-
 
     getErrorMessage() {
         return this.email.hasError('required') ? 'You must enter a value' :
@@ -30,4 +28,8 @@ export class LoginComponent implements OnInit {
                 '';
     }
 
+    onSubmit() {
+        this.authService.authenticate(this.form.controls['email'].value, this.form.controls['password'].value)
+            .subscribe((res) => console.log(res));
+    }
 }

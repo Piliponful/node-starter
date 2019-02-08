@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
 const PROTOCOL = 'http';
-const PORT = 3500;
+const PORT = 3000;
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -20,10 +20,9 @@ export class DatasourceService {
     this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
   }
 
-  authenticate(user: string, pass: string): Observable<boolean> {
-    const url = this.baseUrl + 'login';
-    const userData = { user, pass };
-    return this.httpClient.post<any>(url, userData, httpOptions).pipe(
+  authenticate(email: string, password: string): Observable<boolean> {
+    const url = this.baseUrl + 'user/login';
+    return this.httpClient.post<any>(url, { email, password }, httpOptions).pipe(
       tap((res: any) => {
         console.log(`res ${res}`);
         const r = res.json();
