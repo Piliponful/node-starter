@@ -42,30 +42,21 @@ router.post('/user', async ctx => {
 
 router.post('/user/login', async ctx => {
   const { password, email } = ctx.request.body
-  const passwordMatchRes = await User.doesPasswordMatch(email, password)
+  const { error: passwordMatchError, value: passwordMatch } = await User.doesPasswordMatch(email, password)
 
-  if (passwordMatchRes.error.external) {
-    console.log('PASSWORD MATCH RES: ', passwordMatchRes)
-    ctx.response.status = 400
-    ctx.body = passwordMatchRes.error.external
+  if (passwordMatchError) {
+    ctx.body = passwordMatchError
     return
   }
 
-  if (!passwordMatchRes.value) {
-    ctx.response.status = 400
+  if (!passwordMatch) {
     ctx.body = 'Your password doesn\'t match'
     return
   }
 
-  const getJWTRes = await User.getJWTFromUser(email)
+  const getJWTFromUserRes = await User.getJWTFromUser(email)
 
-  if (getJWTRes.error.external) {
-    ctx.response.status = 400
-    ctx.body = getJWTRes.error.external
-    return
-  }
-
-  ctx.body = getJWTRes.value
+  ctx.body = getJWTFromUserRes
 })
 
 module.exports = router
