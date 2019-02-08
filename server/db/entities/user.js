@@ -30,7 +30,7 @@ const create = async user => {
     const { error } = userSchema.validate()
 
     if (error) {
-      return { error: { external: error } }
+      return { error: error.details.message }
     }
 
     const hash = hashSync(user.password)
@@ -38,7 +38,7 @@ const create = async user => {
     return { error: {} }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity create function')
-    return { error: { internal: error, external: 'Internal server error has occurred' } }
+    return { error: 'Internal server error has occurred' }
   }
 }
 
@@ -48,32 +48,32 @@ const remove = async query => (await db).collection('users').deleteOne(query)
 
 const doesPasswordMatch = async (email, password) => {
   try {
-    const { error } = joi.validate(password, userSchema.password)
+    const { error } = joi.validate(password, userFields.password)
 
     if (error) {
-      return { error: { external: error } }
+      return { error: error.details.message }
     }
 
     const user = (await find({ email }))[0]
 
     if (!user) {
-      return { error: { external: 'Couldn\'t find user by the provided email' } }
+      return { error: 'Couldn\'t find user by the provided email' }
     }
 
-    return { error: {}, value: compareSync(password, user.password) }
+    return { value: compareSync(password, user.password) }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity doesPasswordMatch function')
-    return { error: { internal: error, external: 'Internat server error has occurred' } }
+    return { error: 'Internal server error has occurred' }
   }
 }
 
 const getUserFromJWT = jwt => {
   try {
     const user = decode(jwt, config.secret)
-    return { error: {}, value: user }
+    return { value: user }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity getUserFromJWT function')
-    return { error: { internal: error, external: 'Internat server error has occurred' } }
+    return { error: 'Internat server error has occurred' }
   }
 }
 
@@ -82,12 +82,12 @@ const getJWTFromUser = async email => {
     const user = (await find({ email }))[0]
 
     if (!user) {
-      return { error: { external: 'Couldn\'t find user by the provided email' } }
+      return { error: 'Couldn\'t find user by the provided email' }
     }
-    return { error: {}, value: encode(user, config.secret) }
+    return { value: encode(user, config.secret) }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity getJWTFromUser function')
-    return { error: { internal: error, external: 'Internat server error has occurred' } }
+    return { error: 'Internat server error has occurred' }
   }
 }
 

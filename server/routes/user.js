@@ -8,8 +8,8 @@ router.post('/user', async ctx => {
 
   const { error: getUserFromJWTError, value: user } = User.getUserFromJWT(jwt)
 
-  if (getUserFromJWTError.external) {
-    ctx.body = getUserFromJWTError.external
+  if (getUserFromJWTError) {
+    ctx.body = { error: getUserFromJWTError }
     return
   }
 
@@ -28,7 +28,7 @@ router.post('/user', async ctx => {
     return
   }
 
-  const { error: { external } } = await User.create({
+  const userCreationRes = await User.create({
     firstname,
     lastname,
     email,
@@ -37,7 +37,7 @@ router.post('/user', async ctx => {
     tenantId
   })
 
-  ctx.body = external
+  ctx.body = userCreationRes
 })
 
 router.post('/user/login', async ctx => {
@@ -45,6 +45,7 @@ router.post('/user/login', async ctx => {
   const passwordMatchRes = await User.doesPasswordMatch(email, password)
 
   if (passwordMatchRes.error.external) {
+    console.log('PASSWORD MATCH RES: ', passwordMatchRes)
     ctx.response.status = 400
     ctx.body = passwordMatchRes.error.external
     return
