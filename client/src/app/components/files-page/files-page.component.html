@@ -1,4 +1,4 @@
-<app-header></app-header>
+
 
 <div class="files-page-container">
   <mat-tab-group class="page-tab">
@@ -105,10 +105,15 @@
           </mat-accordion>
         </mat-tab>
         <mat-tab label="Saved Filters">
-            <a mat-button class="button-new" *ngIf="animal">
-             <i>{{animal}}</i>
-              <mat-icon class="button-new-icon">more_vert</mat-icon>
-            </a>
+            <button mat-button class="button-new" *ngFor="let item of items">
+              <span>{{ item.animal }}</span>
+              <mat-icon class="button-new-icon" [matMenuTriggerFor]="menu">more_vert</mat-icon>
+              <div>{{ item.filter }}</div>
+            </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openDialog()">Edit Details</button>
+            <button mat-menu-item routerLink="/">Delete</button>
+          </mat-menu>
         </mat-tab>
       </mat-tab-group>
     </mat-card-content>

@@ -20,4 +20,10 @@ export class FilesPageDialogComponent implements OnInit {
   ngOnInit() {
   }
 
+  onSendDataToParent() {
+      this.dialogRef.close({
+          animal: this.data.animal,
+          filter: this.data.filter
+      });
+  }
 }

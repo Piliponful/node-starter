@@ -7,10 +7,11 @@ import { map, startWith } from 'rxjs/operators';
 import { FilesPageDialogComponent } from './files-page-dialog//files-page-dialog.component';
 
 
-
 export interface DialogData {
     animal: string;
     name: string;
+    filter: string;
+
 }
 @Component({
   selector: 'app-files-page',
@@ -40,6 +41,7 @@ export class FilesPageComponent implements OnInit {
   ];
   selectedRadio = 'Anytime';
 
+
   @ViewChild('usersInput') usersInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
@@ -49,7 +51,9 @@ export class FilesPageComponent implements OnInit {
     this.filteredUsers = this.usersCtrl.valueChanges.pipe(
       startWith(null),
       map((fruit: string | null) => fruit ? this._filter(fruit) : this.allUsers.slice()));
+      this.isCollapsed2 = true;
   }
+
 
 
 
@@ -99,21 +103,23 @@ export class FilesPageComponent implements OnInit {
   }
     animal: string;
     name: string;
-
-
+    filter: string;
+    isCollapsed2 = false;
+    items = [ ];
 
     openDialog(): void {
         const dialogRef = this.dialog.open(FilesPageDialogComponent, {
             width: '500px',
-            data: {name: this.name, animal: this.animal}
+            data: {name: this.name, animal: this.animal, filter: this.filter}
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
-            this.animal = result;
+            let res = { animal: result.animal, filter: result.filter };
+            this.items.push(res);
+
         });
     }
-
 }
 
 export class DXFFiles {

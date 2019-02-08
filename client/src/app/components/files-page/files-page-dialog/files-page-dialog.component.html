@@ -8,10 +8,10 @@
   </mat-form-field>
   <p>Give this filter a description(Optional)</p>
   <mat-form-field class="example-full-width" appearance="outline">
-    <textarea matInput></textarea>
+    <textarea matInput [(ngModel)]="data.filter"></textarea>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
-  <button mat-button class="button-save" [mat-dialog-close]="data.animal" cdkFocusInitial>Save</button>
+  <button mat-button class="button-save" (click)="onSendDataToParent()" cdkFocusInitial>Save</button>
 </div>

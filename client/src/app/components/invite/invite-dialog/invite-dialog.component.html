@@ -17,7 +17,7 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Email Address</mat-label>
-            <input matInput formControlName="emailCtrl" required>
+            <input matInput formControlName="emailCtrl" (keyup)="myKeyup()" required>
           </mat-form-field>
         </div>
         <div class="tenant">
@@ -25,7 +25,7 @@
           <div class="tenant-form">
             <mat-form-field appearance="outline">
               <mat-label>Tenant filled by default and can be changed</mat-label>
-              <input matInput formControlName="tenantCtrl" required>
+              <input matInput  [(ngModel)] ="text"  formControlName="tenantCtrl" required>
             </mat-form-field>
             <h4>as</h4>
             <mat-form-field appearance="outline">

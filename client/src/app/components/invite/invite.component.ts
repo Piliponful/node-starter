@@ -11,10 +11,11 @@ import { IUserData } from '../../models/user.model';
 export class InviteComponent implements OnInit {
   invite: string;
   inviteVariants: string[] = ['Tenant admin', 'Tenant User'];
-  displayedColumns: string[] = ['name', 'surname', 'tenant', 'email', 'group', 'role'];
+  displayedColumns: string[] = ['edit', 'name', 'surname', 'tenant', 'email', 'group', 'role'];
   dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [
     {
+      edit: 'Edit1',
       name: 'TestName1',
       surname: 'TestSurname1',
       tenant: 'TestTenant1',
@@ -23,6 +24,7 @@ export class InviteComponent implements OnInit {
       role: 'Tenant Admin'
     },
     {
+      edit: 'Edit2',
       name: 'TestName2',
       surname: 'TestSurname2',
       tenant: 'TestTenant2',
@@ -31,6 +33,7 @@ export class InviteComponent implements OnInit {
       role: 'Standart User 2'
     },
     {
+      edit: 'Edit3',
       name: 'TestName3',
       surname: 'TestSurname3',
       tenant: 'TestTenant3',
@@ -39,6 +42,7 @@ export class InviteComponent implements OnInit {
       role: 'Standart User 3'
     },
     {
+      edit: 'Edit4',
       name: 'TestName4',
       surname: 'TestSurname4',
       tenant: 'TestTenant4',
