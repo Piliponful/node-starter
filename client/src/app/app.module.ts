@@ -31,7 +31,8 @@ import {
   MatCheckboxModule,
   MatCardModule,
   MatChipsModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 /** Components */
 import { LoginComponent } from './components/login/login.component';
@@ -100,6 +101,7 @@ import { FilesPageDialogComponent } from './components/files-page/files-page-dia
     MatCardModule,
     MatChipsModule,
     MatExpansionModule,
+    MatProgressSpinnerModule,
     NoopAnimationsModule
   ],
   exports: [
