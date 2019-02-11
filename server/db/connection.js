@@ -1,22 +1,24 @@
 const MongoClient = require('mongodb').MongoClient
+const config = require('config')
 
-const log = require('../logger')
+const logger = require('../logger')
 const { createIndexes } = require('./indexes')
 
-const url = 'mongodb://root:password@mongodb:27017'
-const dbName = 'staging'
+const url = `mongodb://${config.db.username}:${config.db.password}@mongodb:27017`
 
 const client = new MongoClient(url)
 
 const initializeDB = async () => {
   try {
     await client.connect()
-    const db = client.db(dbName)
-    const index = await createIndexes(db)
-    console.log(index)
+    const db = client.db(config.db.name)
+    const indexedFields = await createIndexes(db)
+
+    logger.info(indexedFields, 'Indexes applied to mongodb')
+
     return db
   } catch (error) {
-    log.error(error, 'Database initialization error')
+    logger.error(error, 'Database initialization error')
     process.exit(1)
   }
 }

@@ -1,10 +1,16 @@
 const Router = require('koa-router')
-const router = new Router()
+const nodeMailer = require('nodemailer')
+const config = require('config')
+const shortUUID = require('short-uuid')
 
 const User = require('../db/entities/user')
+const logger = require('../logger')
+
+const router = new Router()
 
 router.post('/user', async ctx => {
-  const { jwt, firstname, lastname, email, password, tenantAdmin, tenantId } = ctx.request.body
+  logger.info(ctx.body, 'Starting registration process, post /user')
+  const { jwt, firstname, lastname, email, tenantAdmin, tenantId, message = '' } = ctx.request.body
 
   const { error: getUserFromJWTError, value: user } = User.getUserFromJWT(jwt)
 
@@ -28,16 +34,55 @@ router.post('/user', async ctx => {
     return
   }
 
+  const finishRegistrationCode = shortUUID.generate()
   const userCreationRes = await User.create({
     firstname,
     lastname,
     email,
-    password,
     tenantAdmin,
-    tenantId
+    tenantId,
+    finishRegistrationCode
+  })
+  if (!userCreationRes.value) {
+    ctx.body = userCreationRes
+    return
+  }
+
+  const transporter = nodeMailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: config.gmail.username,
+      pass: config.gmail.password
+    }
   })
 
+  const mailOptions = {
+    from: `${user.firstname} ${user.lastname} <${user.email}>`,
+    to: [email],
+    subject: '[Arial Point]: Finish registration process',
+    text: message + '\n' + '\n' + '\n' +
+      `link to finish registration, do not share it with anyone - ${config.app.URL}/user/finish-registration?code=${finishRegistrationCode}`
+  }
+
+  try {
+    await transporter.sendMail(mailOptions)
+  } catch (error) {
+    logger.error(error, 'Email invite hasn\'t been sent due to error, post /user')
+    ctx.body = { error: 'Internal server error has occured' }
+    return
+  }
+
+  logger.info(mailOptions, 'Email invite sent, post /user')
+
   ctx.body = userCreationRes
+})
+
+router.post('/user/finish-registration', async ctx => {
+  const { finishRegistrationCode, additionalFields } = ctx.request.body
+
+  ctx.body = await User.updateWithAdditionalFilds(finishRegistrationCode, additionalFields)
 })
 
 router.post('/user/login', async ctx => {
@@ -50,7 +95,7 @@ router.post('/user/login', async ctx => {
   }
 
   if (!passwordMatch) {
-    ctx.body = 'Your password doesn\'t match'
+    ctx.body = { error: 'Your password doesn\'t match' }
     return
   }
 
