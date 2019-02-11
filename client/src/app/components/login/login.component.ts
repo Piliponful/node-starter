@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +15,11 @@ export class LoginComponent implements OnInit {
     hide = true;
     form: FormGroup;
 
-    constructor(public formBuilder: FormBuilder, private authService: AuthService ) {}
+    constructor(
+        public formBuilder: FormBuilder,
+        private authService: AuthService,
+        private router: Router,
+        private snackBar: MatSnackBar) {}
 
     ngOnInit() {
         this.form = this.formBuilder.group({
@@ -30,6 +36,13 @@ export class LoginComponent implements OnInit {
 
     onSubmit() {
         this.authService.authenticate(this.form.controls['email'].value, this.form.controls['password'].value)
-            .subscribe((res) => console.log(res));
+            .subscribe(
+                (res) => {
+                    if (res) {
+                        this.router.navigateByUrl('/root-admin-dashboard');
+                    }
+                },
+                (error) => this.snackBar.open(error.error.text, '', { duration: 2000 })
+            );
     }
 }

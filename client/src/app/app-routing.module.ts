@@ -42,16 +42,16 @@ const routes: Routes = [
     component: FilesPageComponent
   },
   {
-      path: 'view-page',
-      component: ViewPageComponent
+    path: 'view-page',
+    component: ViewPageComponent
   },
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent
   },
   {
-     path: 'reset-password',
-     component: ResetPasswordComponent
+    path: 'reset-password',
+    component: ResetPasswordComponent
   }
 ];
 

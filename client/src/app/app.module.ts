@@ -33,7 +33,8 @@ import {
   MatCardModule,
   MatChipsModule,
   MatExpansionModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatSnackBarModule
 } from '@angular/material';
 /** Components */
 import { LoginComponent } from './components/login/login.component';
@@ -75,6 +76,7 @@ import { AuthService } from './services/auth.service';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
@@ -105,17 +107,16 @@ import { AuthService } from './services/auth.service';
     MatChipsModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
-    NoopAnimationsModule,
-    HttpClientModule
+    MatSnackBarModule,
+    NoopAnimationsModule
   ],
-  exports: [
-  ],
+  exports: [],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [
     DatasourceService,
     AuthService
   ],
   entryComponents: [ InviteDialogComponent, FilesPageDialogComponent ],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
