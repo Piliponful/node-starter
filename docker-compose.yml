@@ -10,9 +10,9 @@ services:
   server:
     build: ./server
     volumes:
-      - type: bind
-        source: ${PWD}/server/log
-        target: /root/app/server/log
+      - type: volume
+        source: logs
+        target: /root/app/server/logs
     depends_on:
       - mongodb
     environment:
@@ -44,3 +44,4 @@ services:
 volumes:
   dist:
   mongo:
+  logs:

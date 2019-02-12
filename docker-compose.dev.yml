@@ -9,7 +9,7 @@ services:
       - type: volume
         source: node_modules
         target: /root/app/server/node_modules
-    command: ./wait-for-it.sh mongodb:27017 -- npm run dev
+    command: bash -c './wait-for-it.sh mongodb:27017 -- touch logs/log && npm run dev'
     ports:
       - 3000:80
 
