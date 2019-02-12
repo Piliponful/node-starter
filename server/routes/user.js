@@ -42,7 +42,7 @@ router.post('/user', async ctx => {
     lastname,
     email,
     tenantAdmin,
-    tenantId,
+    tenantId: 1,
     finishRegistrationCode
   })
   if (!userCreationRes.value) {
