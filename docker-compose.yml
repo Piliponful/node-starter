@@ -15,6 +15,10 @@ services:
         target: /root/app/server/log
     depends_on:
       - mongodb
+    environment:
+      - SECRET=${SECRET}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
 
   nginx:
     build: ./nginx

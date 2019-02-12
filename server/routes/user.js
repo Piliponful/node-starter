@@ -8,7 +8,7 @@ const logger = require('../logger')
 
 const router = new Router()
 
-sgMail.setApiKey(config.email)
+sgMail.setApiKey(config.email.API_KEY)
 
 router.post('/user', async ctx => {
   logger.info(ctx.body, 'Starting registration process, post /user')
@@ -51,14 +51,14 @@ router.post('/user', async ctx => {
   }
 
   const msg = {
-    to: [email],
+    to: email,
     from: `${user.firstname} ${user.lastname} <${user.email}>`,
     subject: '[Arial Point]: Finish registration process',
     text: message + (message && '\n' + '\n' + '\n') + `link to finish registration, do not share it with anyone - ${config.app.URL}/user/finish-registration?code=${finishRegistrationCode}`
   }
 
   try {
-    sgMail.send(msg)
+    await sgMail.send(msg)
   } catch (error) {
     logger.error(error, 'Email invite hasn\'t been sent due to error, post /user')
     ctx.body = { error: 'Internal server error has occured' }
