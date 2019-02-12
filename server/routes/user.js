@@ -1,5 +1,5 @@
 const Router = require('koa-router')
-const nodeMailer = require('nodemailer')
+const sgMail = require('@sendgrid/mail')
 const config = require('config')
 const shortUUID = require('short-uuid')
 
@@ -7,6 +7,8 @@ const User = require('../db/entities/user')
 const logger = require('../logger')
 
 const router = new Router()
+
+sgMail.setApiKey(config.email)
 
 router.post('/user', async ctx => {
   logger.info(ctx.body, 'Starting registration process, post /user')
@@ -48,33 +50,22 @@ router.post('/user', async ctx => {
     return
   }
 
-  const transporter = nodeMailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: config.gmail.username,
-      pass: config.gmail.password
-    }
-  })
-
-  const mailOptions = {
-    from: `${user.firstname} ${user.lastname} <${user.email}>`,
+  const msg = {
     to: [email],
+    from: `${user.firstname} ${user.lastname} <${user.email}>`,
     subject: '[Arial Point]: Finish registration process',
-    text: message + '\n' + '\n' + '\n' +
-      `link to finish registration, do not share it with anyone - ${config.app.URL}/user/finish-registration?code=${finishRegistrationCode}`
+    text: message + (message && '\n' + '\n' + '\n') + `link to finish registration, do not share it with anyone - ${config.app.URL}/user/finish-registration?code=${finishRegistrationCode}`
   }
 
   try {
-    await transporter.sendMail(mailOptions)
+    sgMail.send(msg)
   } catch (error) {
     logger.error(error, 'Email invite hasn\'t been sent due to error, post /user')
     ctx.body = { error: 'Internal server error has occured' }
     return
   }
 
-  logger.info(mailOptions, 'Email invite sent, post /user')
+  logger.info(msg, 'Email invite sent, post /user')
 
   ctx.body = userCreationRes
 })

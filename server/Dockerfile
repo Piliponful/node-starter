@@ -7,4 +7,7 @@ RUN npm i
 
 COPY . ./
 
-CMD npm start
+RUN chmod 777 ./wait-for-it.sh
+RUN ls -la
+
+CMD ./wait-for-it.sh mongodb:27017 -- npm start
