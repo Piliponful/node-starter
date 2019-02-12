@@ -22,8 +22,8 @@ export class InviteDialogComponent implements OnInit {
 
 
     myKeyup() {
-        let emailField = this.firstFormGroup.controls['emailCtrl'].value;
-        let parseStr = emailField.split('@');
+        const emailField = this.firstFormGroup.controls['emailCtrl'].value;
+        const parseStr = emailField.split('@');
         if (parseStr.length > 1) {
           this.firstFormGroup.controls['tenantCtrl'].setValue(`@${parseStr[1]}`);
         }

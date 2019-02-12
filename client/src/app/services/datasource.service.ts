@@ -24,7 +24,17 @@ export class DatasourceService {
     return this.http.post('/api/user/login', { email, password }, httpOptions)
       .pipe(
         tap((res: any) => {
-          this.auth_token = res.success ? res.value : null;
+          this.auth_token = res ? res.value : null;
+          return res;
+        })
+      );
+  }
+
+  inviteUser(firstname, lastname, email, tenantAdmin, tenantId, message) {
+    const jwt = this.auth_token;
+    return this.http.post('/api/user', { jwt, firstname, lastname, email, tenantAdmin, tenantId, message }, httpOptions)
+      .pipe(
+        tap((res: any) => {
           return res;
         })
       );
