@@ -102,7 +102,6 @@ export class InviteComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       const tenantAdmin = result['role'] === 'admin';
-      console.log(this.datasourceService.auth_token);
       this.datasourceService.inviteUser(result.firstName, result.lastName, result.email, tenantAdmin, result.tenant, result.message)
         .subscribe(
           (res) => {
