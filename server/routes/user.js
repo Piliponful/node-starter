@@ -95,4 +95,12 @@ router.post('/user/login', async ctx => {
   ctx.body = getJWTFromUserRes
 })
 
+router.post('/user/byJwt', async ctx => {
+  const { jwt } = ctx.request.body
+
+  const getUser = await User.getUserFromJWT(jwt)
+
+  ctx.body = getUser
+})
+
 module.exports = router

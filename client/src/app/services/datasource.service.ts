@@ -54,6 +54,16 @@ export class DatasourceService {
         }));
   }
 
+  getUser() {
+    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
+    const jwt = this.currentUserSubject.value;
+    return this.http.post('/api/user/byJwt', { jwt }, httpOptions)
+      .pipe(
+        tap((res: any) => {
+          return res;
+        }));
+  }
+
   // private sendRequest(
   //   verb: RequestMethod,
   //   url: string, body?: any, auth: boolean = false): Observable<any> {
