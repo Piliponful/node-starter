@@ -9,12 +9,13 @@ const logger = require('../../logger')
 const additionalFields = {
   address: joi.string().min(5).max(200).required(),
   city: joi.string().min(5).max(200).required(),
-  state: joi.string().min(5).max(200).required(),
+  firstname: joi.string().min(5).max(200).required(),
+  lastname: joi.string().min(5).max(200).required(),
   password: joi.string().min(6).max(50).required(),
-
   phoneNumber: joi.string().phoneNumber(),
+  secretQuestionAnswer: joi.string(),
   secretQuestionId: joi.number(),
-  secretQuestionAnswer: joi.string()
+  state: joi.string().min(5).max(200).required()
 }
 
 const userFields = {
