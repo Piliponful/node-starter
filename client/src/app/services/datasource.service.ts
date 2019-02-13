@@ -24,8 +24,13 @@ export class DatasourceService {
     return this.http.post('/api/user/login', { email, password }, httpOptions)
       .pipe(
         tap((res: any) => {
-          this.auth_token = res ? res.value : null;
-          return res;
+            if (res.error) {
+              return res.error;
+            } else {
+              this.auth_token = res ? res.value : null;
+              localStorage.setItem('currentUser', JSON.stringify(this.auth_token));
+              return res;
+            }
         })
       );
   }
@@ -53,15 +58,4 @@ export class DatasourceService {
   //     }
   //     return this.http.request(request).map(response => response.json());
   // }
-
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error('error', error); // log to console instead
-      // TODO: better job of transforming error for user consumption
-      console.log(`${operation} failed: ${error.message}`);
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
 }

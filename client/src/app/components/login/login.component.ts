@@ -15,8 +15,7 @@ export class LoginComponent implements OnInit {
     hide = true;
     form: FormGroup;
 
-    constructor(
-        public formBuilder: FormBuilder,
+    constructor(public formBuilder: FormBuilder,
         private authService: AuthService,
         private router: Router,
         private snackBar: MatSnackBar) {}
@@ -36,13 +35,13 @@ export class LoginComponent implements OnInit {
 
     onSubmit() {
         this.authService.authenticate(this.form.controls['email'].value, this.form.controls['password'].value)
-            .subscribe(
-                (res) => {
-                    if (res) {
+            .subscribe((res) => {
+                    if (res['error']) {
+                        this.snackBar.open(res['error'], '', { duration: 2000 });
+                    } else {
                         this.router.navigateByUrl('/root-admin-dashboard');
                     }
-                },
-                (error) => this.snackBar.open(error.error.text, '', { duration: 2000 })
+                }
             );
     }
 }

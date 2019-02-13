@@ -54,6 +54,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { FilesPageDialogComponent } from './components/files-page/files-page-dialog/files-page-dialog.component';
 import { DatasourceService } from './services/datasource.service';
 import { AuthService } from './services/auth.service';
+import { LoginGuard } from './login.guard';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import { AuthService } from './services/auth.service';
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [
     DatasourceService,
-    AuthService
+    AuthService,
+    LoginGuard
   ],
   entryComponents: [ InviteDialogComponent, FilesPageDialogComponent ],
   bootstrap: [ AppComponent ]

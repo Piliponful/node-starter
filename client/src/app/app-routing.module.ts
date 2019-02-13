@@ -10,6 +10,7 @@ import { FilesPageComponent } from 'src/app/components/files-page/files-page.com
 import { ViewPageComponent } from 'src/app/components/view-page/view-page.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { LoginGuard } from './login.guard';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
   },
   {
     path: 'root-admin-dashboard',
-    component: RootAdminComponent
+    component: RootAdminComponent,
+    canActivate: [LoginGuard]
   },
   {
     path: 'user-registration',
@@ -31,19 +33,23 @@ const routes: Routes = [
   },
   {
     path: 'edit-profile',
-    component: EditProfileComponent
+    component: EditProfileComponent,
+    canActivate: [LoginGuard]
   },
   {
     path: 'delete-user',
-    component: DeleteUserComponent
+    component: DeleteUserComponent,
+    canActivate: [LoginGuard]
   },
   {
     path: 'files-page',
-    component: FilesPageComponent
+    component: FilesPageComponent,
+    canActivate: [LoginGuard]
   },
   {
     path: 'view-page',
-    component: ViewPageComponent
+    component: ViewPageComponent,
+    canActivate: [LoginGuard]
   },
   {
     path: 'forgot-password',

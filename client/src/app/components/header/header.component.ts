@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -11,16 +12,12 @@ export class HeaderComponent implements OnInit {
     'background-color': 'blue'
   };
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    // this.items = [{
-    //   label: 'root admin',
-    //   items: [
-    //       {label: 'Dashboard', icon: 'fa fa-plus'},
-    //       {label: 'Logout', icon: 'fa fa-download'}
-    //   ]
-    // }];
   }
 
+  logout() {
+    this.authService.clear();
+  }
 }

@@ -17,6 +17,7 @@ export class AuthService {
   }
 
   clear() {
-      this.datasource.auth_token = null;
+    localStorage.removeItem('currentUser');
+    this.datasource.auth_token = null;
   }
 }

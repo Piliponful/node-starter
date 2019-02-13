@@ -7,6 +7,6 @@
   <mat-menu #menu="matMenu">
     <button mat-menu-item routerLink="/edit-profile">Edit Profile</button>
     <button mat-menu-item routerLink="/">Settings</button>
-    <button mat-menu-item routerLink="/login">Logout</button>
+    <button mat-menu-item routerLink="/login" (click)="logout()">Logout</button>
   </mat-menu>
 </mat-sidenav-container>
