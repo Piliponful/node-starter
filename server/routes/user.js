@@ -54,7 +54,7 @@ router.post('/user', async ctx => {
     to: email,
     from: `${user.firstname} ${user.lastname} <${user.email}>`,
     subject: '[Arial Point]: Finish registration process',
-    text: message + (message && '\n' + '\n' + '\n') + `link to finish registration, do not share it with anyone - ${config.app.URL}/user/finish-registration?code=${finishRegistrationCode}`
+    text: message + (message && '\n' + '\n' + '\n') + `link to finish registration, do not share it with anyone - ${config.app.URL}/user-registration?code=${finishRegistrationCode}`
   }
 
   try {
