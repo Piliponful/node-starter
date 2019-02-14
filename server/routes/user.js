@@ -111,6 +111,7 @@ router.post('/user/finish-registration', async ctx => {
 router.post('/user/login', async ctx => {
   const { password, email } = ctx.request.body
   const { errors: passwordMatchErrors, value: passwordMatch } = await User.doesPasswordMatch(email, password)
+  console.log(passwordMatch)
 
   if (passwordMatchErrors.length) {
     ctx.body = { errors: passwordMatchErrors }

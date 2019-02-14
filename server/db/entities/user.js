@@ -50,7 +50,7 @@ const create = async user => {
 const find = async (query, limit = 0, skip = 0, projection) => {
   try {
     const value = await (await db).collection('users').find(query, { limit, skip, projection }).toArray()
-    return { value }
+    return { errors: [], value }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity find function')
     return { errors: ['Internal server error has occurred'] }
@@ -77,7 +77,7 @@ const doesPasswordMatch = async (email, password) => {
 
     const { errors: findByEmailErrors, value: user } = await findByEmail(email)
 
-    if (findByEmailErrors) {
+    if (findByEmailErrors.length) {
       return { errors: findByEmailErrors }
     }
 
@@ -91,7 +91,7 @@ const doesPasswordMatch = async (email, password) => {
 const findByEmail = async email => {
   const { errors: findErrors, value: users } = await find({ email })
 
-  if (findErrors) {
+  if (findErrors.length) {
     return { errors: findErrors }
   }
 
@@ -114,7 +114,7 @@ const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
 
     const { errors: findErrors, value: users } = (await find({ finishRegistrationCode }))
 
-    if (findErrors) {
+    if (findErrors.length) {
       return { errors: findErrors }
     }
 
@@ -148,7 +148,7 @@ const getJWTFromUser = async email => {
   try {
     const { errors: findErrors, value: users } = (await find({ email }))
 
-    if (findErrors) {
+    if (findErrors.length) {
       return { errors: findErrors }
     }
 
