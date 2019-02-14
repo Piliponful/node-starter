@@ -49,12 +49,14 @@ const create = async user => {
 
 const find = async (query, limit = 0, skip = 0, projection) => {
   try {
-    return { value: (await db).collection('users').find(query, { limit, skip, projection }).toArray() }
+    const value = await (await db).collection('users').find(query, { limit, skip, projection }).toArray()
+    return { value }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity find function')
     return { errors: ['Internal server error has occurred'] }
   }
 }
+
 const update = async (query, fields, createIfAbsent = false) => {
   try {
     (await db).collection('users').updateMany(query, fields, { upsert: createIfAbsent })
@@ -106,7 +108,13 @@ const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
       return { errors: error.details.map(d => d.message) }
     }
 
-    const user = (await find({ finishRegistrationCode }))[0]
+    const { errors: findErrors, value: users } = (await find({ finishRegistrationCode }))
+
+    if (findErrors) {
+      return { errors: findErrors }
+    }
+
+    const [user] = users
 
     if (!user) {
       return { errors: ['Finish registration code isn\'t valid'] }
