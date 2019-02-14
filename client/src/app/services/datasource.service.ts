@@ -65,7 +65,7 @@ export class DatasourceService {
   }
 
   getUsers() {
-    return this.http.post('/api/user', httpOptions)
+    return this.http.get('/api/user', httpOptions)
       .pipe(
         tap((res: any) => {
           return res;
