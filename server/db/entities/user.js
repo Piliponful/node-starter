@@ -75,13 +75,11 @@ const doesPasswordMatch = async (email, password) => {
       return { errors: error.details.map(d => d.message) }
     }
 
-    const findByEmailRes = await findByEmail(email)
+    const { errors: findByEmailErrors, value: user } = await findByEmail(email)
 
-    if (findByEmailRes.errors) {
-      return findByEmailRes
+    if (findByEmailErrors) {
+      return findByEmailErrors
     }
-
-    const { value: user } = findByEmailRes
 
     return { errors: [], value: compareSync(password, user.password) }
   } catch (error) {
@@ -91,7 +89,13 @@ const doesPasswordMatch = async (email, password) => {
 }
 
 const findByEmail = async email => {
-  const user = (await find({ email }))[0]
+  const { errors: findErrors, value: users } = await find({ email })
+
+  if (findErrors) {
+    return { errors: findErrors }
+  }
+
+  const [user] = users
 
   if (!user) {
     return { errors: ['Couldn\'t find user by the provided email'] }
@@ -142,11 +146,18 @@ const getUserFromJWT = jwt => {
 
 const getJWTFromUser = async email => {
   try {
-    const user = (await find({ email }))[0]
+    const { errors: findErrors, value: users } = (await find({ email }))
+
+    if (findErrors) {
+      return { errors: findErrors }
+    }
+
+    const [user] = users
 
     if (!user) {
       return { errors: ['Couldn\'t find user by the provided email'] }
     }
+
     return { errors: [], value: encode(user, config.app.secret) }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity getJWTFromUser function')
