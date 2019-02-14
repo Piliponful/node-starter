@@ -11,8 +11,6 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./invite.component.scss']
 })
 export class InviteComponent implements OnInit {
-  invite: string;
-  inviteVariants: string[] = ['Tenant admin', 'Tenant User'];
   displayedColumns: string[] = ['edit', 'name', 'surname', 'tenant', 'email', 'group', 'role'];
   dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [
@@ -74,6 +72,7 @@ export class InviteComponent implements OnInit {
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.getUsers();
   }
 
   applyFilter(filterValue: string) {
@@ -110,5 +109,12 @@ export class InviteComponent implements OnInit {
           (error) => this.snackBar.open(error.error.text, '', { duration: 2000 })
       );
     });
+  }
+
+  getUsers() {
+    return this.datasourceService.getUsers()
+      .subscribe((res) => {
+        console.log('InviteComponent', res);
+      });
   }
 }

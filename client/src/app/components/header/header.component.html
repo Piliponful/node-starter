@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <img src="../assets/images/user.png" class="photo" >
   <button mat-icon-button [matMenuTriggerFor]="menu">
-    <span>Root Admin</span>
+    <span>{{ username }}</span>
     <mat-icon>keyboard_arrow_down</mat-icon>
   </button>
   <mat-menu #menu="matMenu">

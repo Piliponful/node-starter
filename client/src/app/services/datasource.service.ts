@@ -64,6 +64,14 @@ export class DatasourceService {
         }));
   }
 
+  getUsers() {
+    return this.http.post('/api/user', httpOptions)
+      .pipe(
+        tap((res: any) => {
+          return res;
+        }));
+  }
+
   // private sendRequest(
   //   verb: RequestMethod,
   //   url: string, body?: any, auth: boolean = false): Observable<any> {

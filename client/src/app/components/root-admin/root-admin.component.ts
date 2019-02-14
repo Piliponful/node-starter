@@ -11,7 +11,7 @@ export class RootAdminComponent implements OnInit {
   constructor(public datasourceService: DatasourceService) {}
 
   ngOnInit() {
-    console.log(this.getUser());
+    this.getUser();
   }
 
   getUser() {
