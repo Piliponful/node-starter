@@ -78,7 +78,7 @@ const doesPasswordMatch = async (email, password) => {
     const { errors: findByEmailErrors, value: user } = await findByEmail(email)
 
     if (findByEmailErrors) {
-      return findByEmailErrors
+      return { errors: findByEmailErrors }
     }
 
     return { errors: [], value: compareSync(password, user.password) }
