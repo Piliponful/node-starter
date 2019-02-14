@@ -50,7 +50,7 @@ export class UserRegistrationComponent implements OnInit {
         data['secretQuestionId'] = this.options.indexOf(this.formGroup.value.secretQuestionId);
         this.datasourceService.finishRegistration(this.route.queryParams['value'].code, data)
             .subscribe((res) => {
-                    if (res.errors.length > 0) {
+                    if (res && res.errors.length > 0) {
                         this.snackBar.open(res['errors'][0], '', { duration: 2000 });
                     } else {
                         this.router.navigateByUrl('/login');
