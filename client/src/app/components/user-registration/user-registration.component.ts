@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatasourceService } from '../../services/datasource.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-user-registration',
@@ -18,7 +19,11 @@ export class UserRegistrationComponent implements OnInit {
     options: string[] = ['Your favorite animal?', 'Your favorite color?', 'Three'];
     hide = true;
 
-    constructor(private _formBuilder: FormBuilder, private route: ActivatedRoute, private datasourceService: DatasourceService) {}
+    constructor(private _formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private datasourceService: DatasourceService,
+        private router: Router,
+        private snackBar: MatSnackBar) {}
 
     ngOnInit() {
         this.formGroup = this._formBuilder.group({
@@ -45,7 +50,11 @@ export class UserRegistrationComponent implements OnInit {
         data['secretQuestionId'] = this.options.indexOf(this.formGroup.value.secretQuestionId);
         this.datasourceService.finishRegistration(this.route.queryParams['value'].code, data)
             .subscribe((res) => {
-                    console.log(res);
+                    if (res.errors.length > 0) {
+                        this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+                    } else {
+                        this.router.navigateByUrl('/login');
+                    }
                 }
             );
     }
