@@ -14,8 +14,6 @@ import { MatSnackBar } from '@angular/material';
 export class InviteComponent implements OnInit {
   invite: string;
   inviteVariants: string[] = ['Tenant admin', 'Tenant User'];
-  displayedColumns: string[] = ['edit', 'name', 'surname', 'tenant', 'email', 'group', 'role'];
-  dataSource: MatTableDataSource<IUserData>;
   displayedColumns: string[] = ['edit', 'firstname', 'lastname', 'tenant', 'email', 'group', 'role'];
   dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [
