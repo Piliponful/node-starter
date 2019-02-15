@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DatasourceService } from '../../services/datasource.service';
 
 @Component({
   selector: 'app-root-admin',
@@ -8,17 +7,8 @@ import { DatasourceService } from '../../services/datasource.service';
 })
 export class RootAdminComponent implements OnInit {
 
-  constructor(public datasourceService: DatasourceService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.getUser();
-  }
-
-  getUser() {
-    this.datasourceService.getUser()
-      .subscribe((res) => {
-        console.log('getUser', res);
-      }
-    );
   }
 }

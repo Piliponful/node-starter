@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./invite.component.scss']
 })
 export class InviteComponent implements OnInit {
-  displayedColumns: string[] = ['edit', 'name', 'surname', 'tenant', 'email', 'group', 'role'];
+  displayedColumns: string[] = ['edit', 'firstname', 'lastname', 'tenant', 'email', 'group', 'role'];
   dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [
     {
@@ -114,7 +114,34 @@ export class InviteComponent implements OnInit {
   getUsers() {
     return this.datasourceService.getUsers()
       .subscribe((res) => {
-        console.log('InviteComponent', res);
+        if (res && res['errors'].length > 0) {
+          this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+        } else {
+          const result = res.value;
+          result.forEach(element => {
+            element['editable'] = false;
+          });
+          this.dataSource = new MatTableDataSource(result);
+        }
+      });
+  }
+
+  onEditable(row) {
+    row.editable = !row.editable;
+  }
+
+  onEditUser(row) {
+    row.editable = !row.editable;
+    const id = row._id;
+    delete row.editable;
+    delete row._id;
+    this.datasourceService.editUser(id, row)
+      .subscribe((res) => {
+        if (res && res['errors'].length > 0) {
+          this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+        } else {
+          this.getUsers();
+        }
       });
   }
 }

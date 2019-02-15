@@ -15,10 +15,10 @@
         </mat-checkbox>
       </div>
       <div class="name-column">
-        <p>{{ user.name }}</p>
+        <p>{{ user.firstname }}</p>
       </div>
       <div class="surname-column">
-        <p>{{ user.surname }}</p>
+        <p>{{ user.lastname }}</p>
       </div>
       <div class="email-column">
         <p>{{ user.email }}</p>
@@ -31,6 +31,7 @@
   <span>*Showing users deleted within the last 30 days</span>
   <div class="controls-panel">
     <button mat-raised-button color="warn" (click)="back()">Close</button>
-    <button mat-raised-button color="accent">Restore selected</button>
+    <button mat-raised-button color="accent" (click)="onRestoreSelect()">Restore selected</button>
+    <button mat-raised-button color="primary" (click)="onDeleteUser()">Delete</button>
   </div>
 </div>

@@ -34,31 +34,64 @@
     <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="edit">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Edit </th>
-        <td mat-cell *matCellDef="let row"> {{row.edit}} </td>
+        <td mat-cell *matCellDef="let row"> 
+          <button mat-button color="primary" (click)="onEditable(row)" *ngIf="!row.editable">Edit</button> 
+          <button mat-button color="primary" (click)="onEditUser(row)" *ngIf="row.editable">Save</button> 
+        </td>
       </ng-container>
-      <ng-container matColumnDef="name">
+      <ng-container matColumnDef="firstname">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        <td mat-cell *matCellDef="let row">
+          <span *ngIf="!row.editable">{{row.firstname}}</span>
+          <mat-form-field appearance="outline" *ngIf="row.editable">
+            <input matInput [(ngModel)]="row.firstname">
+          </mat-form-field>
+        </td>
       </ng-container>
-      <ng-container matColumnDef="surname">
+      <ng-container matColumnDef="lastname">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Surname </th>
-        <td mat-cell *matCellDef="let row"> {{row.surname}} </td>
+        <td mat-cell *matCellDef="let row">
+          <span *ngIf="!row.editable">{{row.lastname}}</span>
+          <mat-form-field appearance="outline" *ngIf="row.editable">
+            <input matInput [(ngModel)]="row.lastname">
+          </mat-form-field>
+        </td>
       </ng-container>
       <ng-container matColumnDef="tenant">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant </th>
-        <td mat-cell *matCellDef="let row"> {{row.tenant}} </td>
+        <td mat-cell *matCellDef="let row">
+          <span *ngIf="!row.editable">{{row.tenant}}</span>
+          <mat-form-field appearance="outline" *ngIf="row.editable">
+            <input matInput [(ngModel)]="row.tenant">
+          </mat-form-field>
+        </td>
       </ng-container>
       <ng-container matColumnDef="email">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
-        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+        <td mat-cell *matCellDef="let row">
+          <span *ngIf="!row.editable">{{row.email}}</span>
+          <mat-form-field appearance="outline" *ngIf="row.editable">
+            <input matInput [(ngModel)]="row.email">
+          </mat-form-field>
+        </td>
       </ng-container>
       <ng-container matColumnDef="group">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Group </th>
-        <td mat-cell *matCellDef="let row"> {{row.group}} </td>
+        <td mat-cell *matCellDef="let row">
+          <span *ngIf="!row.editable">{{row.group}}</span>
+          <mat-form-field appearance="outline" *ngIf="row.editable">
+            <input matInput [(ngModel)]="row.group">
+          </mat-form-field>
+        </td>
       </ng-container>
       <ng-container matColumnDef="role">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
-        <td mat-cell *matCellDef="let row"> {{row.role}} </td>
+        <td mat-cell *matCellDef="let row">
+          <span *ngIf="!row.editable">{{row.tenantAdmin ? 'Tenant Admin' : (row.rootAdmin ? 'Root Admin' : 'Standart User')}}</span>
+          <mat-form-field appearance="outline" *ngIf="row.editable">
+            <input matInput [(ngModel)]="row.tenantAdmin">
+          </mat-form-field>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

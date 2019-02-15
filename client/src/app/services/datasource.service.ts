@@ -72,6 +72,24 @@ export class DatasourceService {
         }));
   }
 
+  editUser(id, data) {
+    return this.http.patch(`/api/user/${id}`, data, httpOptions)
+      .pipe(
+        tap((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  deleteUser(id) {
+    return this.http.delete(`/api/user/${id}`, httpOptions)
+      .pipe(
+        tap((res: any) => {
+          return res;
+        })
+      );
+  }
+
   // private sendRequest(
   //   verb: RequestMethod,
   //   url: string, body?: any, auth: boolean = false): Observable<any> {
