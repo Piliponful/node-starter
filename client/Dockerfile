@@ -7,4 +7,4 @@ RUN npm i
 
 COPY . ./
 
-CMD npm run build && mv disttmp/* dist
+CMD npm run build && rm -r dist/* && mv disttmp/* dist

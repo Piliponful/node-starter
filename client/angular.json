@@ -32,7 +32,7 @@
             ],
             "scripts": [
               "src/assets/cadviewer/cadviewerjs_min.js",
-              "src/assets/cadviewer/stackBlur.js",
+              "src/assets/cadviewer/StackBlur.js",
               "src/assets/cadviewer/cvlicense.js",
               "src/assets/cadviewer/cadviewerjs_min.js",
               "src/assets/cadviewer/cadviewerjs_setup_min.js",

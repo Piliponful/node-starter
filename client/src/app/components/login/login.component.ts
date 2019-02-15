@@ -1,5 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-login',
@@ -11,18 +14,18 @@ export class LoginComponent implements OnInit {
     password = new FormControl('', [Validators.required]);
     hide = true;
     form: FormGroup;
-    constructor(public formBuilder: FormBuilder) {}
+
+    constructor(public formBuilder: FormBuilder,
+        private authService: AuthService,
+        private router: Router,
+        private snackBar: MatSnackBar) {}
 
     ngOnInit() {
         this.form = this.formBuilder.group({
             email: ['', [Validators.minLength(3)]],
-            // remember to replace RegisterComponent with YOUR class name
             password: ['', [Validators.minLength(3)]],
-
-        })
+        });
     }
-
-
 
     getErrorMessage() {
         return this.email.hasError('required') ? 'You must enter a value' :
@@ -30,4 +33,15 @@ export class LoginComponent implements OnInit {
                 '';
     }
 
+    onSubmit() {
+        this.authService.authenticate(this.form.controls['email'].value, this.form.controls['password'].value)
+            .subscribe((res) => {
+                    if (res && res['errors'].length > 0) {
+                        this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+                    } else {
+                        this.router.navigateByUrl('/root-admin-dashboard');
+                    }
+                }
+            );
+    }
 }

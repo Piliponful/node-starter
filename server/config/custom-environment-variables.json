@@ -1,0 +1,11 @@
+{
+  "db": {
+    "password": "MONGODB_ROOT_PASSWORD"
+  },
+  "email": {
+    "API_KEY": "SENDGRID_API_KEY"
+  },
+  "app": {
+    "secret": "APP_SECRET"
+  }
+}

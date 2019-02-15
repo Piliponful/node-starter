@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { DatasourceService } from '../../services/datasource.service';
 
 @Component({
   selector: 'app-header',
@@ -10,17 +12,18 @@ export class HeaderComponent implements OnInit {
     'width': '100%',
     'background-color': 'blue'
   };
+  username: string;
 
-  constructor() { }
+  constructor(private authService: AuthService, private datasourceService: DatasourceService) { }
 
   ngOnInit() {
-    // this.items = [{
-    //   label: 'root admin',
-    //   items: [
-    //       {label: 'Dashboard', icon: 'fa fa-plus'},
-    //       {label: 'Logout', icon: 'fa fa-download'}
-    //   ]
-    // }];
+    this.datasourceService.getUser()
+      .subscribe((res) => {
+        this.username = `${res.value.firstname} ${res.value.lastname}`;
+      });
   }
 
+  logout() {
+    this.authService.clear();
+  }
 }

@@ -19,25 +19,20 @@ export class InviteDialogComponent implements OnInit {
   newGroupName: string;
   text: string;
 
-
-
-    myKeyup() {
-        let emailField = this.firstFormGroup.controls['emailCtrl'].value;
-        let parseStr = emailField.split('@');
-        if (parseStr.length > 1) {
-          let correctStr = parseStr[1].split('.');
-          this.firstFormGroup.controls['tenantCtrl'].setValue(`${correctStr[0]}`);
-        }
+  myKeyup() {
+    let emailField = this.firstFormGroup.controls['emailCtrl'].value;
+    let parseStr = emailField.split('@');
+    if (parseStr.length > 1) {
+      let correctStr = parseStr[1].split('.');
+      this.firstFormGroup.controls['tenantCtrl'].setValue(`${correctStr[0]}`);
     }
-
-
+  }
 
   constructor(
     private _formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<InviteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData
   ) { }
-
 
   ngOnInit() {
     this.firstFormGroup = this._formBuilder.group({

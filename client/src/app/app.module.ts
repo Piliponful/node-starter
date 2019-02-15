@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 /** Material Modules */
 import {
   MatInputModule,
@@ -32,7 +33,8 @@ import {
   MatCardModule,
   MatChipsModule,
   MatExpansionModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatSnackBarModule
 } from '@angular/material';
 /** Components */
 import { LoginComponent } from './components/login/login.component';
@@ -51,66 +53,74 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { FilesPageDialogComponent } from './components/files-page/files-page-dialog/files-page-dialog.component';
 import { DelePageDialogComponent } from './components/files-page/dele-page-dialog/dele-page-dialog.component';
+import { DatasourceService } from './services/datasource.service';
+import { AuthService } from './services/auth.service';
+import { LoginGuard } from './login.guard';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    RootAdminComponent,
-    HeaderComponent,
-    InviteComponent,
-    TenantGroupsComponent,
-    InviteDialogComponent,
-    LoginHistoryComponent,
-    UserRegistrationComponent,
-    EditProfileComponent,
-    DeleteUserComponent,
-    FilesPageComponent,
-    ViewPageComponent,
-    ForgotPasswordComponent,
-    ResetPasswordComponent,
-    FilesPageDialogComponent,
-    DelePageDialogComponent,
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSidenavModule,
-    MatMenuModule,
-    MatIconModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatGridListModule,
-    MatTabsModule,
-    MatBadgeModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDialogModule,
-    MatStepperModule,
-    MatSlideToggleModule,
-    MatFormFieldModule,
-    MatTreeModule,
-    MatProgressBarModule,
-    MatListModule,
-    MatAutocompleteModule,
-    MatCheckboxModule,
-    MatCardModule,
-    MatChipsModule,
-    MatExpansionModule,
-    MatProgressSpinnerModule,
-    NoopAnimationsModule
-  ],
-  exports: [
-  ],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  providers: [],
-  entryComponents: [ InviteDialogComponent, FilesPageDialogComponent, DelePageDialogComponent ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        RootAdminComponent,
+        HeaderComponent,
+        InviteComponent,
+        TenantGroupsComponent,
+        InviteDialogComponent,
+        LoginHistoryComponent,
+        UserRegistrationComponent,
+        EditProfileComponent,
+        DeleteUserComponent,
+        FilesPageComponent,
+        ViewPageComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent,
+        FilesPageDialogComponent,
+        DelePageDialogComponent,
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatInputModule,
+        MatSidenavModule,
+        MatMenuModule,
+        MatIconModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatGridListModule,
+        MatTabsModule,
+        MatBadgeModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDialogModule,
+        MatStepperModule,
+        MatSlideToggleModule,
+        MatFormFieldModule,
+        MatTreeModule,
+        MatProgressBarModule,
+        MatListModule,
+        MatAutocompleteModule,
+        MatCheckboxModule,
+        MatCardModule,
+        MatChipsModule,
+        MatExpansionModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        NoopAnimationsModule
+    ],
+    exports: [],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    entryComponents: [InviteDialogComponent, FilesPageDialogComponent, DelePageDialogComponent],
+    bootstrap: [AppComponent],
+    providers: [
+        DatasourceService,
+        AuthService,
+        LoginGuard
+    ]
 })
 export class AppModule { }

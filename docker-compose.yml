@@ -10,9 +10,15 @@ services:
   server:
     build: ./server
     volumes:
-      - type: bind
-        source: ${PWD}/server/log
-        target: /root/app/server/log
+      - type: volume
+        source: logs
+        target: /root/app/server/logs
+    depends_on:
+      - mongodb
+    environment:
+      - SECRET=${SECRET}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
 
   nginx:
     build: ./nginx
@@ -23,20 +29,19 @@ services:
     ports:
       - 80:80
       - 443:443
+    depends_on:
+      - server
 
   mongodb:
     image: bitnami/mongodb
-    container_name: mongo
     ports:
       - 27017:27017
     environment:
-      - MONGODB_USERNAME=root
-      - MONGODB_PASSWORD=password
-      - MONGODB_DATABASE=staging
-      - MONGODB_ROOT_PASSWORD=password
+      - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
     volumes:
       - mongo:/bitnami
 
 volumes:
   dist:
   mongo:
+  logs:

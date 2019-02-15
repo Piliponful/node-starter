@@ -1,5 +1,5 @@
 export interface IUserData {
-  edit:string;
+  edit: string;
   name: string;
   surname: string;
   tenant: string;

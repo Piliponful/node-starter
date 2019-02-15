@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
 import { IUserData } from '../../models/user.model';
-import {FilesPageDialogComponent} from "../files-page/files-page-dialog/files-page-dialog.component";
+import { FilesPageDialogComponent } from "../files-page/files-page-dialog/files-page-dialog.component";
+import { DatasourceService } from '../../services/datasource.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-invite',
@@ -13,7 +15,9 @@ export class InviteComponent implements OnInit {
   invite: string;
   inviteVariants: string[] = ['Tenant admin', 'Tenant User'];
   displayedColumns: string[] = ['edit', 'name', 'surname', 'tenant', 'email', 'group', 'role'];
-    dataSource: MatTableDataSource<IUserData>;
+  dataSource: MatTableDataSource<IUserData>;
+  displayedColumns: string[] = ['edit', 'firstname', 'lastname', 'tenant', 'email', 'group', 'role'];
+  dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [
     {
       edit: 'Edit1',
@@ -66,7 +70,8 @@ export class InviteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private datasourceService: DatasourceService,
+    private snackBar: MatSnackBar) {
     this.dataSource = new MatTableDataSource(this.users);
   }
 
@@ -119,6 +124,7 @@ export class InviteComponent implements OnInit {
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.getUsers();
   }
 
   applyFilter(filterValue: string) {
@@ -146,7 +152,48 @@ export class InviteComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+      const tenantAdmin = result['role'] === 'admin';
+      this.datasourceService.inviteUser(result.firstName, result.lastName, result.email, tenantAdmin, result.tenant, result.message)
+        .subscribe(
+          (res) => {
+              console.log(res);
+          },
+          (error) => this.snackBar.open(error.error.text, '', { duration: 2000 })
+      );
     });
+  }
+
+  getUsers() {
+    return this.datasourceService.getUsers()
+      .subscribe((res) => {
+        if (res && res['errors'].length > 0) {
+          this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+        } else {
+          const result = res['value'];
+          result.forEach(element => {
+            element['editable'] = false;
+          });
+          this.dataSource = new MatTableDataSource(result);
+        }
+      });
+  }
+
+  onEditable(row) {
+    row.editable = !row.editable;
+  }
+
+  onEditUser(row) {
+    row.editable = !row.editable;
+    const id = row._id;
+    delete row.editable;
+    delete row._id;
+    this.datasourceService.editUser(id, row)
+      .subscribe((res) => {
+        if (res && res['errors'].length > 0) {
+          this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+        } else {
+          this.getUsers();
+        }
+      });
   }
 }
