@@ -105,14 +105,15 @@
           </mat-accordion>
         </mat-tab>
         <mat-tab label="Saved Filters">
-            <button mat-button class="button-new" *ngFor="let item of items">
+            <button mat-button class="button-new" *ngFor="let item of items; index as i" (click)="checkDeletePress(i)">
               <span>{{ item.animal }}</span>
               <mat-icon class="button-new-icon" [matMenuTriggerFor]="menu">more_vert</mat-icon>
               <div>{{ item.filter }}</div>
             </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="openDialog()">Edit Details</button>
-            <button mat-menu-item routerLink="/">Delete</button>
+            <button mat-menu-item (click)="openEditDialog()">Edit Details</button>
+
+            <button mat-menu-item (click)="openDeleteDialog()">Delete</button>
           </mat-menu>
         </mat-tab>
       </mat-tab-group>

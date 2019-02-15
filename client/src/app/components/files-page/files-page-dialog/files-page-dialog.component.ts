@@ -25,5 +25,6 @@ export class FilesPageDialogComponent implements OnInit {
           animal: this.data.animal,
           filter: this.data.filter
       });
+
   }
 }

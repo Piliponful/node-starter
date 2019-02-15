@@ -50,6 +50,7 @@ import { ViewPageComponent } from './components/view-page/view-page.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { FilesPageDialogComponent } from './components/files-page/files-page-dialog/files-page-dialog.component';
+import { DelePageDialogComponent } from './components/files-page/dele-page-dialog/dele-page-dialog.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { FilesPageDialogComponent } from './components/files-page/files-page-dia
     ForgotPasswordComponent,
     ResetPasswordComponent,
     FilesPageDialogComponent,
+    DelePageDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,7 +110,7 @@ import { FilesPageDialogComponent } from './components/files-page/files-page-dia
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   providers: [],
-  entryComponents: [ InviteDialogComponent, FilesPageDialogComponent ],
+  entryComponents: [ InviteDialogComponent, FilesPageDialogComponent, DelePageDialogComponent ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

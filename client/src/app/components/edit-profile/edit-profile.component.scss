@@ -13,6 +13,7 @@ mat-form-field {
         align-items: baseline;
         & label {
           width: 150px;
+          text-align: center;
         }
         & mat-form-field {
           margin-right: 60px;
@@ -35,9 +36,10 @@ mat-form-field {
       .row {
         display: flex;
         align-items: baseline;
-        width: 100%;
+        width: 107%;
         label {
           width: 150px;
+          text-align: center;
         }
         mat-form-field {
           margin-right: 60px;

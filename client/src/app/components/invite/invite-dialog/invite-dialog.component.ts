@@ -25,7 +25,8 @@ export class InviteDialogComponent implements OnInit {
         let emailField = this.firstFormGroup.controls['emailCtrl'].value;
         let parseStr = emailField.split('@');
         if (parseStr.length > 1) {
-          this.firstFormGroup.controls['tenantCtrl'].setValue(`@${parseStr[1]}`);
+          let correctStr = parseStr[1].split('.');
+          this.firstFormGroup.controls['tenantCtrl'].setValue(`${correctStr[0]}`);
         }
     }
 

@@ -9,9 +9,9 @@
     </div>
     <div class="filter">
       <mat-form-field appearance="outline">
-        <mat-select placeholder="Sort By...">
-          <mat-option value="option">Tenant</mat-option>
-          <mat-option value="option">Role</mat-option>
+        <mat-select placeholder="Sort By..." [ngModel]="sortBy" (ngModelChange)="changRole($event)">
+          <mat-option value="Standart User"> Standard User </mat-option>
+          <mat-option value="Tenant Admin">Admin</mat-option>
         </mat-select>
       </mat-form-field>
       <button mat-icon-button color="accent" (click)="openDialog()">

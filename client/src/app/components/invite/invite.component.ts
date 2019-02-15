@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
 import { IUserData } from '../../models/user.model';
+import {FilesPageDialogComponent} from "../files-page/files-page-dialog/files-page-dialog.component";
 
 @Component({
   selector: 'app-invite',
@@ -12,7 +13,7 @@ export class InviteComponent implements OnInit {
   invite: string;
   inviteVariants: string[] = ['Tenant admin', 'Tenant User'];
   displayedColumns: string[] = ['edit', 'name', 'surname', 'tenant', 'email', 'group', 'role'];
-  dataSource: MatTableDataSource<IUserData>;
+    dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [
     {
       edit: 'Edit1',
@@ -30,7 +31,7 @@ export class InviteComponent implements OnInit {
       tenant: 'TestTenant2',
       email: 'TestEmail2',
       group: 'TestGroup2',
-      role: 'Standart User 2'
+      role: 'Standart User'
     },
     {
       edit: 'Edit3',
@@ -39,7 +40,7 @@ export class InviteComponent implements OnInit {
       tenant: 'TestTenant3',
       email: 'TestEmail3',
       group: 'TestGroup3',
-      role: 'Standart User 3'
+      role: 'Standart User'
     },
     {
       edit: 'Edit4',
@@ -48,9 +49,10 @@ export class InviteComponent implements OnInit {
       tenant: 'TestTenant4',
       email: 'TestEmail4',
       group: 'TestGroup4',
-      role: 'Standart User 4'
-    }
+      role: 'Standart User'
+    },
   ];
+
   firstName: string;
   lastName: string;
   email: string;
@@ -66,6 +68,52 @@ export class InviteComponent implements OnInit {
 
   constructor(public dialog: MatDialog) {
     this.dataSource = new MatTableDataSource(this.users);
+  }
+
+    changRole(newValue){
+      this.users = [
+          {
+              edit: 'Edit1',
+              name: 'TestName1',
+              surname: 'TestSurname1',
+              tenant: 'TestTenant1',
+              email: 'TestEmail1',
+              group: 'TestGroup1',
+              role: 'Tenant Admin'
+          },
+          {
+              edit: 'Edit2',
+              name: 'TestName2',
+              surname: 'TestSurname2',
+              tenant: 'TestTenant2',
+              email: 'TestEmail2',
+              group: 'TestGroup2',
+              role: 'Standart User'
+          },
+          {
+              edit: 'Edit3',
+              name: 'TestName3',
+              surname: 'TestSurname3',
+              tenant: 'TestTenant3',
+              email: 'TestEmail3',
+              group: 'TestGroup3',
+              role: 'Standart User'
+          },
+          {
+              edit: 'Edit4',
+              name: 'TestName4',
+              surname: 'TestSurname4',
+              tenant: 'TestTenant4',
+              email: 'TestEmail4',
+              group: 'TestGroup4',
+              role: 'Standart User'
+          },
+      ];
+      this.users = this.users.filter((user) => {
+        return user.role === newValue;
+      });
+      this.dataSource = new MatTableDataSource(this.users);
+      console.log(this.users)
   }
 
   ngOnInit() {
