@@ -22,7 +22,7 @@ const userFields = {
   firstname: joi.string().alphanum().min(3).max(20).required(),
   lastname: joi.string().alphanum().min(3).max(20).required(),
   email: joi.string().email({ minDomainAtoms: 2 }).required(),
-  tenantId: joi.number().required(),
+  tenantId: joi.string().required(),
 
   tenantAdmin: joi.boolean().default(false),
   rootAdmin: joi.boolean().default(false),
@@ -30,16 +30,17 @@ const userFields = {
   finishRegistrationCode: joi.string().required(),
   deleted: joi.boolean().default(false)
 }
+
 const userSchema = joi.object().keys(userFields)
 
 const create = async user => {
   try {
-    const { error } = userSchema.validate(user)
+    const { error, value } = userSchema.validate(user)
     if (error) {
       return { errors: error.details.map(d => d.message) }
     }
 
-    await (await db).collection('users').insertOne(user)
+    await (await db).collection('users').insertOne(value)
     return { errors: [], value: true }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity create function')

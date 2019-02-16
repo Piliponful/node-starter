@@ -3,20 +3,21 @@ const joi = require('joi')
 const db = require('../connection').initializeDB()
 const logger = require('../../logger')
 
-const userFields = {
-  name: joi.string().alphanum().min(3).max(20).required()
+const tenantFields = {
+  name: joi.string().alphanum().min(3).max(20).required(),
+  deleted: joi.boolean().default(false)
 }
 
-const userSchema = joi.object().keys(userFields)
+const tenantSchema = joi.object().keys(tenantFields)
 
 const create = async user => {
   try {
-    const { error } = userSchema.validate(user)
+    const { error, value } = tenantSchema.validate(user)
     if (error) {
       return { errors: error.details.map(d => d.message) }
     }
 
-    await (await db).collection('users').insertOne(user)
+    await (await db).collection('tenants').insertOne(value)
     return { errors: [], value: true }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity create function')
@@ -26,8 +27,8 @@ const create = async user => {
 
 const find = async (query, limit = 0, skip = 0, projection) => {
   try {
-    const value = await (await db).collection('users').find(query, { limit, skip, projection }).toArray()
-    return { value }
+    const value = await (await db).collection('tenants').find(query, { limit, skip, projection }).toArray()
+    return { errors: [], value }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity find function')
     return { errors: ['Internal server error has occurred'] }
@@ -36,7 +37,8 @@ const find = async (query, limit = 0, skip = 0, projection) => {
 
 const update = async (query, fields, createIfAbsent = false) => {
   try {
-    (await db).collection('users').updateMany(query, fields, { upsert: createIfAbsent })
+    const a = await (await db).collection('tenants').updateMany(query, fields, { upsert: createIfAbsent })
+    console.log('a', fields, a, query)
     return { errors: [], value: true }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity find function')
@@ -44,99 +46,8 @@ const update = async (query, fields, createIfAbsent = false) => {
   }
 }
 
-const doesPasswordMatch = async (email, password) => {
-  try {
-    const { error } = joi.validate(password, additionalFields.password)
-
-    if (error) {
-      return { errors: error.details.map(d => d.message) }
-    }
-
-    const findByEmailRes = await findByEmail(email)
-
-    if (findByEmailRes.errors) {
-      return findByEmailRes
-    }
-
-    const { value: user } = findByEmailRes
-
-    return { errors: [], value: compareSync(password, user.password) }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity doesPasswordMatch function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
-
-const findByEmail = async email => {
-  const user = (await find({ email }))[0]
-
-  if (!user) {
-    return { errors: ['Couldn\'t find user by the provided email'] }
-  }
-
-  return { errors: [], value: user }
-}
-
-const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
-  try {
-    const { error } = joi.validate(fields, additionalFields)
-
-    if (error) {
-      return { errors: error.details.map(d => d.message) }
-    }
-
-    const { errors: findErrors, value: users } = (await find({ finishRegistrationCode }))
-
-    if (findErrors) {
-      return { errors: findErrors }
-    }
-
-    const [user] = users
-
-    if (!user) {
-      return { errors: ['Finish registration code isn\'t valid'] }
-    }
-
-    const hash = hashSync(fields.password)
-
-    await update({ finishRegistrationCode }, { $set: { ...fields, password: hash }, $unset: { finishRegistrationCode: 1 } })
-    return { errors: [], value: true }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity updateWithAdditionalFilds function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
-
-const getUserFromJWT = jwt => {
-  try {
-    const user = decode(jwt, config.app.secret)
-    return { errors: [], value: user }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity getUserFromJWT function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
-
-const getJWTFromUser = async email => {
-  try {
-    const user = (await find({ email }))[0]
-
-    if (!user) {
-      return { errors: ['Couldn\'t find user by the provided email'] }
-    }
-    return { errors: [], value: encode(user, config.app.secret) }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity getJWTFromUser function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
-
 module.exports = {
   create,
   find,
-  update,
-  doesPasswordMatch,
-  getUserFromJWT,
-  getJWTFromUser,
-  updateWithAdditionalFilds
+  update
 }

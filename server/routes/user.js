@@ -5,6 +5,7 @@ const shortUUID = require('short-uuid')
 const { ObjectId } = require('mongodb')
 
 const User = require('../db/entities/user')
+const Tenant = require('../db/entities/tenant')
 const logger = require('../logger')
 
 const router = new Router()
@@ -20,14 +21,24 @@ router.get('/user', async ctx => {
 router.get('/user/:id', async ctx => {
   const { id } = ctx.params
 
-  const [user] = await User.find({ _id: ObjectId(id) })
+  const { errors, value: user } = await User.find({ _id: ObjectId(id) })
+
+  if (errors.length) {
+    ctx.body = { errors }
+    return
+  }
+
   if (user) {
     ctx.body = { errors: [`User with ${id} wasn't found`] }
+    return
   }
+
   if (user.deleted) {
     ctx.body = { errors: [`User with ${id} was deleted`] }
+    return
   }
-  ctx.body = { value: user }
+
+  ctx.body = { errors: [], value: user }
 })
 
 router.patch('/user/:id', async ctx => {
@@ -43,8 +54,8 @@ router.delete('/user/:id', async ctx => {
 })
 
 router.post('/user', async ctx => {
-  logger.info(ctx.body, 'Starting registration process, post /user')
-  const { jwt, firstname, lastname, email, tenantAdmin, tenantId, message = '' } = ctx.request.body
+  logger.info(ctx.request.body, 'Starting registration process, post /user')
+  const { jwt, firstname, lastname, email, tenantAdmin, tenantName, message = '' } = ctx.request.body
 
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
@@ -63,7 +74,27 @@ router.post('/user', async ctx => {
     return
   }
 
-  if (user.tenantAdmin && user.tenantId !== tenantId) {
+  if (user.rootAdmin && tenantAdmin) {
+    const { errors: tenantCreationErrors } = await Tenant.create({ name: tenantName })
+
+    if (tenantCreationErrors.length) {
+      ctx.body = { errors: tenantCreationErrors }
+      return
+    }
+  }
+
+  const { errors: findTenantErrors, value: [tenant] } = await Tenant.find({ name: tenantName })
+
+  if (!tenant) {
+    ctx.body = { errors: [`Wasn't able to find tenant by the '${tenant}' name`] }
+  }
+
+  if (findTenantErrors.length) {
+    ctx.body = { errors: findTenantErrors }
+    return
+  }
+
+  if (user.tenantAdmin && user.tenantId !== tenant._id) {
     ctx.body = { errors: ['You can create users only for tenant you\'re an admin of'] }
     return
   }
@@ -74,9 +105,10 @@ router.post('/user', async ctx => {
     lastname,
     email,
     tenantAdmin,
-    tenantId: 1,
+    tenantId: tenant._id.toString(),
     finishRegistrationCode
   })
+
   if (!userCreationRes.value) {
     ctx.body = userCreationRes
     return
