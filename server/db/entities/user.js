@@ -125,7 +125,7 @@ const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
     }
 
     const hash = hashSync(fields.password)
-
+    fields.deleted = false
     await update({ finishRegistrationCode }, { $set: { ...fields, password: hash }, $unset: { finishRegistrationCode: 1 } })
     return { errors: [], value: true }
   } catch (error) {

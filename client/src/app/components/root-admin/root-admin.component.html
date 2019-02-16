@@ -1,17 +1,17 @@
 <app-header></app-header>
 
 <mat-tab-group>
-  <mat-tab label="People">
+  <mat-tab label="People" *ngIf="userRole !== 'Standart User'">
     <ng-template matTabContent>
-      <app-invite></app-invite>
+      <app-invite [userRole]="userRole"></app-invite>
     </ng-template>
   </mat-tab>
-  <mat-tab label="Tenants">
+  <mat-tab label="Tenants" *ngIf="userRole==='Root Admin'">
     <ng-template matTabContent>
       <app-tenant-groups></app-tenant-groups>
     </ng-template>
   </mat-tab>
-  <mat-tab label="Login History">
+  <mat-tab label="Login History" *ngIf="userRole !== 'Standart User'">
     <ng-template matTabContent>
       <app-login-history></app-login-history>
     </ng-template>

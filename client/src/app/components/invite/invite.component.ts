@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
 import { IUserData } from '../../models/user.model';
@@ -16,45 +16,7 @@ export class InviteComponent implements OnInit {
   inviteVariants: string[] = ['Tenant admin', 'Tenant User'];
   displayedColumns: string[] = ['edit', 'firstname', 'lastname', 'tenant', 'email', 'group', 'role'];
   dataSource: MatTableDataSource<IUserData>;
-  users: IUserData[] = [
-    {
-      edit: 'Edit1',
-      name: 'TestName1',
-      surname: 'TestSurname1',
-      tenant: 'TestTenant1',
-      email: 'TestEmail1',
-      group: 'TestGroup1',
-      role: 'Tenant Admin'
-    },
-    {
-      edit: 'Edit2',
-      name: 'TestName2',
-      surname: 'TestSurname2',
-      tenant: 'TestTenant2',
-      email: 'TestEmail2',
-      group: 'TestGroup2',
-      role: 'Standart User'
-    },
-    {
-      edit: 'Edit3',
-      name: 'TestName3',
-      surname: 'TestSurname3',
-      tenant: 'TestTenant3',
-      email: 'TestEmail3',
-      group: 'TestGroup3',
-      role: 'Standart User'
-    },
-    {
-      edit: 'Edit4',
-      name: 'TestName4',
-      surname: 'TestSurname4',
-      tenant: 'TestTenant4',
-      email: 'TestEmail4',
-      group: 'TestGroup4',
-      role: 'Standart User'
-    },
-  ];
-
+  users: IUserData[] = [];
   firstName: string;
   lastName: string;
   email: string;
@@ -67,61 +29,20 @@ export class InviteComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @Input() userRole: string;
 
   constructor(public dialog: MatDialog, private datasourceService: DatasourceService,
-    private snackBar: MatSnackBar) {
-    this.dataSource = new MatTableDataSource(this.users);
-  }
+    private snackBar: MatSnackBar) {}
 
-    changRole(newValue){
-      this.users = [
-          {
-              edit: 'Edit1',
-              name: 'TestName1',
-              surname: 'TestSurname1',
-              tenant: 'TestTenant1',
-              email: 'TestEmail1',
-              group: 'TestGroup1',
-              role: 'Tenant Admin'
-          },
-          {
-              edit: 'Edit2',
-              name: 'TestName2',
-              surname: 'TestSurname2',
-              tenant: 'TestTenant2',
-              email: 'TestEmail2',
-              group: 'TestGroup2',
-              role: 'Standart User'
-          },
-          {
-              edit: 'Edit3',
-              name: 'TestName3',
-              surname: 'TestSurname3',
-              tenant: 'TestTenant3',
-              email: 'TestEmail3',
-              group: 'TestGroup3',
-              role: 'Standart User'
-          },
-          {
-              edit: 'Edit4',
-              name: 'TestName4',
-              surname: 'TestSurname4',
-              tenant: 'TestTenant4',
-              email: 'TestEmail4',
-              group: 'TestGroup4',
-              role: 'Standart User'
-          },
-      ];
+    changRole(newValue) {
+      this.getUsers();
       this.users = this.users.filter((user) => {
         return user.role === newValue;
       });
       this.dataSource = new MatTableDataSource(this.users);
-      console.log(this.users)
   }
 
   ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
     this.getUsers();
   }
 

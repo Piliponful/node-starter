@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
+import { DatasourceService } from '../../services/datasource.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -11,7 +12,7 @@ export class EditProfileComponent implements OnInit {
   editProfileFormGroup: FormGroup;
   userRole = 'Root Admin';
 
-  constructor(private _formBuilder: FormBuilder, private location: Location) { }
+  constructor(private _formBuilder: FormBuilder, private location: Location, private datasourceService: DatasourceService) { }
 
   ngOnInit() {
     this.editProfileFormGroup = this._formBuilder.group({
@@ -25,9 +26,22 @@ export class EditProfileComponent implements OnInit {
       phoneCtrl: ['', Validators.required],
       secretQuestionCtrl: ['', Validators.required],
     });
+    this.getUser();
   }
 
   back() {
     this.location.back();
+  }
+
+  getUser() {
+    this.datasourceService.getUser()
+      .subscribe((res) => {
+        this.editProfileFormGroup.controls['emailCtrl'].setValue(`${res.value.email}`);
+        this.editProfileFormGroup.controls['firstNameCtrl'].setValue(`${res.value.firstname}`);
+        this.editProfileFormGroup.controls['surnameCtrl'].setValue(`${res.value.lastname}`);
+        this.editProfileFormGroup.controls['addressCtrl'].setValue(`${res.value.address}`);
+        this.editProfileFormGroup.controls['phoneCtrl'].setValue(`${res.value.phoneNumber}`);
+        this.editProfileFormGroup.controls['secretQuestionCtrl'].setValue(`${res.value.secretQuestionId}`);
+      });
   }
 }
