@@ -3,6 +3,7 @@ const asyncBusboy = require('async-busboy')
 const AWS = require('aws-sdk')
 const config = require('config')
 const promisify = require('es6-promisify')
+const { ObjectID } = require('mongodb')
 
 const DxfFile = require('../db/entities/dxfFile')
 const User = require('../db/entities/user')
@@ -23,7 +24,7 @@ router.post('/dxf-file', async ctx => {
 
   const { fields, files } = await asyncBusboy(ctx.req)
 
-  if (!user.rootAdmin) {
+  if (!user.rootAdmin && !user.tenantAdmin) {
     ctx.body = { errors: ['You dont\'t have the permission to upload dxf files'] }
     return
   }
@@ -40,6 +41,36 @@ router.post('/dxf-file', async ctx => {
   try {
     await s3Upload()
     ctx.body = await DxfFile.create({ name: files[0].filename, tenantId: fields.tenantId })
+  } catch (err) {
+    logger.error(err, 'Problem with uploading dxf file to S3, post /dxf-file')
+    ctx.body = { errors: ['Internal server error'] }
+    return
+  }
+})
+
+router.get('/dxf-file', async ctx => {
+  ctx.body = await DxfFile.find({ deleted: false })
+})
+
+router.get('/dxf-file/:id', async ctx => {
+  const { errors, value: [{ name: filename }] } = await DxfFile.find({ _id: ObjectID(ctx.params.id) })
+  if (errors.length) {
+    ctx.body = { errors }
+    return
+  }
+
+  const s3Download = () => new Promise((res, rej) => {
+    s3.getObject({ Bucket: 'arialpoint-staging-dxf', Key: filename }, (err, data) => {
+      if (err) {
+        rej(err)
+      } else {
+        res(data)
+      }
+    })
+  })
+  try {
+    const file = await s3Download()
+    ctx.body = file
   } catch (err) {
     logger.error(err, 'Problem with uploading dxf file to S3, post /dxf-file')
     ctx.body = { errors: ['Internal server error'] }
