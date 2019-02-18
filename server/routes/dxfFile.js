@@ -53,9 +53,14 @@ router.get('/dxf-file', async ctx => {
 })
 
 router.get('/dxf-file/:id', async ctx => {
-  const { errors, value: [{ name: filename }] } = await DxfFile.find({ _id: ObjectID(ctx.params.id) })
+  const { errors, value: [{ name: filename, deleted }] } = await DxfFile.find({ _id: ObjectID(ctx.params.id) })
   if (errors.length) {
     ctx.body = { errors }
+    return
+  }
+
+  if (deleted) {
+    ctx.body = { errors: ['The file was deleted'] }
     return
   }
 
@@ -76,6 +81,23 @@ router.get('/dxf-file/:id', async ctx => {
     ctx.body = { errors: ['Internal server error'] }
     return
   }
+})
+
+router.delete('/dxf-file/:id', async ctx => {
+  const jwt = ctx.request.headers['authorization']
+  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
+
+  if (getUserFromJWTErrors.length) {
+    ctx.body = { errors: getUserFromJWTErrors }
+    return
+  }
+
+  if (!user.rootAdmin && !user.tenantAdmin) {
+    ctx.body = { errors: ['You dont\'t have the permission to delete dxf files'] }
+    return
+  }
+
+  ctx.body = await DxfFile.update({ _id: ObjectID(ctx.params.id) }, { $set: { deleted: true } })
 })
 
 module.exports = router
