@@ -2,11 +2,12 @@ const Router = require('koa-router')
 const asyncBusboy = require('async-busboy')
 const AWS = require('aws-sdk')
 const config = require('config')
-const promisify = require('es6-promisify')
 const { ObjectID } = require('mongodb')
 
 const DxfFile = require('../db/entities/dxfFile')
 const User = require('../db/entities/user')
+const Tenant = require('../db/entities/tenant')
+
 const logger = require('../logger')
 
 const s3 = new AWS.S3({ credentials: { accessKeyId: config.aws.accessKey, secretAccessKey: config.aws.secretAccessKey } })
@@ -29,12 +30,22 @@ router.post('/dxf-file', async ctx => {
     return
   }
 
-  const s3Upload = () => new Promise((res, rej) => {
+  const { errors: tenantFindErrors, value: [tenant] } = await Tenant.find({})
+  if (tenantFindErrors.length) {
+    ctx.body = { errors: tenantFindErrors }
+    return
+  }
+  if (!tenant) {
+    ctx.body = { errors: ['You trying to upload file to non existant tenant'] }
+    return
+  }
+
+  const s3Upload = () => new Promise((resolve, reject) => {
     s3.upload({ Bucket: 'arialpoint-staging-dxf', Key: files[0].filename, Body: files[0] }, (err, data) => {
       if (err) {
-        rej(err)
+        reject(err)
       } else {
-        res(data)
+        resolve(data)
       }
     })
   })
@@ -44,7 +55,6 @@ router.post('/dxf-file', async ctx => {
   } catch (err) {
     logger.error(err, 'Problem with uploading dxf file to S3, post /dxf-file')
     ctx.body = { errors: ['Internal server error'] }
-    return
   }
 })
 
@@ -53,7 +63,15 @@ router.get('/dxf-file', async ctx => {
 })
 
 router.get('/dxf-file/:id', async ctx => {
-  const { errors, value: [{ name: filename, deleted }] } = await DxfFile.find({ _id: ObjectID(ctx.params.id) })
+  const jwt = ctx.request.headers['authorization']
+  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
+
+  if (getUserFromJWTErrors.length) {
+    ctx.body = { errors: getUserFromJWTErrors }
+    return
+  }
+
+  const { errors, value: [{ name: filename, deleted, _id }] } = await DxfFile.find({ _id: ObjectID(ctx.params.id) })
   if (errors.length) {
     ctx.body = { errors }
     return
@@ -61,6 +79,11 @@ router.get('/dxf-file/:id', async ctx => {
 
   if (deleted) {
     ctx.body = { errors: ['The file was deleted'] }
+    return
+  }
+
+  if (!user.rootAdmin && user.tenantId !== _id) {
+    ctx.body = { errors: ['You don\'t have the permission to download this file'] }
     return
   }
 
