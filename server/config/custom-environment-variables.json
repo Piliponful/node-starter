@@ -7,5 +7,9 @@
   },
   "app": {
     "secret": "APP_SECRET"
+  },
+  "aws": {
+    "accessKey": "ACCESS_KEY",
+    "secretAccessKey": "SECRET_ACCESS_KEY"
   }
 }

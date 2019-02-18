@@ -3,7 +3,7 @@ const { hashSync, compareSync } = require('bcrypt-nodejs')
 const { decode, encode } = require('jwt-simple')
 const config = require('config')
 
-const db = require('../connection').initializeDB()
+const { db } = require('../../')
 const logger = require('../../logger')
 
 const additionalFields = {
