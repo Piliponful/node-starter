@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ITenantGroup } from '../../models/tenant-group.model';
+import { DatasourceService } from '../../services/datasource.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-tenant-groups',
@@ -8,46 +10,18 @@ import { ITenantGroup } from '../../models/tenant-group.model';
   styleUrls: ['./tenant-groups.component.scss']
 })
 export class TenantGroupsComponent implements OnInit {
-  displayedColumns: string[] = ['Tenant Name', 'Tenant Admin', 'Accounts', 'DXF File', 'Annotation Files'];
+  displayedColumns: string[] = ['name', 'Tenant Admin', 'usersCount', 'dxfFilesCount', 'anotationFilesCount'];
   dataSource: MatTableDataSource<ITenantGroup>;
-  tenantGroups: Array<ITenantGroup> = [
-    {
-      tenantName: 'Tenant 1',
-      tenantAdmin: 'NameSurname 1',
-      account: 3,
-      dxfFile: 12,
-      annotationFiles: 2
-    },
-    {
-      tenantName: 'Tenant 4',
-      tenantAdmin: 'NameSurname 4',
-      account: 65,
-      dxfFile: 4,
-      annotationFiles: 5
-    },
-    {
-      tenantName: 'Tenant 7',
-      tenantAdmin: 'NameSurname 7',
-      account: 93,
-      dxfFile: 7,
-      annotationFiles: 8
-    },
-    {
-      tenantName: 'Tenant 10',
-      tenantAdmin: 'NameSurname 10',
-      account: 126,
-      dxfFile: 10,
-      annotationFiles: 11
-    }
-  ];
+  tenantGroups: Array<ITenantGroup> = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() {
+  constructor(private datasourceService: DatasourceService, private snackBar: MatSnackBar) {
     this.dataSource = new MatTableDataSource(this.tenantGroups);
   }
 
   ngOnInit() {
+    this.getTenants();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -55,14 +29,16 @@ export class TenantGroupsComponent implements OnInit {
   onEditTenantAdmin(tenantGroup: ITenantGroup) {
     console.log('Test', tenantGroup);
   }
-}
 
-// export class TenantGroup implements ITenantGroup {
-//   constructor(
-//     private tenantName: string,
-//     private tenantAdmin: string,
-//     private account: string,
-//     private dxfFile: string,
-//     private annotationFiles: string
-//   ) {}
-// }
+  getTenants() {
+    this.datasourceService.getTenants()
+      .subscribe((res) => {
+        if (res && res['errors'].length > 0) {
+          this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+        } else {
+          this.tenantGroups = res.value;
+          this.dataSource = new MatTableDataSource(this.tenantGroups);
+        }
+      });
+  }
+}

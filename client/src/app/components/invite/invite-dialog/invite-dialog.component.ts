@@ -12,19 +12,16 @@ export class InviteDialogComponent implements OnInit {
   isLinear = true;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
-  selectedGroup: string;
-  groups: string[] = ['All groups', 'Group 1', 'Group 2', 'Group 3', 'Group 4'];
   dialogResult: IDialogData;
-  showAddNewGroupField = false;
-  newGroupName: string;
-  text: string;
 
   myKeyup() {
-    let emailField = this.firstFormGroup.controls['emailCtrl'].value;
-    let parseStr = emailField.split('@');
-    if (parseStr.length > 1) {
-      let correctStr = parseStr[1].split('.');
-      this.firstFormGroup.controls['tenantCtrl'].setValue(`${correctStr[0]}`);
+    const emailField = this.firstFormGroup.controls['emailCtrl'].value;
+    if (emailField) {
+      const parseStr = emailField.split('@');
+      if (parseStr && parseStr.length > 1) {
+        const correctStr = parseStr[1].split('.');
+        this.firstFormGroup.controls['tenantCtrl'].setValue(`${correctStr[0]}`);
+      }
     }
   }
 
@@ -65,16 +62,7 @@ export class InviteDialogComponent implements OnInit {
       role: this.firstFormGroup.controls['roleCtrl'].value,
       message: this.secondFormGroup.controls['textareaCtrl'].value
     };
+
     this.dialogRef.close(this.dialogResult);
-  }
-
-  onShowNewGroupField() {
-    this.showAddNewGroupField = true;
-  }
-
-  onAddNewGroup() {
-    this.groups.push(this.newGroupName);
-    this.showAddNewGroupField = false;
-    this.newGroupName = '';
   }
 }

@@ -36,10 +36,11 @@ export class DatasourceService {
       );
   }
 
-  inviteUser(firstname, lastname, email, tenantAdmin, tenantId, message) {
+  inviteUser(firstname, lastname, email, tenantAdmin, tenantName, message) {
+    const role = tenantAdmin === 'admin';
     this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
     const jwt = this.currentUserSubject.value;
-    return this.http.post('/api/user', { jwt, firstname, lastname, email, tenantAdmin, tenantId, message }, httpOptions)
+    return this.http.post('/api/user', { jwt, firstname, lastname, email, role, tenantName, message }, httpOptions)
       .pipe(
         tap((res: any) => {
           return res;
@@ -88,6 +89,53 @@ export class DatasourceService {
           return res;
         })
       );
+  }
+
+  getTenants() {
+    const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser'))};
+    return this.http.get('/api/tenant', { headers: headers })
+      .pipe(
+        tap((res: any) => {
+          return res;
+        }));
+  }
+
+  getTenant(id: number) {
+    const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser'))};
+    return this.http.get(`/api/tenant/${id}`, { headers: headers })
+      .pipe(
+        tap((res: any) => {
+          return res;
+        }));
+  }
+
+  editTenant(id: number, data: any) {
+    const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser'))};
+    return this.http.patch(`/api/tenant/${id}`, data, { headers: headers })
+      .pipe(
+        tap((res: any) => {
+          return res;
+        }));
+  }
+
+  deleteTenant(id: number) {
+    return this.http.delete(`/api/tenant/${id}`, httpOptions)
+      .pipe(
+        tap((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  uploadDXFFile(file) {
+    console.log(file);
+
+    const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser'))};
+    return this.http.post(`/api/dxf-file`, file, { headers: headers })
+      .pipe(
+        tap((res: any) => {
+          return res;
+        }));
   }
 
   // private sendRequest(

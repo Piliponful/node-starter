@@ -5,7 +5,6 @@ declare var cvjs_InitCADViewerJS: any;
 declare var cvjs_LoadDrawing: any;
 declare var cvjs_windowResize_position: any;
 
-
 @Component({
   selector: 'app-view-page',
   templateUrl: './view-page.component.html',

@@ -1,7 +1,6 @@
 export interface ITenantGroup {
-  tenantName: string;
-  tenantAdmin: string;
-  account: number;
-  dxfFile: number;
-  annotationFiles: number;
+  name: string;
+  usersCount: number;
+  dxfFilesCount: number;
+  anotationFilesCount: number;
 }

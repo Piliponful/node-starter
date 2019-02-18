@@ -1,25 +1,25 @@
 <div class="tenant-container">
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="Tenant Name">
+      <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant Name </th>
-        <td mat-cell *matCellDef="let row"> {{row.tenantName}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
       </ng-container>
       <ng-container matColumnDef="Tenant Admin">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant Admin </th>
         <td mat-cell *matCellDef="let row" routerLink="/edit-profile"> {{row.tenantAdmin}} <mat-icon color="accent" class="create">create</mat-icon></td>
       </ng-container>
-      <ng-container matColumnDef="Accounts">
+      <ng-container matColumnDef="usersCount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Accounts </th>
-        <td mat-cell *matCellDef="let row"> {{row.account}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.usersCount}} </td>
       </ng-container>
-      <ng-container matColumnDef="DXF File">
+      <ng-container matColumnDef="dxfFilesCount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> DXF File </th>
-        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.dxfFile}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
+        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.dxfFilesCount}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
       </ng-container>
-      <ng-container matColumnDef="Annotation Files">
+      <ng-container matColumnDef="anotationFilesCount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Annotation Files </th>
-        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.annotationFiles}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
+        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.anotationFilesCount}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

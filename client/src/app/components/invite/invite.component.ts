@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
 import { IUserData } from '../../models/user.model';
-import { FilesPageDialogComponent } from "../files-page/files-page-dialog/files-page-dialog.component";
 import { DatasourceService } from '../../services/datasource.service';
 import { MatSnackBar } from '@angular/material';
 
@@ -12,8 +11,6 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./invite.component.scss']
 })
 export class InviteComponent implements OnInit {
-  invite: string;
-  inviteVariants: string[] = ['Tenant admin', 'Tenant User'];
   displayedColumns: string[] = ['edit', 'firstname', 'lastname', 'tenant', 'email', 'group', 'role'];
   dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [];
@@ -22,9 +19,6 @@ export class InviteComponent implements OnInit {
   email: string;
   tenant: string;
   role: string;
-  group: string;
-  addUsers = false;
-  addGroups = false;
   message: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -63,22 +57,19 @@ export class InviteComponent implements OnInit {
         email: this.email,
         tenant: this.tenant,
         role: this.role,
-        group: this.group,
-        addUsers: this.addUsers,
-        addGroups: this.addGroups,
         message: this.message
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      const tenantAdmin = result['role'] === 'admin';
-      this.datasourceService.inviteUser(result.firstName, result.lastName, result.email, tenantAdmin, result.tenant, result.message)
-        .subscribe(
-          (res) => {
-              console.log(res);
-          },
-          (error) => this.snackBar.open(error.error.text, '', { duration: 2000 })
-      );
+      this.datasourceService.inviteUser(result.firstName, result.lastName, result.email, result.role, result.tenant, result.message)
+        .subscribe((res) => {
+            if (res && res.errors.length > 0) {
+              this.snackBar.open(res.errors[0], '', { duration: 2000 });
+            } else {
+              console.log('dialogRef', res);
+            }
+          });
     });
   }
 
