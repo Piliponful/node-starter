@@ -95,7 +95,7 @@ router.post('/user', async ctx => {
     return
   }
 
-  if (user.tenantAdmin && user.tenantId !== tenant._id) {
+  if (user.tenantAdmin && user.tenantId !== tenant._id.toString()) {
     ctx.body = { errors: ['You can create users only for tenant you\'re an admin of'] }
     return
   }
