@@ -40,7 +40,7 @@ export class DatasourceService {
     const role = tenantAdmin === 'admin';
     this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
     const jwt = this.currentUserSubject.value;
-    return this.http.post('/api/user', { jwt, firstname, lastname, email, role, tenantName, message }, httpOptions)
+    return this.http.post('/api/user', { jwt, firstname, lastname, email, tenantAdmin: role, tenantName, message }, httpOptions)
       .pipe(
         tap((res: any) => {
           return res;
