@@ -7,7 +7,7 @@ const User = require('../db/entities/user')
 const router = new Router()
 
 router.get('/tenant', async ctx => {
-  const { limit, skip } = ctx.query
+  const { limit, skip, tenantId } = ctx.query
 
   const jwt = ctx.request.headers['authorization']
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
@@ -22,7 +22,7 @@ router.get('/tenant', async ctx => {
     return
   }
 
-  ctx.body = await Tenant.find({ deleted: false }, limit, skip)
+  ctx.body = await Tenant.find({ tenantId, deleted: false }, limit, skip)
 })
 
 router.get('/tenant/:id', async ctx => {
@@ -82,8 +82,6 @@ router.patch('/tenant/:id', async ctx => {
     ctx.body = { errors: [`You have the permission to update tenant with id - ${id}`] }
     return
   }
-
-  console.log('ctx.request.body', ctx.request.body)
 
   ctx.body = await Tenant.update({ _id: ObjectId(id) }, { $set: ctx.request.body })
 })
