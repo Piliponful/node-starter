@@ -87,6 +87,7 @@ router.post('/user', async ctx => {
 
   if (!tenant) {
     ctx.body = { errors: [`Wasn't able to find tenant by the '${tenant}' name`] }
+    return
   }
 
   if (findTenantErrors.length) {
