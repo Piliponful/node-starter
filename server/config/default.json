@@ -1,7 +1,7 @@
 {
   "app": {
     "secret": "secret",
-    "URL": "http://localhost"
+    "URL": "http://18.223.88.144"
   },
   "db": {
     "username": "root",
