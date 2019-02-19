@@ -7,7 +7,7 @@
             <span>{{ dxfFiles.length }} results</span>
             <div class="control-btns">
               <mat-form-field appearance="outline">
-                <mat-select placeholder="Sort By:"[ngModel]="sortBy" (ngModelChange)="changRole()">
+                <mat-select placeholder="Sort By:" [(ngModel)]="sortBy" (ngModelChange)="changRole">
                   <mat-option value="uploadDate">Sort By: Date</mat-option>
                   <mat-option value="name">  Sort By: Name</mat-option>
                   <mat-option value="size">Sort By: Size</mat-option>
@@ -105,11 +105,15 @@
           <button mat-raised-button class="button-save" (click)="openDialog()">Save</button>
         </mat-tab>
         <mat-tab label="Saved Filters">
+
             <button mat-button class="button-new" *ngFor="let item of items; index as i" (click)="checkDeletePress(i)">
-              <span>{{ item.animal }}</span>
               <mat-icon class="button-new-icon" [matMenuTriggerFor]="menu">more_vert</mat-icon>
+              <div class="button-new2">
+              <span>{{ item.animal }}</span>
               <div>{{ item.filter}}</div>
+              </div>
             </button>
+
 
           <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="openEditDialog()">Edit Details</button>

@@ -34,9 +34,10 @@ export interface DeleteDialog {
 
 export class FilesPageComponent implements OnInit {
   dxfFiles: DXFFiles[] = [
-    new DXFFiles('DXF File Example 1.dxf', 'Maksim Pilipenko', 'January 13', '62 KB'),
-    new DXFFiles('DXF File Example 1.dxf', 'Maksim Pilipenko', 'January 3', '62 KB'),
-    new DXFFiles('DXF File Example 1.dxf', 'Maksim Pilipenko', 'February 17', '62 KB')
+    new DXFFiles('DXF File Example 1.dxf', 'Maksim Pilipenko', '01.13', '55 KB'),
+    new DXFFiles('ADXF File Example 1.dxf', 'Maksim Pilipenko', '03.13', '62 KB'),
+    new DXFFiles('BDXF File Example 1.dxf', 'Maksim Pilipenko', '02.17', '52 KB'),
+    new DXFFiles('CDXF File Example 1.dxf', 'Maksim Pilipenko', '05.17', '60 KB')
   ];
   visible = true;
   selectable = true;
@@ -53,6 +54,7 @@ export class FilesPageComponent implements OnInit {
   ];
   selectedRadio = 'Anytime';
   clickOnItem: number;
+  sortBy:string;
 
 
   @ViewChild('usersInput') usersInput: ElementRef<HTMLInputElement>;
@@ -70,17 +72,24 @@ export class FilesPageComponent implements OnInit {
 
     get changRole() {
 
-           this.dxfFiles.sort((a, b) => {
-                if (<any>(b.uploadDate) - <any>(a.uploadDate)) return <any>(b.uploadDate) - <any>(a.uploadDate);
-            });
-           this.dxfFiles.sort((a, b) => {
-                    if (a.name[0] < b.name[0]) return -1;
-                });
-           this.dxfFiles.sort((a, b) => {
-            if (<any>(b.size) - <any>(a.size)) return <any>(b.size) - <any>(a.size);
-           });
-        return this.dxfFiles;
-    }
+          switch(this.sortBy) {
+              case 'uploadDate':
+                  return this.dxfFiles.sort((a, b) => {
+                      return (<any>(b.uploadDate) - <any>(a.uploadDate));
+                  });
+              case 'name':
+                  return  this.dxfFiles.sort((a, b) => {
+                      return (a.name[0] > b.name[0]) ? 1 : -1;
+                  });
+              case 'size':
+                  return this.dxfFiles.sort((a, b) => {
+                      return (<any>(b.size)[0] - <any>(a.size)[0]);
+                  });
+
+          }
+          }
+
+
 
 
     ngOnInit() {
@@ -189,10 +198,10 @@ export class FilesPageComponent implements OnInit {
 }
 export class DXFFiles {
   constructor(
-    private name: string,
-    private author: string,
-    private uploadDate: string,
-    private size: string
+    public name: string,
+    public author: string,
+    public uploadDate: string,
+    public size: string
   ) {}
 }
 

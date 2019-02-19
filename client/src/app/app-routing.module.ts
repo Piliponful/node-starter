@@ -34,22 +34,22 @@ const routes: Routes = [
   {
     path: 'edit-profile',
     component: EditProfileComponent,
-    canActivate: [LoginGuard]
+    //canActivate: [LoginGuard]//
   },
   {
     path: 'delete-user',
     component: DeleteUserComponent,
-    canActivate: [LoginGuard]
+    //canActivate: [LoginGuard]//
   },
   {
     path: 'files-page',
     component: FilesPageComponent,
-    canActivate: [LoginGuard]
+    //canActivate: [LoginGuard]//
   },
   {
     path: 'view-page',
     component: ViewPageComponent,
-    canActivate: [LoginGuard]
+    //canActivate: [LoginGuard]//
   },
   {
     path: 'forgot-password',

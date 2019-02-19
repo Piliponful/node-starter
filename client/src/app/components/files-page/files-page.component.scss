@@ -81,12 +81,18 @@
   .button-new{
      float: none ;
      background-color: #1e88c9;
-     width: 169px;
      margin-top: 14px;
      text-align: left;
      color: white;
-     width: 89%;
+     width: 85%;
+    overflow: hidden;
    }
+  .button-new2{
+    display: block;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+  }
   button {
     float: right;
     margin-right: 20px;
