@@ -24,7 +24,7 @@ router.post('/dxf-file', async ctx => {
     return
   }
 
-  const { fields, files } = await asyncBusboy(ctx.req)
+  const { fields: { tenantId }, files } = await asyncBusboy(ctx.req)
 
   if (path.extname(files[0].filename) !== '.dxf') {
     ctx.body = { errors: ['Wrong file type'] }
@@ -36,7 +36,7 @@ router.post('/dxf-file', async ctx => {
     return
   }
 
-  const { errors: tenantFindErrors, value: [tenant] } = await Tenant.find({})
+  const { errors: tenantFindErrors, value: [tenant] } = await Tenant.find({ _id: ObjectID(tenantId) })
   if (tenantFindErrors.length) {
     ctx.body = { errors: tenantFindErrors }
     return
@@ -57,7 +57,7 @@ router.post('/dxf-file', async ctx => {
   })
   try {
     await s3Upload()
-    ctx.body = { errors: [], value: await DxfFile.create({ name: files[0].filename, tenantId: fields.tenantId }) }
+    ctx.body = { errors: [], value: await DxfFile.create({ name: files[0].filename, tenantId }) }
   } catch (err) {
     logger.error(err, 'Problem with uploading dxf file to S3, post /dxf-file')
     ctx.body = { errors: ['Internal server error'] }
