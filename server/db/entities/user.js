@@ -7,15 +7,20 @@ const { db } = require('../../')
 const logger = require('../../logger')
 
 const additionalFields = {
+  // geo
   address: joi.string().min(5).max(200).required(),
   city: joi.string().min(5).max(200).required(),
+  state: joi.string().min(5).max(200).required(),
+
+  // basic
   firstname: joi.string().min(5).max(200).required(),
   lastname: joi.string().min(5).max(200).required(),
-  password: joi.string().min(6).max(50).required(),
   phoneNumber: joi.string().phoneNumber(),
+
+  // secret
+  password: joi.string().min(6).max(50).required(),
   secretQuestionAnswer: joi.string(),
   secretQuestionId: joi.number(),
-  state: joi.string().min(5).max(200).required()
 }
 
 const userFields = {
@@ -107,31 +112,43 @@ const findByEmail = async email => {
 
 const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
   try {
-    const { error } = joi.validate(fields, additionalFields)
+    const errors = await validate()
 
-    if (error) {
-      return { errors: error.details.map(d => d.message) }
+    if (errors.length) {
+      return { errors }
     }
 
-    const { errors: findErrors, value: users } = (await find({ finishRegistrationCode }))
+    await update({ finishRegistrationCode }, {
+      $set: {
+        ...fields,
+        password: hashSync(fields.password),
+        deleted: false,
+      },
+      $unset: { finishRegistrationCode: 1 },
+    })
 
-    if (findErrors.length) {
-      return { errors: findErrors }
-    }
-
-    const [user] = users
-
-    if (!user) {
-      return { errors: ['Finish registration code isn\'t valid'] }
-    }
-
-    const hash = hashSync(fields.password)
-    fields.deleted = false
-    await update({ finishRegistrationCode }, { $set: { ...fields, password: hash }, $unset: { finishRegistrationCode: 1 } })
     return { errors: [], value: true }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity updateWithAdditionalFilds function')
     return { errors: ['Internal server error has occurred'] }
+  }
+
+  async function validate() {
+    const { error } = joi.validate(fields, additionalFields)
+
+    if (error) {
+      return error.details.map(d => d.message)
+    }
+
+    const { errors, value: [user] = [] } = await find({ finishRegistrationCode })
+
+    if (errors.length) {
+      return errors
+    }
+
+    if (!user) {
+      return ['Finish registration code isn\'t valid']
+    }
   }
 }
 
