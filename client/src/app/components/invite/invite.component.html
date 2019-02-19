@@ -61,12 +61,12 @@
           </mat-form-field>
         </td>
       </ng-container>
-      <ng-container matColumnDef="tenant">
+      <ng-container matColumnDef="tenantId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Tenant </th>
         <td mat-cell *matCellDef="let row">
-          <span *ngIf="!row.editable">{{row.tenant}}</span>
+          <span *ngIf="!row.editable">{{row.tenantId}}</span>
           <mat-form-field appearance="outline" *ngIf="row.editable">
-            <input matInput [(ngModel)]="row.tenant">
+            <input matInput [(ngModel)]="row.tenantId">
           </mat-form-field>
         </td>
       </ng-container>
@@ -76,15 +76,6 @@
           <span *ngIf="!row.editable">{{row.email}}</span>
           <mat-form-field appearance="outline" *ngIf="row.editable">
             <input matInput [(ngModel)]="row.email">
-          </mat-form-field>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="group">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Group </th>
-        <td mat-cell *matCellDef="let row">
-          <span *ngIf="!row.editable">{{row.group}}</span>
-          <mat-form-field appearance="outline" *ngIf="row.editable">
-            <input matInput [(ngModel)]="row.group">
           </mat-form-field>
         </td>
       </ng-container>

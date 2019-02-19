@@ -11,13 +11,13 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./invite.component.scss']
 })
 export class InviteComponent implements OnInit {
-  displayedColumns: string[] = ['edit', 'firstname', 'lastname', 'tenant', 'email', 'group', 'role'];
+  displayedColumns: string[] = ['edit', 'firstname', 'lastname', 'tenantId', 'email', 'role'];
   dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [];
   firstName: string;
   lastName: string;
   email: string;
-  tenant: string;
+  tenantId: string;
   role: string;
   message: string;
 
@@ -55,14 +55,14 @@ export class InviteComponent implements OnInit {
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
-        tenant: this.tenant,
+        tenantId: this.tenantId,
         role: this.role,
         message: this.message
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.datasourceService.inviteUser(result.firstName, result.lastName, result.email, result.role, result.tenant, result.message)
+      this.datasourceService.inviteUser(result.firstName, result.lastName, result.email, result.role, result.tenantId, result.message)
         .subscribe((res) => {
             if (res && res.errors.length > 0) {
               this.snackBar.open(res.errors[0], '', { duration: 2000 });
