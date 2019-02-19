@@ -57,7 +57,12 @@ router.post('/dxf-file', async ctx => {
   })
   try {
     await s3Upload()
-    ctx.body = { errors: [], value: await DxfFile.create({ name: files[0].filename, tenantId }) }
+    const { errors: dxfFileCreationErrors, value: dxfFileCreationRes } = await DxfFile.create({ name: files[0].filename, tenantId })
+    if (dxfFileCreationErrors.length) {
+      ctx.body = { errors: dxfFileCreationErrors }
+      return
+    }
+    ctx.body = { errors: [], value: dxfFileCreationRes }
   } catch (err) {
     logger.error(err, 'Problem with uploading dxf file to S3, post /dxf-file')
     ctx.body = { errors: ['Internal server error'] }
