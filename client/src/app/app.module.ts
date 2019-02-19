@@ -56,6 +56,7 @@ import { DelePageDialogComponent } from './components/files-page/dele-page-dialo
 import { DatasourceService } from './services/datasource.service';
 import { AuthService } from './services/auth.service';
 import { LoginGuard } from './login.guard';
+import { FileUploadDialogComponent } from './components/files-page/file-upload-dialog/file-upload-dialog.component';
 
 @NgModule({
     declarations: [
@@ -76,6 +77,7 @@ import { LoginGuard } from './login.guard';
         ResetPasswordComponent,
         FilesPageDialogComponent,
         DelePageDialogComponent,
+        FileUploadDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -115,7 +117,7 @@ import { LoginGuard } from './login.guard';
     ],
     exports: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    entryComponents: [InviteDialogComponent, FilesPageDialogComponent, DelePageDialogComponent],
+    entryComponents: [InviteDialogComponent, FilesPageDialogComponent, DelePageDialogComponent, FileUploadDialogComponent],
     bootstrap: [AppComponent],
     providers: [
         DatasourceService,

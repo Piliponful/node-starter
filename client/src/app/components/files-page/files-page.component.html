@@ -13,8 +13,7 @@
                   <mat-option value="size">Sort By: Size</mat-option>
                 </mat-select>
               </mat-form-field>
-              <button mat-raised-button color="accent" (click)="fileInput.click()">Upload Files</button>
-              <input style="display: none;" type="file" #fileInput (change)="uploadDXFFile($event)">
+              <button mat-raised-button color="accent" (click)="openFileUploadDialog()">Upload Files</button>
             </div>
           </div>
           <div class="container-list">

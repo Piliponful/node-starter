@@ -127,11 +127,12 @@ export class DatasourceService {
       );
   }
 
-  uploadDXFFile(file) {
-    console.log(file);
-
-    const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser'))};
-    return this.http.post(`/api/dxf-file`, file, { headers: headers })
+  uploadDXFFile(currentUser, files: FormData) {
+    const formData = new FormData();
+    formData.append('files', files[0], files[0].filename);
+    formData.append('tenantId', currentUser.tenantId);
+    const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser')) };
+    return this.http.post('/api/dxf-file', formData, { headers: headers })
       .pipe(
         tap((res: any) => {
           return res;

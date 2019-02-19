@@ -13,6 +13,7 @@ export class TenantGroupsComponent implements OnInit {
   displayedColumns: string[] = ['name', 'Tenant Admin', 'usersCount', 'dxfFilesCount', 'anotationFilesCount'];
   dataSource: MatTableDataSource<ITenantGroup>;
   tenantGroups: Array<ITenantGroup> = [];
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
