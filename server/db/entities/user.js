@@ -149,6 +149,8 @@ const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
     if (!user) {
       return ['Finish registration code isn\'t valid']
     }
+
+    return []
   }
 }
 
