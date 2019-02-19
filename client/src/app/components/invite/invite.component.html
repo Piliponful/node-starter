@@ -1,19 +1,23 @@
 <div class="invite-container">
   <div class="invite-header">
     <div class="search">
+    <!--
       <mat-form-field appearance="outline">
         <mat-label>Quick Search</mat-label>
         <input matInput>
       </mat-form-field>
       <button mat-stroked-button>Go!</button>
+    -->
     </div>
     <div class="filter">
+    <!--
       <mat-form-field appearance="outline">
         <mat-select placeholder="Sort By..." [ngModel]="sortBy" (ngModelChange)="changRole($event)">
           <mat-option value="Standart User"> Standard User </mat-option>
           <mat-option value="Tenant Admin">Admin</mat-option>
         </mat-select>
       </mat-form-field>
+    -->
       <button mat-icon-button color="accent" (click)="openDialog()">
         <mat-icon>add_circle_outline</mat-icon>
       </button>
