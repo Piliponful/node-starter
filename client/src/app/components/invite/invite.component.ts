@@ -4,6 +4,7 @@ import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
 import { IUserData } from '../../models/user.model';
 import { DatasourceService } from '../../services/datasource.service';
 import { MatSnackBar } from '@angular/material';
+import { AuthService } from '../../services/auth.service'
 
 @Component({
   selector: 'app-invite',
@@ -11,7 +12,7 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./invite.component.scss']
 })
 export class InviteComponent implements OnInit {
-  displayedColumns: string[] = ['edit', 'firstname', 'lastname', 'tenantId', 'email', 'role'];
+  displayedColumns = ['edit', 'firstname', 'lastname', 'tenantId', 'email', 'role'];
   dataSource: MatTableDataSource<IUserData>;
   users: IUserData[] = [];
   firstName: string;
@@ -25,8 +26,11 @@ export class InviteComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @Input() userRole: string;
 
-  constructor(public dialog: MatDialog, private datasourceService: DatasourceService,
-    private snackBar: MatSnackBar) {}
+  constructor(
+    public dialog: MatDialog,
+    private datasourceService: DatasourceService,
+    private snackBar: MatSnackBar,
+  ) {}
 
     changRole(newValue) {
       this.getUsers();
@@ -36,7 +40,17 @@ export class InviteComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.users);
   }
 
+  constructor(private authService: AuthService, private datasourceService: DatasourceService) { }
+
   ngOnInit() {
+    this.datasourceService.getUser()
+      .subscribe(res => {
+        const user = res.value;
+
+        if (user.tenantAdmin) {
+          this.displayedColumns = ['edit', 'firstname', 'lastname', 'email'];
+        }
+      });
     this.getUsers();
   }
 
