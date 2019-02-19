@@ -2,19 +2,19 @@ import { Component, OnInit, ElementRef, ViewChild, Inject } from '@angular/core'
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import {
-  MatAutocompleteSelectedEvent,
-  MatChipInputEvent,
-  MatAutocomplete,
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA
+    MatAutocompleteSelectedEvent,
+    MatChipInputEvent,
+    MatAutocomplete,
+    MatDialog,
+    MatDialogRef,
+    MAT_DIALOG_DATA,
+    MatTableDataSource
 } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FilesPageDialogComponent } from './files-page-dialog/files-page-dialog.component';
 import { DelePageDialogComponent } from './dele-page-dialog/dele-page-dialog.component';
-import { DatasourceService } from '../../services/datasource.service';
-import { MatSnackBar } from '@angular/material';
+
 
 export interface DialogData {
     animal: string;
@@ -22,14 +22,16 @@ export interface DialogData {
     filter: string;
 
 }
+export interface DeleteDialog {
 
-export interface DeleteDialog {}
-
+}
 @Component({
   selector: 'app-files-page',
   templateUrl: './files-page.component.html',
   styleUrls: ['./files-page.component.scss']
 })
+
+
 export class FilesPageComponent implements OnInit {
   dxfFiles: DXFFiles[] = [
     new DXFFiles('DXF File Example 1.dxf', 'Maksim Pilipenko', 'January 13', '62 KB'),
@@ -51,16 +53,13 @@ export class FilesPageComponent implements OnInit {
   ];
   selectedRadio = 'Anytime';
   clickOnItem: number;
-  animal: string;
-  name: string;
-  filter: string;
-  isCollapsed2 = false;
-  items = [];
-  dialogRef = true;
-  fileToUpload: File = null;
+
 
   @ViewChild('usersInput') usersInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+
+
 
   constructor(public dialog: MatDialog, private datasourceService: DatasourceService, private snackBar: MatSnackBar) {
     this.filteredUsers = this.usersCtrl.valueChanges.pipe(
@@ -69,7 +68,22 @@ export class FilesPageComponent implements OnInit {
       this.isCollapsed2 = true;
   }
 
-  ngOnInit() {
+    get changRole() {
+
+           this.dxfFiles.sort((a, b) => {
+                if (<any>(b.uploadDate) - <any>(a.uploadDate)) return <any>(b.uploadDate) - <any>(a.uploadDate);
+            });
+           this.dxfFiles.sort((a, b) => {
+                    if (a.name[0] < b.name[0]) return -1;
+                });
+           this.dxfFiles.sort((a, b) => {
+            if (<any>(b.size) - <any>(a.size)) return <any>(b.size) - <any>(a.size);
+           });
+        return this.dxfFiles;
+    }
+
+
+    ngOnInit() {
   }
 
   add(event: MatChipInputEvent): void {
@@ -112,73 +126,67 @@ export class FilesPageComponent implements OnInit {
     return this.allUsers.filter(user => user.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(FilesPageDialogComponent, {
-      width: '500px',
-      data: {name: this.name, animal: this.animal, filter: this.filter},
-      disableClose: false
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      const res = { animal: result.animal, filter: result.filter };
-      this.items.push(res);
-      if (result) {
-        // do confirmation actions
-      }
-      this.dialogRef = null;
-    });
-  }
 
-  openEditDialog() {
-    const dialogRef = this.dialog.open(FilesPageDialogComponent, {
-      width: '500px',
-      data: {animal: this.items[this.clickOnItem].animal, filter: this.items[this.clickOnItem].filter},
-      disableClose: false
-    });
+    animal: string;
+    name: string;
+    filter: string;
+    isCollapsed2 = false;
+    items = [ ];
+    dialogRef = true;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const res = { animal: result.animal, filter: result.filter };
-        this.items.splice(this.clickOnItem, 1, res);
-      }
-      this.dialogRef = null;
-      this.clickOnItem = null;
-    });
-  }
 
-  openDeleteDialog(): void {
-    const dialogRef = this.dialog.open(DelePageDialogComponent, {
-      width: '500px',
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.items.splice(this.clickOnItem, 1);
-      }
-      this.clickOnItem = null;
-    });
-  }
+    openDialog(): void {
+        const dialogRef = this.dialog.open(FilesPageDialogComponent, {
+            width: '500px',
+            data: {name: this.name, animal: this.animal, filter: this.filter},
+            disableClose: false
+        });
 
-  checkDeletePress(index) {
-    this.clickOnItem = index;
-  }
-
-  uploadDXFFile(event) {
-    // const reader = new FileReader();
-    if (event.target.files && event.target.files.length) {
-      const [file] = event.target.files;
-      // reader.readAsDataURL(file);
-      this.datasourceService.uploadDXFFile([file])
-        .subscribe((res) => {
-          if (res && res['errors'].length > 0) {
-            this.snackBar.open(res['errors'][0], '', { duration: 2000 });
-          } else {
-            console.log('onFileChange', res);
-          }
+        dialogRef.afterClosed().subscribe(result => {
+            let res = { animal: result.animal, filter: result.filter };
+            this.items.push(res);
+            if(result) {
+                // do confirmation actions
+            }
+            this.dialogRef = null;
         });
     }
-  }
-}
 
+    openEditDialog() {
+        const dialogRef = this.dialog.open(FilesPageDialogComponent, {
+            width: '500px',
+            data: {animal: this.items[this.clickOnItem].animal, filter: this.items[this.clickOnItem].filter},
+            disableClose: false
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                let res = { animal: result.animal, filter: result.filter };
+                this.items.splice(this.clickOnItem, 1, res);
+            }
+            this.dialogRef = null;
+            this.clickOnItem = null;
+        });
+    }
+
+    openDeleteDialog(): void {
+        const dialogRef = this.dialog.open(DelePageDialogComponent, {
+            width: '500px',
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.items.splice(this.clickOnItem, 1);
+            }
+            this.clickOnItem = null;
+        })
+    }
+
+    checkDeletePress(index) {
+        this.clickOnItem = index;
+    }
+
+}
 export class DXFFiles {
   constructor(
     private name: string,
@@ -187,3 +195,5 @@ export class DXFFiles {
     private size: string
   ) {}
 }
+
+
