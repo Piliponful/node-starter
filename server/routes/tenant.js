@@ -10,6 +10,10 @@ router.get('/tenant', async ctx => {
   const { limit, skip } = ctx.query
 
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
+    return
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
   if (getUserFromJWTErrors.length) {
@@ -30,6 +34,10 @@ router.get('/tenant/:id', async ctx => {
   const { findByName } = ctx.query
 
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
+    return
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
   if (getUserFromJWTErrors.length) {
@@ -65,6 +73,9 @@ router.get('/tenant/:id', async ctx => {
 
 router.patch('/tenant/:id', async ctx => {
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    return { errors: ['You have to supply jwt token in authorization header'] }
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
   const { id } = ctx.params
 
@@ -89,6 +100,9 @@ router.patch('/tenant/:id', async ctx => {
 router.delete('/tenant/:id', async ctx => {
   const { id } = ctx.params
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    return { errors: ['You have to supply jwt token in authorization header'] }
+  }
 
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 

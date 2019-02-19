@@ -82,6 +82,9 @@ const doesPasswordMatch = async (email, password) => {
     }
 
     const { errors: findByEmailErrors, value: user } = await findByEmail(email)
+    if (user.finishRegistrationCode) {
+      return { errors: ['You need to finish your registration process'] }
+    }
 
     if (findByEmailErrors.length) {
       return { errors: findByEmailErrors }

@@ -17,6 +17,10 @@ const router = new Router()
 
 router.post('/dxf-file', async ctx => {
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
+    return
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
   if (getUserFromJWTErrors.length) {
@@ -37,10 +41,12 @@ router.post('/dxf-file', async ctx => {
   }
 
   const { errors: tenantFindErrors, value: [tenant] } = await Tenant.find({ _id: ObjectID(tenantId) })
+
   if (tenantFindErrors.length) {
     ctx.body = { errors: tenantFindErrors }
     return
   }
+
   if (!tenant) {
     ctx.body = { errors: ['You trying to upload file to non existant tenant'] }
     return
@@ -55,6 +61,7 @@ router.post('/dxf-file', async ctx => {
       }
     })
   })
+
   try {
     await s3Upload()
     const { errors: dxfFileCreationErrors, value: dxfFileCreationRes } = await DxfFile.create({ name: files[0].filename, tenantId })
@@ -70,11 +77,22 @@ router.post('/dxf-file', async ctx => {
 })
 
 router.get('/dxf-file', async ctx => {
+  const { tenantId } = ctx.query
+  if (!tenantId) {
+    if (ObjectID.isValid(tenantId)) {
+      ctx.body = { errors: ['TenantId is invalid'] }
+      return
+    }
+  }
   ctx.body = await DxfFile.find({ deleted: false })
 })
 
 router.get('/dxf-file/:id', async ctx => {
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
+    return
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
   if (getUserFromJWTErrors.length) {
@@ -118,6 +136,10 @@ router.get('/dxf-file/:id', async ctx => {
 
 router.delete('/dxf-file/:id', async ctx => {
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
+    return
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
   if (getUserFromJWTErrors.length) {

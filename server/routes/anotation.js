@@ -4,7 +4,6 @@ const asyncBusboy = require('async-busboy')
 const AWS = require('aws-sdk')
 const config = require('config')
 const { ObjectID } = require('mongodb')
-const lodash = require('lodash')
 
 const DxfFile = require('../db/entities/dxfFile')
 const User = require('../db/entities/user')
@@ -18,6 +17,10 @@ const router = new Router()
 
 router.post('/anotation', async ctx => {
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
+    return
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
   if (getUserFromJWTErrors.length) {
@@ -69,11 +72,48 @@ router.post('/anotation', async ctx => {
 })
 
 router.get('/anotation', async ctx => {
-  ctx.body = await Anotation.find({ ...ctx.query, deleted: false })
+  const { dxfFileId, createdBy } = ctx.query
+  let query = { deleted: true }
+  if (dxfFileId && ObjectID.isValid(dxfFileId)) {
+    const { errors: dxfFileFindErrors, value: [dxf] } = await DxfFile.find({ _id: ObjectID(dxfFileId) })
+
+    if (dxfFileFindErrors.length) {
+      ctx.body = { errors: dxfFileFindErrors }
+      return
+    }
+
+    if (!dxf) {
+      ctx.body = { errors: ['You trying to upload file to non existant tenant'] }
+      return
+    }
+
+    query['dxfFileId'] = dxfFileId
+  }
+  if (createdBy && ObjectID.isValid(createdBy)) {
+    const { errors: userFindErrors, value: [user] } = await User.find({ _id: ObjectID(createdBy) })
+
+    if (userFindErrors.length) {
+      ctx.body = { errors: userFindErrors }
+      return
+    }
+
+    if (!user) {
+      ctx.body = { errors: ['You trying to upload file to non existant tenant'] }
+      return
+    }
+
+    query['createdBy'] = createdBy
+  }
+
+  ctx.body = await Anotation.find(query)
 })
 
 router.get('/anotation/:id', async ctx => {
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
+    return
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
   if (getUserFromJWTErrors.length) {
@@ -119,6 +159,9 @@ router.get('/anotation/:id', async ctx => {
 
 router.delete('/anotation/:id', async ctx => {
   const jwt = ctx.request.headers['authorization']
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
+  }
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
   const { tenantId } = ctx.req.body
 

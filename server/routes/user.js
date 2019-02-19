@@ -56,6 +56,10 @@ router.delete('/user/:id', async ctx => {
 router.post('/user', async ctx => {
   logger.info(ctx.request.body, 'Starting registration process, post /user')
   const { jwt, firstname, lastname, email, tenantAdmin, tenantName, message = '' } = ctx.request.body
+  if (!jwt) {
+    ctx.body = { errors: ['You have to supply jwt token in body jwt field'] }
+    return
+  }
 
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
 
