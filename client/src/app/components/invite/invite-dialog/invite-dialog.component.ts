@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IDialogData } from '../../../models/dialog-data.model';
+import { IUserData } from '../../../models/user.model'
 
 @Component({
   selector: 'app-invite-dialog',
@@ -9,6 +10,7 @@ import { IDialogData } from '../../../models/dialog-data.model';
   styleUrls: ['./invite-dialog.component.scss']
 })
 export class InviteDialogComponent implements OnInit {
+  user: IUserData;
   isLinear = true;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -29,7 +31,9 @@ export class InviteDialogComponent implements OnInit {
     private _formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<InviteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData
-  ) { }
+  ) {
+    this.user = data['user'];
+  }
 
   ngOnInit() {
     this.firstFormGroup = this._formBuilder.group({
@@ -48,9 +52,7 @@ export class InviteDialogComponent implements OnInit {
     this.firstFormGroup.controls['emailCtrl'].setValue(this.data.email);
     this.firstFormGroup.controls['tenantCtrl'].setValue(this.data.tenant);
     this.firstFormGroup.controls['roleCtrl'].setValue(this.data.role);
-
     this.secondFormGroup.controls['textareaCtrl'].setValue(this.data.message);
-
   }
 
   submit(): void {

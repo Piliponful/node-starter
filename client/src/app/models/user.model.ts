@@ -1,9 +1,8 @@
 export interface IUserData {
-  edit: string;
-  name: string;
-  surname: string;
-  tenant: string;
   email: string;
-  group: string;
+  name: string;
   role: string;
+  surname: string;
+  tenantAdmin: boolean;
+  tenantId: string;
 }

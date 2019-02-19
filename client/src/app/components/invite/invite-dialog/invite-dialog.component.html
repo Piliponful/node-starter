@@ -30,7 +30,7 @@
               <h4>as</h4>
               <mat-form-field appearance="outline">
                 <mat-select placeholder="Role" formControlName="roleCtrl" required>
-                  <mat-option value="admin">Admin</mat-option>
+                  <mat-option value="admin" *ngIf="user.rootAdmin">Admin</mat-option>
                   <mat-option value="standart user">Standart User</mat-option>
                 </mat-select>
               </mat-form-field>

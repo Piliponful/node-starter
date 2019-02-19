@@ -82,8 +82,10 @@
       <ng-container matColumnDef="role">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
         <td mat-cell *matCellDef="let row">
-          <span *ngIf="!row.editable">{{row.tenantAdmin ? 'Tenant Admin' : (row.rootAdmin ? 'Root Admin' : 'Standart
-            User')}}</span>
+          <span *ngIf="!row.editable">{{
+            row.tenantAdmin ? 'Tenant Admin' :
+              row.rootAdmin ? 'Root Admin' : 'Standart User'
+          }}</span>
           <mat-form-field appearance="outline" *ngIf="row.editable">
             <input matInput [(ngModel)]="row.tenantAdmin">
           </mat-form-field>

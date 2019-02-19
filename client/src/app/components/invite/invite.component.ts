@@ -21,6 +21,7 @@ export class InviteComponent implements OnInit {
   tenantId: string;
   role: string;
   message: string;
+  user: IUserData;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -45,9 +46,9 @@ export class InviteComponent implements OnInit {
   ngOnInit() {
     this.datasourceService.getUser()
       .subscribe(res => {
-        const user = res.value;
+        this.user = res.value;
 
-        if (user.tenantAdmin) {
+        if (this.user.tenantAdmin) {
           this.displayedColumns = ['edit', 'firstname', 'lastname', 'email'];
         }
       });
@@ -66,12 +67,13 @@ export class InviteComponent implements OnInit {
     const dialogRef = this.dialog.open(InviteDialogComponent, {
       width: '685px',
       data: {
+        email: this.email,
         firstName: this.firstName,
         lastName: this.lastName,
-        email: this.email,
-        tenantId: this.tenantId,
+        message: this.message,
         role: this.role,
-        message: this.message
+        tenantId: this.tenantId,
+        user: this.user,
       }
     });
 
