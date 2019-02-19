@@ -7,7 +7,7 @@ const User = require('../db/entities/user')
 const router = new Router()
 
 router.get('/tenant', async ctx => {
-  const { limit, skip, tenantId } = ctx.query
+  const { limit, skip } = ctx.query
 
   const jwt = ctx.request.headers['authorization']
   const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
@@ -22,7 +22,7 @@ router.get('/tenant', async ctx => {
     return
   }
 
-  ctx.body = await Tenant.find({ tenantId, deleted: false }, limit, skip)
+  ctx.body = await Tenant.find({ deleted: false }, limit, skip)
 })
 
 router.get('/tenant/:id', async ctx => {
