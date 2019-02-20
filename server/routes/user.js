@@ -90,7 +90,7 @@ router.post('/user', async ctx => {
   const { errors: findTenantErrors, value: [tenant] } = await Tenant.find({ name: tenantName })
 
   if (!tenant) {
-    ctx.body = { errors: [`Wasn't able to find tenant by the '${tenant}' name`] }
+    ctx.body = { errors: [`Wasn't able to find tenant by the '${tenantName}' name`] }
     return
   }
 
