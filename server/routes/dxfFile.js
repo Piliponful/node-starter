@@ -100,7 +100,7 @@ router.get('/dxf-file/:id', async ctx => {
     return
   }
 
-  const { errors, value: [{ name: filename, deleted, _id }] } = await DxfFile.find({ _id: ObjectID(ctx.params.id) })
+  const { errors, value: [{ name: filename, deleted, tenantId }] } = await DxfFile.find({ _id: ObjectID(ctx.params.id) })
   if (errors.length) {
     ctx.body = { errors }
     return
@@ -111,7 +111,7 @@ router.get('/dxf-file/:id', async ctx => {
     return
   }
 
-  if (!user.rootAdmin && user.tenantId !== _id) {
+  if (!user.rootAdmin && user.tenantId !== tenantId.toString()) {
     ctx.body = { errors: ['You don\'t have the permission to download this file'] }
     return
   }

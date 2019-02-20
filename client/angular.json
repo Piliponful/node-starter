@@ -40,7 +40,10 @@
               "src/assets/cadviewer/snap.svg-min.js",
               "src/assets/cadviewer/rgbcolor.js",
               "src/assets/cadviewer/canvg.js",
-              "src/assets/cadviewer/bootstrap.min.js"
+              "src/assets/cadviewer/bootstrap.min.js",
+              "node_modules/dxf-parser/dist/dxf-parser.js",
+              "node_modules/three/build/three.min.js",
+              "src/assets/libs/js/OrbitControls.js"
             ]
           },
           "configurations": {

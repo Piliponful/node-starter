@@ -60,7 +60,7 @@ export class InviteComponent implements OnInit {
     }
   }
 
-  openDialog() :void {
+  openDialog(): void {
     const dialogRef = this.dialog.open(InviteDialogComponent, {
       width: '685px',
       data: {

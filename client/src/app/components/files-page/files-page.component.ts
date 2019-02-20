@@ -17,6 +17,7 @@ import { FilesPageDialogComponent } from './files-page-dialog/files-page-dialog.
 import { DelePageDialogComponent } from './dele-page-dialog/dele-page-dialog.component';
 import { FileUploadDialogComponent } from './file-upload-dialog/file-upload-dialog.component';
 import { DatasourceService } from '../../services/datasource.service';
+import { Router } from '@angular/router';
 
 export interface DialogData {
   animal: string;
@@ -68,7 +69,11 @@ export class FilesPageComponent implements OnInit {
   @ViewChild('usersInput') usersInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  constructor(public dialog: MatDialog, private datasourceService: DatasourceService, private snackBar: MatSnackBar) {
+  constructor(
+    public dialog: MatDialog,
+    private datasourceService: DatasourceService,
+    private snackBar: MatSnackBar,
+    private router: Router) {
     this.filteredUsers = this.usersCtrl.valueChanges.pipe(
       startWith(null),
       map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allUsers.slice()))
@@ -217,9 +222,12 @@ export class FilesPageComponent implements OnInit {
 
   deleteDXF(id) {
     this.datasourceService.deleteDXFFile(id).subscribe((res) => {
-      console.log(res);
       this.getDXFFiles();
     });
+  }
+
+  previewDXF(id) {
+    this.router.navigateByUrl(`/view-page/${id}`);
   }
 }
 export class DXFFiles {
