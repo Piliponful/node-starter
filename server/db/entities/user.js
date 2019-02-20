@@ -28,6 +28,7 @@ const userFields = {
   lastname: joi.string().alphanum().min(3).max(20).required(),
   email: joi.string().email({ minDomainAtoms: 2 }).required(),
   tenantId: joi.string().required(),
+  tenant: joi.object(),
 
   tenantAdmin: joi.boolean().default(false),
   rootAdmin: joi.boolean().default(false),
