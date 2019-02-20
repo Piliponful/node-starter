@@ -214,6 +214,13 @@ export class FilesPageComponent implements OnInit {
       this.dxfFiles = res.value;
     });
   }
+
+  deleteDXF(id) {
+    this.datasourceService.deleteDXFFile(id).subscribe((res) => {
+      console.log(res);
+      this.getDXFFiles();
+    });
+  }
 }
 export class DXFFiles {
   constructor(public name: string, public createdAt: number, public id: string) {}

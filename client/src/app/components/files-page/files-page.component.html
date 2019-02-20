@@ -31,9 +31,9 @@
                     </div>
                   </div>
                   <div class="control-btns">
-                    <button mat-raised-button>Edit</button>
+                    <!-- <button mat-raised-button>Edit</button> -->
                     <button mat-raised-button color="accent">Preview</button>
-                    <button mat-icon-button color="accent">
+                    <!-- <button mat-icon-button color="accent">
                       <mat-icon>publish</mat-icon>
                     </button>
                     <button mat-icon-button color="accent">
@@ -41,8 +41,8 @@
                     </button>
                     <button mat-icon-button color="accent">
                       <mat-icon>done</mat-icon>
-                    </button>
-                    <button mat-icon-button color="warn">
+                    </button> -->
+                    <button mat-icon-button color="warn" (click)="deleteDXF(file._id)">
                       <mat-icon>close</mat-icon>
                     </button>
                   </div>

@@ -155,6 +155,15 @@ export class DatasourceService {
         }));
   }
 
+  deleteDXFFile(id) {
+    const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser')) };
+    return this.http.delete(`/api/dxf-file/${id}`, { headers: headers })
+      .pipe(
+        tap((res: any) => {
+          return res;
+        }));
+  }
+
   // private sendRequest(
   //   verb: RequestMethod,
   //   url: string, body?: any, auth: boolean = false): Observable<any> {
