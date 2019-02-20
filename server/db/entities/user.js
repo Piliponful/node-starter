@@ -20,7 +20,7 @@ const additionalFields = {
   // secret
   password: joi.string().min(6).max(50).required(),
   secretQuestionAnswer: joi.string(),
-  secretQuestionId: joi.number(),
+  secretQuestionId: joi.number()
 }
 
 const userFields = {
@@ -125,9 +125,9 @@ const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
       $set: {
         ...fields,
         password: hashSync(fields.password),
-        deleted: false,
+        deleted: false
       },
-      $unset: { finishRegistrationCode: 1 },
+      $unset: { finishRegistrationCode: 1 }
     })
 
     return { errors: [], value: true }
@@ -136,7 +136,7 @@ const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
     return { errors: ['Internal server error has occurred'] }
   }
 
-  async function validate() {
+  async function validate () {
     const { error } = joi.validate(fields, additionalFields)
 
     if (error) {

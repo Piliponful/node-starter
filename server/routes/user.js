@@ -79,6 +79,18 @@ router.post('/user', async ctx => {
   }
 
   if (user.rootAdmin && tenantAdmin) {
+    const { errors: findTenantErrors, value: [tenant] } = await Tenant.find({ name: tenantName })
+
+    if (findTenantErrors.length) {
+      ctx.body = { errors: findTenantErrors }
+      return
+    }
+
+    if (tenant) {
+      ctx.body = { errors: [`Tenant with ${tenantName} already exists`] }
+      return
+    }
+
     const { errors: tenantCreationErrors } = await Tenant.create({ name: tenantName })
 
     if (tenantCreationErrors.length) {
@@ -89,13 +101,13 @@ router.post('/user', async ctx => {
 
   const { errors: findTenantErrors, value: [tenant] } = await Tenant.find({ name: tenantName })
 
-  if (!tenant) {
-    ctx.body = { errors: [`Wasn't able to find tenant by the '${tenantName}' name`] }
+  if (findTenantErrors.length) {
+    ctx.body = { errors: findTenantErrors }
     return
   }
 
-  if (findTenantErrors.length) {
-    ctx.body = { errors: findTenantErrors }
+  if (!tenant) {
+    ctx.body = { errors: [`Wasn't able to find tenant by the '${tenantName}' name`] }
     return
   }
 
