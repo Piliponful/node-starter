@@ -35,11 +35,12 @@ export class ViewPageComponent implements OnInit, AfterViewInit {
 
   getDXFFileById(id) {
     this.datasourceService.getDXFFile(id).subscribe((res) => {
-      const parser = new DxfParser();
-      const dxf = parser.parseSync(res.Body.data.toString());
       const loader = new THREE.FontLoader();
-      loader.load( '../../assets/helvetiker_regular.typeface.json', function ( font ) {
-          new ThreeDxf.Viewer(dxf, document.getElementById('cad-view'), 400, 400, font);
+
+      loader.load('../../assets/helvetiker_regular.typeface.json', function ( font ) {
+        const parser = new DxfParser();
+        const dxf = parser.parseSync(res.value);
+        const a = new ThreeDxf.Viewer(dxf, document.getElementById('cad-view'), 400, 400, font);
       });
     });
   }
