@@ -36,7 +36,14 @@ export class DatasourceService {
       );
   }
 
-  inviteUser(firstname, lastname, email, tenantAdmin, tenantName, message) {
+  inviteUser({
+    email,
+    firstname,
+    lastname,
+    message,
+    tenantAdmin,
+    tenantName,
+  }) {
     const role = tenantAdmin === 'admin';
     this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
     const jwt = this.currentUserSubject.value;

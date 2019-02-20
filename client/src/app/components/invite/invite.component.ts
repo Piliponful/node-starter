@@ -63,7 +63,7 @@ export class InviteComponent implements OnInit {
     }
   }
 
-  openDialog(): void {
+  openDialog() :void {
     const dialogRef = this.dialog.open(InviteDialogComponent, {
       width: '685px',
       data: {
@@ -72,28 +72,33 @@ export class InviteComponent implements OnInit {
         lastName: this.lastName,
         message: this.message,
         role: this.role,
-        tenantId: this.tenantId,
+        tenant: this.tenantId, // fixme: tenant should be passed with name
         user: this.user,
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.datasourceService.inviteUser(result.firstName, result.lastName, result.email, result.role, result.tenantId, result.message)
-        .subscribe((res) => {
-            if (res && res.errors.length > 0) {
-              this.snackBar.open(res.errors[0], '', { duration: 2000 });
-            } else {
-              console.log('dialogRef', res);
-            }
-          });
+      this.datasourceService.inviteUser({
+          email: result.email,
+          firstname: result.firstName,
+          lastname: result.lastName,
+          message: result.message,
+          tenantAdmin: result.role,
+          tenantName: result.tenant,
+        })
+        .subscribe(res => {
+          if (res && res.errors.length) {
+            this.snackBar.open(res.errors[0], '', { duration: 2000 });
+          }
+        });
     });
   }
 
   getUsers() {
     return this.datasourceService.getUsers()
       .subscribe((res) => {
-        if (res && res['errors'].length > 0) {
-          this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+        if (res && res.errors.length) {
+          this.snackBar.open(res.errors[0], '', { duration: 2000 });
         } else {
           const result = res['value'];
           result.forEach(element => {
