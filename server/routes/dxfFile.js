@@ -116,7 +116,7 @@ router.get('/dxf-file/:id', async ctx => {
 
   try {
     const file = await s3.getObject({ Key: filename }).promise()
-    ctx.body = file
+    ctx.body = { errors: [], value: file.Body.toString('utf8') }
   } catch (err) {
     logger.error(err, 'Problem with uploading dxf file to S3, post /dxf-file')
     ctx.body = { errors: ['Internal server error'] }
