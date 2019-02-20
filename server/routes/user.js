@@ -106,12 +106,13 @@ router.post('/user', async ctx => {
 
   const finishRegistrationCode = shortUUID.generate()
   const userCreationRes = await User.create({
+    email,
+    finishRegistrationCode,
     firstname,
     lastname,
-    email,
+    tenant: tenant,
     tenantAdmin,
     tenantId: tenant._id.toString(),
-    finishRegistrationCode
   })
 
   if (!userCreationRes.value) {
