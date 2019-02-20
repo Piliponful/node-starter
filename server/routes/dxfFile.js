@@ -11,7 +11,15 @@ const Tenant = require('../db/entities/tenant')
 
 const logger = require('../logger')
 
-const s3 = new AWS.S3({ credentials: { accessKeyId: config.aws.accessKey, secretAccessKey: config.aws.secretAccessKey } })
+const s3 = new AWS.S3({
+  params: {
+    Bucket: 'arialpoint-staging-dxf'
+  },
+  credentials: {
+    accessKeyId: config.aws.accessKey,
+    secretAccessKey: config.aws.secretAccessKey
+  }
+})
 
 const router = new Router()
 
@@ -52,18 +60,8 @@ router.post('/dxf-file', async ctx => {
     return
   }
 
-  const s3Upload = () => new Promise((resolve, reject) => {
-    s3.upload({ Bucket: 'arialpoint-staging-dxf', Key: files[0].filename, Body: files[0] }, (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
-
   try {
-    await s3Upload()
+    await s3.upload({ Key: files[0].filename, Body: files[0] }).promise()
     const { errors: dxfFileCreationErrors, value: dxfFileCreationRes } = await DxfFile.create({ name: files[0].filename, tenantId })
     if (dxfFileCreationErrors.length) {
       ctx.body = { errors: dxfFileCreationErrors }
@@ -116,17 +114,8 @@ router.get('/dxf-file/:id', async ctx => {
     return
   }
 
-  const s3Download = () => new Promise((resolve, reject) => {
-    s3.getObject({ Bucket: 'arialpoint-staging-dxf', Key: filename }, (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
   try {
-    const file = await s3Download()
+    const file = await s3.getObject({ Key: filename }).promise()
     ctx.body = file
   } catch (err) {
     logger.error(err, 'Problem with uploading dxf file to S3, post /dxf-file')
