@@ -4,7 +4,6 @@ import { InviteDialogComponent } from './invite-dialog/invite-dialog.component';
 import { IUserData } from '../../models/user.model';
 import { DatasourceService } from '../../services/datasource.service';
 import { MatSnackBar } from '@angular/material';
-import { AuthService } from '../../services/auth.service'
 
 @Component({
   selector: 'app-invite',
@@ -40,8 +39,6 @@ export class InviteComponent implements OnInit {
       });
       this.dataSource = new MatTableDataSource(this.users);
   }
-
-  constructor(private authService: AuthService, private datasourceService: DatasourceService) { }
 
   ngOnInit() {
     this.datasourceService.getUser()
