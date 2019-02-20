@@ -2,7 +2,7 @@
 
 <div class="edit-profile" *ngIf="user">
   <div class="user-pii">
-    <h3>{{ user.firstname }} {{ user.lastname }} - User Account</h3>
+    <h3>{{ user.firstname }} {{ user.lastname }}</h3>
   </div>
   <form class="edit-form" [formGroup]="editProfileFormGroup">
     <div class="col-2">
@@ -11,7 +11,7 @@
         <mat-form-field appearance="outline">
           <input matInput placeholder="TestName" formControlName="firstNameCtrl" required>
         </mat-form-field>
-        <label>PII</label>
+        <label>Surname</label>
         <mat-form-field appearance="outline">
           <input matInput placeholder="TestSurname" formControlName="surnameCtrl" required>
         </mat-form-field>
@@ -39,19 +39,6 @@
       </div>
     </div>
     <div class="edit-footer">
-      <div class="row" *ngIf="!user.rootAdmin">
-        <label>Group</label>
-        <mat-form-field appearance="outline">
-          <mat-select placeholder="Group" formControlName="groupCtrl" required>
-            <mat-option value="group 1">Group 1</mat-option>
-            <mat-option value="group 2">Group 2</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <label>Tenant</label>
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="TestTenant Name" formControlName="tenantCtrl" required>
-        </mat-form-field>
-      </div>
       <div class="row">
         <label>Role</label>
         <mat-form-field appearance="outline">
@@ -61,15 +48,14 @@
             <option value="standart user">Standard User</option>
           </select>
         </mat-form-field>
-        <label>Question</label>
+        <label>Tenant</label>
         <mat-form-field appearance="outline">
-          <input matInput placeholder="challenge response question for PW reset" formControlName="secretQuestionCtrl" required>
+          <input matInput placeholder="Tenant group name" formControlName="tenantCtrl" required>
         </mat-form-field>
       </div>
     </div>
   </form>
   <div class="controls-panel">
     <button mat-raised-button color="accent" (click)="back()">Close</button>
-    <button mat-raised-button class="primary">Update</button>
   </div>
 </div>

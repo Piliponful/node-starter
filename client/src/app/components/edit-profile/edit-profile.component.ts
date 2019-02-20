@@ -25,11 +25,9 @@ export class EditProfileComponent implements OnInit {
       firstNameCtrl: ['', Validators.required],
       surnameCtrl: ['', Validators.required],
       tenantCtrl: ['', Validators.required],
-      groupCtrl: ['', Validators.required],
       roleCtrl: ['', Validators.required],
       addressCtrl: ['', Validators.required],
       phoneCtrl: ['', Validators.required],
-      secretQuestionCtrl: ['', Validators.required],
     });
     this.getUser();
   }
@@ -48,11 +46,12 @@ export class EditProfileComponent implements OnInit {
         this.editProfileFormGroup.controls['surnameCtrl'].setValue(this.user.lastname || '');
         this.editProfileFormGroup.controls['addressCtrl'].setValue(this.user.address || '');
         this.editProfileFormGroup.controls['phoneCtrl'].setValue(this.user.phoneNumber || '');
-        this.editProfileFormGroup.controls['secretQuestionCtrl'].setValue(this.user.secretQuestionId || '');
         this.editProfileFormGroup.controls['roleCtrl'].setValue(this.getRole());
+        this.editProfileFormGroup.controls['tenantCtrl'].setValue(this.user.tenantId || '');
 
         if (!this.user.rootAdmin) {
           this.editProfileFormGroup.controls['roleCtrl'].disable();
+          this.editProfileFormGroup.controls['tenantCtrl'].disable();
         }
       });
   }

@@ -9,6 +9,7 @@ export interface IUserData {
   rootAdmin :boolean;
   secretQuestionId :any;
   surname :string;
+  tenant :any;
   tenantAdmin :boolean;
   tenantId :string;
 }
