@@ -4,7 +4,7 @@ const { db } = require('../../')
 const logger = require('../../logger')
 
 const tenantFields = {
-  name: joi.string().alphanum().min(3).max(20).required(),
+  name: joi.string().min(3).max(20).required(),
   dxfFilesCount: joi.number().default(0),
   usersCount: joi.number().default(1),
   anotationFilesCount: joi.number().default(0),
