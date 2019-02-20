@@ -15,7 +15,7 @@
       </ng-container>
       <ng-container matColumnDef="dxfFilesCount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> DXF File </th>
-        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.dxfFilesCount}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
+        <td mat-cell *matCellDef="let row" (click)="openUploadDXFFileDialog(row._id)"> {{row.dxfFilesCount}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
       </ng-container>
       <ng-container matColumnDef="anotationFilesCount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Annotation Files </th>

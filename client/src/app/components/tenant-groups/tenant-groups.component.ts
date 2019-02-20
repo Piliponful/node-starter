@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { ITenantGroup } from '../../models/tenant-group.model';
 import { DatasourceService } from '../../services/datasource.service';
 import { MatSnackBar } from '@angular/material';
+import { FileUploadDialogComponent } from '../files-page/file-upload-dialog/file-upload-dialog.component';
 
 @Component({
   selector: 'app-tenant-groups',
@@ -17,14 +18,15 @@ export class TenantGroupsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private datasourceService: DatasourceService, private snackBar: MatSnackBar) {
+  constructor(
+    private datasourceService: DatasourceService,
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog) {
     this.dataSource = new MatTableDataSource(this.tenantGroups);
   }
 
   ngOnInit() {
     this.getTenants();
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   onEditTenantAdmin(tenantGroup: ITenantGroup) {
@@ -39,7 +41,22 @@ export class TenantGroupsComponent implements OnInit {
         } else {
           this.tenantGroups = res.value;
           this.dataSource = new MatTableDataSource(this.tenantGroups);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
         }
       });
+  }
+
+  openUploadDXFFileDialog(id) {
+    const dialogRef = this.dialog.open(FileUploadDialogComponent, {
+      width: '685px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(id);
+      this.datasourceService.uploadDXFFile(id, result).subscribe((res) => {
+        console.log(res);
+      });
+    });
   }
 }

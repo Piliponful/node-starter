@@ -134,10 +134,10 @@ export class DatasourceService {
       );
   }
 
-  uploadDXFFile(currentUser, files: FormData) {
+  uploadDXFFile(id, files: FormData) {
     const formData = new FormData();
     formData.append('files', files[0], files[0].filename);
-    formData.append('tenantId', currentUser.tenantId);
+    formData.append('tenantId', id);
     const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser')) };
     return this.http.post('/api/dxf-file', formData, { headers: headers })
       .pipe(
