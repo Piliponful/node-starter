@@ -146,6 +146,15 @@ export class DatasourceService {
         }));
   }
 
+  getDXFFiles(tenantId) {
+    const headers = { 'Authorization': JSON.parse(localStorage.getItem('currentUser')) };
+    return this.http.get(`/api/dxf-file?tenantId=${tenantId}`, { headers: headers })
+      .pipe(
+        tap((res: any) => {
+          return res;
+        }));
+  }
+
   // private sendRequest(
   //   verb: RequestMethod,
   //   url: string, body?: any, auth: boolean = false): Observable<any> {

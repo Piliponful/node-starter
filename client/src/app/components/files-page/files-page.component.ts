@@ -32,12 +32,7 @@ export interface DeleteDialog {}
   styleUrls: [ './files-page.component.scss' ]
 })
 export class FilesPageComponent implements OnInit {
-  dxfFiles: DXFFiles[] = [
-    new DXFFiles('DXF File Example 1.dxf', 'Maksim Pilipenko', '01.13', '55 KB'),
-    new DXFFiles('ADXF File Example 1.dxf', 'Maksim Pilipenko', '03.13', '62 KB'),
-    new DXFFiles('BDXF File Example 1.dxf', 'Maksim Pilipenko', '02.17', '52 KB'),
-    new DXFFiles('CDXF File Example 1.dxf', 'Maksim Pilipenko', '05.17', '60 KB')
-  ];
+  dxfFiles: DXFFiles[] = [];
   visible = true;
   selectable = true;
   removable = true;
@@ -81,22 +76,22 @@ export class FilesPageComponent implements OnInit {
     this.isCollapsed2 = true;
   }
 
-  get changRole() {
-    switch (this.sortBy) {
-      case 'uploadDate':
-        return this.dxfFiles.sort((a, b) => {
-          return <any>b.uploadDate - <any>a.uploadDate;
-        });
-      case 'name':
-        return this.dxfFiles.sort((a, b) => {
-          return a.name[0] > b.name[0] ? 1 : -1;
-        });
-      case 'size':
-        return this.dxfFiles.sort((a, b) => {
-          return <any>b.size[0] - <any>a.size[0];
-        });
-    }
-  }
+  // get changRole() {
+  //   switch (this.sortBy) {
+  //     case 'uploadDate':
+  //       return this.dxfFiles.sort((a, b) => {
+  //         return <any>b.uploadDate - <any>a.uploadDate;
+  //       });
+  //     case 'name':
+  //       return this.dxfFiles.sort((a, b) => {
+  //         return a.name[0] > b.name[0] ? 1 : -1;
+  //       });
+  //     case 'size':
+  //       return this.dxfFiles.sort((a, b) => {
+  //         return <any>b.size[0] - <any>a.size[0];
+  //       });
+  //   }
+  // }
 
   ngOnInit() {
     this.getUser();
@@ -176,6 +171,7 @@ export class FilesPageComponent implements OnInit {
   getUser() {
     this.datasourceService.getUser().subscribe((res) => {
       this.currentUser = res.value;
+      this.getDXFFiles();
     });
   }
 
@@ -211,7 +207,14 @@ export class FilesPageComponent implements OnInit {
   checkDeletePress(index) {
     this.clickOnItem = index;
   }
+
+  getDXFFiles() {
+    this.datasourceService.getDXFFiles(this.currentUser.tenantId).subscribe((res) => {
+      console.log(res);
+      this.dxfFiles = res.value;
+    });
+  }
 }
 export class DXFFiles {
-  constructor(public name: string, public author: string, public uploadDate: string, public size: string) {}
+  constructor(public name: string, public createdAt: number, public id: string) {}
 }

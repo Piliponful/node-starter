@@ -20,14 +20,14 @@
             <mat-list>
               <mat-list-item *ngFor="let file of dxfFiles">
                 <div class="file-header">
-                  <h3>{{ file.uploadDate }}</h3>
+                  <h3>{{ file.createdAt | date: 'yyyy-MM-dd' }}</h3>
                 </div>
                 <div class="file-content">
                   <div class="file-description">
                     <mat-icon mat-list-icon>note</mat-icon>
                     <div class="col">
                       <h4 mat-line>{{ file.name }}</h4>
-                      <p mat-line ng-repeat="logs in dxfFiles | orderBy: 'uploadDate'"> By {{ file.author }} {{ file.uploadDate }}, {{ file.size }}</p>
+                      <!-- <p mat-line ng-repeat="logs in dxfFiles | orderBy: 'uploadDate'"> By {{ file.author }} {{ file.uploadDate }}, {{ file.size }}</p> -->
                     </div>
                   </div>
                   <div class="control-btns">
