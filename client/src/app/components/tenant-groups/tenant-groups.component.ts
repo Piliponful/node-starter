@@ -53,9 +53,10 @@ export class TenantGroupsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(id);
       this.datasourceService.uploadDXFFile(id, result).subscribe((res) => {
-        console.log(res);
+        if (res && res.value) {
+          this.snackBar.open(res['errors'][0], '', { duration: 2000 });
+        }
       });
     });
   }
