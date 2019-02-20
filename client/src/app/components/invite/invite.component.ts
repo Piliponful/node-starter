@@ -12,32 +12,32 @@ import { MatSnackBar } from '@angular/material';
 })
 export class InviteComponent implements OnInit {
   displayedColumns = ['edit', 'firstname', 'lastname', 'tenantId', 'email', 'role'];
-  dataSource: MatTableDataSource<IUserData>;
-  users: IUserData[] = [];
-  firstName: string;
-  lastName: string;
-  email: string;
-  tenantId: string;
-  role: string;
-  message: string;
-  user: IUserData;
+  dataSource :MatTableDataSource<IUserData>;
+  users :IUserData[] = [];
+  firstName :string;
+  lastName :string;
+  email :string;
+  tenantId :string;
+  role :string;
+  message :string;
+  user :IUserData;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @Input() userRole: string;
+  @ViewChild(MatPaginator) paginator :MatPaginator;
+  @ViewChild(MatSort) sort :MatSort;
+  @Input() userRole :string;
 
   constructor(
-    public dialog: MatDialog,
-    private datasourceService: DatasourceService,
-    private snackBar: MatSnackBar,
+    public dialog :MatDialog,
+    private datasourceService :DatasourceService,
+    private snackBar :MatSnackBar,
   ) {}
 
-    changRole(newValue) {
-      this.getUsers();
-      this.users = this.users.filter((user) => {
-        return user.role === newValue;
-      });
-      this.dataSource = new MatTableDataSource(this.users);
+  changRole(newValue) {
+    this.getUsers();
+    this.users = this.users.filter((user) => {
+      return user.role === newValue;
+    });
+    this.dataSource = new MatTableDataSource(this.users);
   }
 
   ngOnInit() {
@@ -52,7 +52,7 @@ export class InviteComponent implements OnInit {
     this.getUsers();
   }
 
-  applyFilter(filterValue: string) {
+  applyFilter(filterValue :string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
