@@ -1,8 +1,14 @@
 export interface IUserData {
-  email: string;
-  name: string;
-  role: string;
-  surname: string;
-  tenantAdmin: boolean;
-  tenantId: string;
+  address :string;
+  email :string;
+  firstname :string;
+  lastname :string;
+  name :string;
+  phoneNumber :string;
+  role :string;
+  rootAdmin :boolean;
+  secretQuestionId :any;
+  surname :string;
+  tenantAdmin :boolean;
+  tenantId :string;
 }

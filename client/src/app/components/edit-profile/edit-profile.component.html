@@ -1,8 +1,8 @@
 <app-header></app-header>
 
-<div class="edit-profile">
+<div class="edit-profile" *ngIf="user">
   <div class="user-pii">
-    <h3>TestName TestSurname User Account</h3>
+    <h3>{{ user.firstname }} {{ user.lastname }} - User Account</h3>
   </div>
   <form class="edit-form" [formGroup]="editProfileFormGroup">
     <div class="col-2">
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="edit-footer">
-      <div class="row" *ngIf="userRole!='Root Admin'">
+      <div class="row" *ngIf="!user.rootAdmin">
         <label>Group</label>
         <mat-form-field appearance="outline">
           <mat-select placeholder="Group" formControlName="groupCtrl" required>
@@ -55,10 +55,11 @@
       <div class="row">
         <label>Role</label>
         <mat-form-field appearance="outline">
-          <mat-select placeholder="Role" formControlName="roleCtrl" required>
-            <mat-option value="tenant admin">Tenant Admin</mat-option>
-            <mat-option value="standart user">Standart User</mat-option>
-          </mat-select>
+          <select matNativeControl placeholder="Role" formControlName="roleCtrl" required>
+            <option value="root admin">Root Admin</option>
+            <option value="tenant admin">Tenant Admin</option>
+            <option value="standart user">Standard User</option>
+          </select>
         </mat-form-field>
         <label>Question</label>
         <mat-form-field appearance="outline">

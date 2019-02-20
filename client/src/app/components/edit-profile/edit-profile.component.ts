@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { DatasourceService } from '../../services/datasource.service';
+import { IUserData } from '../../models/user.model'
 
 @Component({
   selector: 'app-edit-profile',
@@ -9,10 +10,14 @@ import { DatasourceService } from '../../services/datasource.service';
   styleUrls: ['./edit-profile.component.scss']
 })
 export class EditProfileComponent implements OnInit {
-  editProfileFormGroup: FormGroup;
-  userRole = 'Root Admin';
+  user :IUserData;
+  editProfileFormGroup :FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, private location: Location, private datasourceService: DatasourceService) { }
+  constructor(
+    private _formBuilder :FormBuilder,
+    private location :Location,
+    private datasourceService :DatasourceService,
+  ) { }
 
   ngOnInit() {
     this.editProfileFormGroup = this._formBuilder.group({
@@ -36,12 +41,31 @@ export class EditProfileComponent implements OnInit {
   getUser() {
     this.datasourceService.getUser()
       .subscribe((res) => {
-        this.editProfileFormGroup.controls['emailCtrl'].setValue(`${res.value.email}`);
-        this.editProfileFormGroup.controls['firstNameCtrl'].setValue(`${res.value.firstname}`);
-        this.editProfileFormGroup.controls['surnameCtrl'].setValue(`${res.value.lastname}`);
-        this.editProfileFormGroup.controls['addressCtrl'].setValue(`${res.value.address}`);
-        this.editProfileFormGroup.controls['phoneCtrl'].setValue(`${res.value.phoneNumber}`);
-        this.editProfileFormGroup.controls['secretQuestionCtrl'].setValue(`${res.value.secretQuestionId}`);
+        this.user = res.value;
+
+        this.editProfileFormGroup.controls['emailCtrl'].setValue(this.user.email || '');
+        this.editProfileFormGroup.controls['firstNameCtrl'].setValue(this.user.firstname || '');
+        this.editProfileFormGroup.controls['surnameCtrl'].setValue(this.user.lastname || '');
+        this.editProfileFormGroup.controls['addressCtrl'].setValue(this.user.address || '');
+        this.editProfileFormGroup.controls['phoneCtrl'].setValue(this.user.phoneNumber || '');
+        this.editProfileFormGroup.controls['secretQuestionCtrl'].setValue(this.user.secretQuestionId || '');
+        this.editProfileFormGroup.controls['roleCtrl'].setValue(this.getRole());
+
+        if (!this.user.rootAdmin) {
+          this.editProfileFormGroup.controls['roleCtrl'].disable();
+        }
       });
+  }
+
+  getRole() {
+    if (this.user.rootAdmin) {
+      return 'root admin';
+    }
+
+    if (this.user.tenantAdmin) {
+      return 'tenant admin';
+    }
+
+    return 'standart user';
   }
 }
