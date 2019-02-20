@@ -43,8 +43,13 @@ router.post('/dxf-file', async ctx => {
     return
   }
 
-  if (!user.rootAdmin && !user.tenantAdmin) {
+  if (!user.rootAdmin) {
     ctx.body = { errors: ['You dont\'t have the permission to upload dxf files'] }
+    return
+  }
+
+  if (!ObjectID.isValid(tenantId)) {
+    ctx.body = { errors: ['tenantId is not valid'] }
     return
   }
 
