@@ -59,7 +59,7 @@ router.get('/tenant', async ctx => {
 
       return { ...t, userCount: userCount.value, dxfFileCount: dxfFileCount.value, anotationCount: anotationCount.value }
     })
-    ctx.body = tenantsWithCount
+    ctx.body = { errors: [], value: tenantsWithCount }
   } catch (error) {
   }
 })
