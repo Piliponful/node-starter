@@ -27,32 +27,42 @@
         </mat-form-field>
       </div>
       <div class="row">
+        <label>Role</label>
+        <mat-form-field appearance="outline">
+          <input matInput formControlName="roleCtrl">
+        </mat-form-field>
+        <label *ngIf="!user.rootAdmin">Tenant</label>
+        <mat-form-field *ngIf="!user.rootAdmin" appearance="outline">
+          <input matInput formControlName="tenantCtrl" required>
+        </mat-form-field>
+      </div>
+      <div class="row">
         <label>Phone</label>
         <mat-form-field appearance="outline">
           <input matInput placeholder="Telephone number" formControlName="phoneCtrl" required>
+        </mat-form-field>
+      </div>
+      <div *ngIf="!user.rootAdmin" class="row">
+        <label>Secret Question</label>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <input type="text" aria-label="Number" matInput [(ngModel)]="options[secretQuestionId]" [ngModelOptions]="{standalone: true}" [matAutocomplete]="auto"
+            required>
+          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of options" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <label>Answer</label>
+        <mat-form-field appearance="outline">
+          <input matInput formControlName="answerCtrl" required>
         </mat-form-field>
       </div>
     </div>
     <div class="col-1">
       <div class="image-container">
         <img src="http://i.pravatar.cc/150">
-      </div>
-    </div>
-    <div class="edit-footer">
-      <div class="row">
-        <label>Role</label>
-        <mat-form-field appearance="outline">
-          <input matInput formControlName="roleCtrl">
-        </mat-form-field>
-        <div [ngSwitch]="getRole()">
-          <div *ngSwitchCase="'root admin'"></div>
-          <div *ngSwitchDefault>
-            <label>Tenant</label>
-            <mat-form-field appearance="outline">
-              <input matInput placeholder="Tenant group name" formControlName="tenantCtrl" required>
-            </mat-form-field>
-          </div>
-        </div>
       </div>
     </div>
   </form>

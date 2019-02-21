@@ -8,6 +8,8 @@
   align-items: center;
   & button {
     width: 150px;
+    display: flex;
+    justify-content: flex-end;
   }
 }
    .image-container img {

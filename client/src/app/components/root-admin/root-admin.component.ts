@@ -19,7 +19,6 @@ export class RootAdminComponent implements OnInit {
   getUser() {
     this.datasourceService.getUser()
       .subscribe((res) => {
-        console.log('getUser', res.value);
         this.currentUser = res.value;
         this.checkUserRole();
       });

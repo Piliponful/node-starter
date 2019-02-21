@@ -12,13 +12,13 @@ mat-form-field {
         display: flex;
         align-items: baseline;
         & label {
-          width: 150px;
+          width: 130px;
           text-align: center;
         }
         & mat-form-field {
           margin-right: 60px;
           width: 100%;
-          max-width: 330px;
+          max-width: 300px;
         }
       }
     }

@@ -12,4 +12,5 @@ export interface IUserData {
   tenant: any;
   tenantAdmin: boolean;
   tenantId: string;
+  secretQuestionAnswer: any;
 }

@@ -72,8 +72,12 @@ export class DatasourceService {
         }));
   }
 
-  getUsers() {
-    return this.http.get('/api/user', httpOptions)
+  getUsers(id?: string) {
+    let url = '/api/user';
+    if (id.length > 0) {
+      url += `?tenantId=${id}`;
+    }
+    return this.http.get(url, httpOptions)
       .pipe(
         tap((res: any) => {
           return res;

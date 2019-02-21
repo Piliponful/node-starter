@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit() {
-        this.authService.authenticate(this.form.controls['email'].value, this.form.controls['password'].value)
+        this.authService.authenticate(this.form.controls['email'].value.trim(), this.form.controls['password'].value)
             .subscribe((res) => {
                     if (res && res['errors'].length > 0) {
                         this.snackBar.open(res['errors'][0], '', { duration: 2000 });

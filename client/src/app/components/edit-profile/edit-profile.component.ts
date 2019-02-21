@@ -12,6 +12,8 @@ import { IUserData } from '../../models/user.model';
 export class EditProfileComponent implements OnInit {
   user: IUserData;
   editProfileFormGroup: FormGroup;
+  options: string[] = ['Your favorite animal?', 'Your favorite color?', 'Three'];
+  secretQuestionId: any;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -25,6 +27,8 @@ export class EditProfileComponent implements OnInit {
       firstNameCtrl: ['', Validators.required],
       surnameCtrl: ['', Validators.required],
       tenantCtrl: ['', Validators.required],
+      secretQuestionId: [''],
+      answerCtrl: [''],
       roleCtrl: ['', Validators.required],
       addressCtrl: ['', Validators.required],
       phoneCtrl: ['', Validators.required],
@@ -47,8 +51,12 @@ export class EditProfileComponent implements OnInit {
         this.editProfileFormGroup.controls['addressCtrl'].setValue(this.user.address || '');
         this.editProfileFormGroup.controls['phoneCtrl'].setValue(this.user.phoneNumber || '');
         this.editProfileFormGroup.controls['roleCtrl'].setValue(this.getRole());
-        this.editProfileFormGroup.controls['tenantCtrl'].setValue(this.user.tenant.name || '');
-
+        if (!this.user.rootAdmin) {
+          this.editProfileFormGroup.controls['tenantCtrl'].setValue(this.user.tenant.name || '');
+          this.editProfileFormGroup.controls['secretQuestionId'].setValue(this.user.secretQuestionId || '');
+          this.secretQuestionId = this.user.secretQuestionId;
+          this.editProfileFormGroup.controls['answerCtrl'].setValue(this.user.secretQuestionAnswer || '');
+        }
         this.editProfileFormGroup.controls['roleCtrl'].disable();
         this.editProfileFormGroup.controls['tenantCtrl'].disable();
       });
