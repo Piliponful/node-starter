@@ -39,19 +39,19 @@ router.get('/tenant', async ctx => {
 
   try {
     const tenantsWithCount = await Promise.map(tenants, async t => {
-      const userCount = await User.count({ tenantId: t._id })
+      const userCount = await User.count({ tenantId: t._id.toString() })
       if (userCount.errors.length) {
         ctx.body = userCount
         throw new Error('Error while counting')
       }
 
-      const dxfFileCount = await DxfFile.count({ tenantId: t._id })
+      const dxfFileCount = await DxfFile.count({ tenantId: t._id.toString() })
       if (dxfFileCount.errors.length) {
         ctx.body = dxfFileCount
         throw new Error('Error while counting')
       }
 
-      const anotationCount = await Anotation.count({ tenantId: t._id })
+      const anotationCount = await Anotation.count({ tenantId: t._id.toString() })
       if (anotationCount.errors.length) {
         ctx.body = anotationCount
         throw new Error('Error while counting')
