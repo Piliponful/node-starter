@@ -42,16 +42,17 @@
       <div class="row">
         <label>Role</label>
         <mat-form-field appearance="outline">
-          <select matNativeControl placeholder="Role" formControlName="roleCtrl" required>
-            <option value="root admin">Root Admin</option>
-            <option value="tenant admin">Tenant Admin</option>
-            <option value="standart user">Standard User</option>
-          </select>
+          <input matInput formControlName="roleCtrl">
         </mat-form-field>
-        <label>Tenant</label>
-        <mat-form-field appearance="outline">
-          <input matInput placeholder="Tenant group name" formControlName="tenantCtrl" required>
-        </mat-form-field>
+        <div [ngSwitch]="getRole()">
+          <div *ngSwitchCase="'root admin'"></div>
+          <div *ngSwitchDefault>
+            <label>Tenant</label>
+            <mat-form-field appearance="outline">
+              <input matInput placeholder="Tenant group name" formControlName="tenantCtrl" required>
+            </mat-form-field>
+          </div>
+        </div>
       </div>
     </div>
   </form>

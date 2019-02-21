@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 import { DatasourceService } from '../../services/datasource.service';
-import { IUserData } from '../../models/user.model'
+import { IUserData } from '../../models/user.model';
 
 @Component({
   selector: 'app-edit-profile',
@@ -10,13 +10,13 @@ import { IUserData } from '../../models/user.model'
   styleUrls: ['./edit-profile.component.scss']
 })
 export class EditProfileComponent implements OnInit {
-  user :IUserData;
-  editProfileFormGroup :FormGroup;
+  user: IUserData;
+  editProfileFormGroup: FormGroup;
 
   constructor(
-    private _formBuilder :FormBuilder,
-    private location :Location,
-    private datasourceService :DatasourceService,
+    private _formBuilder: FormBuilder,
+    private location: Location,
+    private datasourceService: DatasourceService,
   ) { }
 
   ngOnInit() {
@@ -47,12 +47,10 @@ export class EditProfileComponent implements OnInit {
         this.editProfileFormGroup.controls['addressCtrl'].setValue(this.user.address || '');
         this.editProfileFormGroup.controls['phoneCtrl'].setValue(this.user.phoneNumber || '');
         this.editProfileFormGroup.controls['roleCtrl'].setValue(this.getRole());
-        this.editProfileFormGroup.controls['tenantCtrl'].setValue(this.user.tenantId || '');
+        this.editProfileFormGroup.controls['tenantCtrl'].setValue(this.user.tenant.name || '');
 
-        if (!this.user.rootAdmin) {
-          this.editProfileFormGroup.controls['roleCtrl'].disable();
-          this.editProfileFormGroup.controls['tenantCtrl'].disable();
-        }
+        this.editProfileFormGroup.controls['roleCtrl'].disable();
+        this.editProfileFormGroup.controls['tenantCtrl'].disable();
       });
   }
 
