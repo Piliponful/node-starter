@@ -8,10 +8,19 @@ const { ObjectID } = require('mongodb')
 const DxfFile = require('../db/entities/dxfFile')
 const User = require('../db/entities/user')
 const Anotation = require('../db/entities/anotation')
+const Tenant = require('../db/entities/tenant')
 
 const logger = require('../logger')
 
-const s3 = new AWS.S3({ credentials: { accessKeyId: config.aws.accessKey, secretAccessKey: config.aws.secretAccessKey } })
+const s3 = new AWS.S3({
+  params: {
+    Bucket: 'arialpoint-staging-anotations'
+  },
+  credentials: {
+    accessKeyId: config.aws.accessKey,
+    secretAccessKey: config.aws.secretAccessKey
+  }
+})
 
 const router = new Router()
 
@@ -28,7 +37,7 @@ router.post('/anotation', async ctx => {
     return
   }
 
-  const { fields: { gridPoints, dxfFileId }, files } = await asyncBusboy(ctx.req)
+  const { fields: { gridPoints, dxfFileId, tenantId }, files } = await asyncBusboy(ctx.req)
 
   if (!['.pdf', '.csv', '.docx'].includes(path.extname(files[0].filename))) {
     ctx.body = { errors: ['Wrong file type'] }
@@ -37,6 +46,18 @@ router.post('/anotation', async ctx => {
 
   if (!ObjectID.isValid(dxfFileId)) {
     ctx.body = { errors: ['DXF file id is invalid'] }
+    return
+  }
+
+  const { errors: tenantFindErrors, value: [tenant] } = await Tenant.find({ _id: ObjectID(tenantId) })
+
+  if (tenantFindErrors.length) {
+    ctx.body = { errors: tenantFindErrors }
+    return
+  }
+
+  if (!tenant) {
+    ctx.body = { errors: ['You trying to upload file to non existant tenant'] }
     return
   }
 
@@ -52,19 +73,9 @@ router.post('/anotation', async ctx => {
     return
   }
 
-  const s3Upload = () => new Promise((resolve, reject) => {
-    s3.upload({ Bucket: 'arialpoint-staging-anotations', Key: files[0].filename, Body: files[0] }, (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
-
   try {
-    await s3Upload()
-    ctx.body = await Anotation.create({ name: files[0].filename, gridPoints, createdBy: user._id, dxfFileId })
+    await s3.upload({ Key: files[0].filename, Body: files[0] }).promise()
+    ctx.body = await Anotation.create({ name: files[0].filename, gridPoints, createdBy: user._id, dxfFileId, tenantId })
   } catch (err) {
     logger.error(err, 'Problem with uploading anotation file to S3, post /anotation')
     ctx.body = { errors: ['Internal server error'] }
@@ -74,6 +85,7 @@ router.post('/anotation', async ctx => {
 router.get('/anotation', async ctx => {
   const { dxfFileId, createdBy } = ctx.query
   let query = { deleted: true }
+
   if (dxfFileId && ObjectID.isValid(dxfFileId)) {
     const { errors: dxfFileFindErrors, value: [dxf] } = await DxfFile.find({ _id: ObjectID(dxfFileId) })
 
@@ -138,18 +150,8 @@ router.get('/anotation/:id', async ctx => {
     return
   }
 
-  const s3Download = () => new Promise((resolve, reject) => {
-    s3.getObject({ Bucket: 'arialpoint-staging-anotations', Key: filename }, (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
-
   try {
-    const file = await s3Download()
+    const file = await s3.getObject({ Key: filename }).promise()
     ctx.body = { errors: [], value: file }
   } catch (err) {
     logger.error(err, 'Problem with downloading anotation file from S3, post /anotation')

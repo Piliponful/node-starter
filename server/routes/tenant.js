@@ -3,6 +3,10 @@ const { ObjectId } = require('mongodb')
 
 const Tenant = require('../db/entities/tenant')
 const User = require('../db/entities/user')
+const DxfFile = require('../db/entities/dxfFile')
+const Anotation = require('../db/entities/anotation')
+
+const Promise = require('bluebird')
 
 const router = new Router()
 
@@ -26,7 +30,12 @@ router.get('/tenant', async ctx => {
     return
   }
 
-  ctx.body = await Tenant.find({ deleted: false }, limit, skip)
+  ctx.body = await Promise.map(Tenant.find({ deleted: false }, limit, skip), async t => {
+    const userCount = await User.count({ tenantId: t._id })
+    const dxfFileCount = await DxfFile.count({ tenantId: t._id })
+    const anotationCount = await Anotation.count({ tenantId: t._id })
+    return { ...t, userCount, dxfFileCount, anotationCount }
+  })
 })
 
 router.get('/tenant/:id', async ctx => {

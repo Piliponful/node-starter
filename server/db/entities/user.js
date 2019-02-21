@@ -189,10 +189,21 @@ const getJWTFromUser = async email => {
   }
 }
 
+const count = async query => {
+  try {
+    const userCount = await db.collection('users').count(query)
+    return userCount
+  } catch (error) {
+    logger.error(error, 'Something wrong in User entity getJWTFromUser function')
+    return { errors: ['Internal server error has occurred'] }
+  }
+}
+
 module.exports = {
   create,
   find,
   update,
+  count,
   doesPasswordMatch,
   getUserFromJWT,
   getJWTFromUser,

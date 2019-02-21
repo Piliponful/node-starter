@@ -17,6 +17,7 @@
     "async-busboy": "^0.7.0",
     "aws-sdk": "^2.404.0",
     "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.5.3",
     "bunyan": "^1.8.12",
     "config": "^3.0.1",
     "es6-promisify": "^6.0.1",
