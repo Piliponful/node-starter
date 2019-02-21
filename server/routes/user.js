@@ -36,7 +36,7 @@ router.get('/user', async ctx => {
     query['tenantId'] = tenantId
   }
 
-  ctx.body = await User.find({ deleted: false }, limit, skip, { password: 0 })
+  ctx.body = await User.find(query, limit, skip, { password: 0 })
 })
 
 router.get('/user/:id', async ctx => {

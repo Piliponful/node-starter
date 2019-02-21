@@ -52,8 +52,8 @@ const update = async (query, fields, createIfAbsent = false) => {
 
 const count = async query => {
   try {
-    const userCount = await db.collection('dxffiles').count(query)
-    return userCount
+    const anotationCount = await (await db).collection('anotations').count(query)
+    return { errors: [], value: anotationCount }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity getJWTFromUser function')
     return { errors: ['Internal server error has occurred'] }

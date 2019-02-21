@@ -5,11 +5,6 @@ const logger = require('../../logger')
 
 const tenantFields = {
   name: joi.string().min(3).max(20).required(),
-  dxfFilesCount: joi.number().default(0),
-  usersCount: joi.number().default(1),
-  anotationFilesCount: joi.number().default(0),
-  dxfFileIds: joi.array(),
-  anotationFileIds: joi.array(),
   deleted: joi.boolean().default(false)
 }
 

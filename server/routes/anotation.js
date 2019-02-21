@@ -6,9 +6,9 @@ const config = require('config')
 const { ObjectID } = require('mongodb')
 
 const DxfFile = require('../db/entities/dxfFile')
-const User = require('../db/entities/user')
 const Anotation = require('../db/entities/anotation')
 const Tenant = require('../db/entities/tenant')
+const User = require('../db/entities/tenant')
 
 const logger = require('../logger')
 

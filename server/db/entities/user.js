@@ -191,8 +191,8 @@ const getJWTFromUser = async email => {
 
 const count = async query => {
   try {
-    const userCount = await db.collection('users').count(query)
-    return userCount
+    const userCount = await (await db).collection('users').count(query)
+    return { errors: [], value: userCount }
   } catch (error) {
     logger.error(error, 'Something wrong in User entity getJWTFromUser function')
     return { errors: ['Internal server error has occurred'] }

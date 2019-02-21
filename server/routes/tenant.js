@@ -30,12 +30,38 @@ router.get('/tenant', async ctx => {
     return
   }
 
-  ctx.body = await Promise.map(Tenant.find({ deleted: false }, limit, skip), async t => {
-    const userCount = await User.count({ tenantId: t._id })
-    const dxfFileCount = await DxfFile.count({ tenantId: t._id })
-    const anotationCount = await Anotation.count({ tenantId: t._id })
-    return { ...t, userCount, dxfFileCount, anotationCount }
-  })
+  const { errors: tenantFindErrors, value: tenants } = await Tenant.find({ deleted: false }, limit, skip)
+
+  if (tenantFindErrors.length) {
+    ctx.body = { errors: tenantFindErrors }
+    return
+  }
+
+  try {
+    const tenantsWithCount = await Promise.map(tenants, async t => {
+      const userCount = await User.count({ tenantId: t._id })
+      if (userCount.errors.length) {
+        ctx.body = userCount
+        throw new Error('Error while counting')
+      }
+
+      const dxfFileCount = await DxfFile.count({ tenantId: t._id })
+      if (dxfFileCount.errors.length) {
+        ctx.body = dxfFileCount
+        throw new Error('Error while counting')
+      }
+
+      const anotationCount = await Anotation.count({ tenantId: t._id })
+      if (anotationCount.errors.length) {
+        ctx.body = anotationCount
+        throw new Error('Error while counting')
+      }
+
+      return { ...t, userCount: userCount.value, dxfFileCount: dxfFileCount.value, anotationCount: anotationCount.value }
+    })
+    ctx.body = tenantsWithCount
+  } catch (error) {
+  }
 })
 
 router.get('/tenant/:id', async ctx => {
