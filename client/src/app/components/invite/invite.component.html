@@ -87,7 +87,11 @@
               row.rootAdmin ? 'Root Admin' : 'Standart User'
           }}</span>
           <mat-form-field appearance="outline" *ngIf="row.editable">
-            <input matInput [(ngModel)]="row.tenantAdmin">
+            <mat-select placeholder="Role" required [(ngModel)]="row.role" [disabled]>
+              <mat-option value="Root Admin">Root Admin</mat-option>
+              <mat-option value="Tenant Admin">Tenant Admin</mat-option>
+              <mat-option value="Standart User">Standart User</mat-option>
+            </mat-select>
           </mat-form-field>
         </td>
       </ng-container>

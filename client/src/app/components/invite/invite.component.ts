@@ -107,6 +107,13 @@ export class InviteComponent implements OnInit {
                 name: ''
               };
             }
+            if (element.rootAdmin) {
+              element.role = 'Root Admin';
+            } else if (element.tenantAdmin) {
+              element.role = 'Tenant Admin';
+            } else {
+              element.role = 'Standart User';
+            }
             element['editable'] = false;
           });
           this.dataSource = new MatTableDataSource(result);
@@ -119,6 +126,21 @@ export class InviteComponent implements OnInit {
   }
 
   onEditUser(row) {
+    switch (row.role) {
+      case 'Root Admin':
+        row.rootAdmin = true;
+        row.tenantAdmin = false;
+        break;
+      case 'Tenant Admin':
+        row.rootAdmin = false;
+        row.tenantAdmin = true;
+        break;
+      default:
+        row.rootAdmin = false;
+        row.tenantAdmin = false;
+        break;
+    }
+    delete row.role;
     row.editable = !row.editable;
     const id = row._id;
     delete row.editable;
