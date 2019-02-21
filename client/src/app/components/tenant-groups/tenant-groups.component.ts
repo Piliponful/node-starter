@@ -11,7 +11,8 @@ import { FileUploadDialogComponent } from '../files-page/file-upload-dialog/file
   styleUrls: ['./tenant-groups.component.scss']
 })
 export class TenantGroupsComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'Tenant Admin', 'usersCount', 'dxfFilesCount', 'anotationFilesCount'];
+  // displayedColumns: string[] = ['name', 'Tenant Admin', 'usersCount', 'dxfFilesCount', 'anotationFilesCount'];
+  displayedColumns: string[] = ['name', 'usersCount', 'dxfFilesCount', 'anotationFilesCount'];
   dataSource: MatTableDataSource<ITenantGroup>;
   tenantGroups: Array<ITenantGroup> = [];
 
