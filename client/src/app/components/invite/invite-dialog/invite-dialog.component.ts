@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IDialogData } from '../../../models/dialog-data.model';
-import { IUserData } from '../../../models/user.model'
+import { IUserData } from '../../../models/user.model';
 
 @Component({
   selector: 'app-invite-dialog',
