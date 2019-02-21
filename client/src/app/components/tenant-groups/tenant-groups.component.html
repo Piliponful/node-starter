@@ -11,15 +11,15 @@
       </ng-container> -->
       <ng-container matColumnDef="usersCount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Accounts </th>
-        <td mat-cell *matCellDef="let row"> {{row.usersCount}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.userCount}} </td>
       </ng-container>
       <ng-container matColumnDef="dxfFilesCount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> DXF File </th>
-        <td mat-cell *matCellDef="let row" (click)="openUploadDXFFileDialog(row._id)"> {{row.dxfFilesCount}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
+        <td mat-cell *matCellDef="let row" (click)="openUploadDXFFileDialog(row._id)"> {{row.dxfFileCount}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
       </ng-container>
       <ng-container matColumnDef="anotationFilesCount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Annotation Files </th>
-        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.anotationFilesCount}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
+        <td mat-cell *matCellDef="let row" routerLink="/files-page"> {{row.anotationCount}} <mat-icon color="accent" class="publish">publish</mat-icon></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

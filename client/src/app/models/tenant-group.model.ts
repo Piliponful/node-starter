@@ -1,6 +1,6 @@
 export interface ITenantGroup {
   name: string;
-  usersCount: number;
-  dxfFilesCount: number;
-  anotationFilesCount: number;
+  userCount: number;
+  dxfFileCount: number;
+  anotationCount: number;
 }
