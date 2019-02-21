@@ -13,7 +13,28 @@ const router = new Router()
 sgMail.setApiKey(config.email.API_KEY)
 
 router.get('/user', async ctx => {
-  const { limit, skip } = ctx.query
+  const { limit, skip, tenantId } = ctx.query
+  let query = { deleted: false }
+  if (tenantId) {
+    if (!ObjectId.isValid(tenantId)) {
+      ctx.body = { errors: ['The tenantId is invalid'] }
+      return
+    }
+
+    const { errors: findTenantErrors, value: [tenant] = [] } = await Tenant.find({ _id: ObjectId(tenantId) })
+
+    if (findTenantErrors.length) {
+      ctx.body = { errors: findTenantErrors }
+      return
+    }
+
+    if (!tenant) {
+      ctx.body = { errors: [`Tenant with tenantId - ${tenantId} wasn't found`] }
+      return
+    }
+
+    query['tenantId'] = tenantId
+  }
 
   ctx.body = await User.find({ deleted: false }, limit, skip, { password: 0 })
 })
