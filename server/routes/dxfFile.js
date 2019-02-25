@@ -6,8 +6,9 @@ const config = require('config')
 const { ObjectID } = require('mongodb')
 
 const DxfFile = require('../db/entities/dxfFile')
-const User = require('../db/entities/user')
 const Tenant = require('../db/entities/tenant')
+
+const { authenticate } = require('../middleware/auth')
 
 const logger = require('../logger')
 
@@ -23,19 +24,7 @@ const s3 = new AWS.S3({
 
 const router = new Router()
 
-router.post('/dxf-file', async ctx => {
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
-    return
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
+router.post('/dxf-file', authenticate, async ctx => {
   const { fields: { tenantId }, files } = await asyncBusboy(ctx.req)
 
   if (path.extname(files[0].filename) !== '.dxf') {
@@ -43,7 +32,7 @@ router.post('/dxf-file', async ctx => {
     return
   }
 
-  if (!user.rootAdmin) {
+  if (!ctx.user.rootAdmin) {
     ctx.body = { errors: ['You dont\'t have the permission to upload dxf files'] }
     return
   }
@@ -102,19 +91,7 @@ router.get('/dxf-file', async ctx => {
   ctx.body = await DxfFile.find({ deleted: false })
 })
 
-router.get('/dxf-file/:id', async ctx => {
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
-    return
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
+router.get('/dxf-file/:id', authenticate, async ctx => {
   const { errors, value: [{ name: filename, deleted, tenantId }] } = await DxfFile.find({ _id: ObjectID(ctx.params.id) })
   if (errors.length) {
     ctx.body = { errors }
@@ -126,7 +103,7 @@ router.get('/dxf-file/:id', async ctx => {
     return
   }
 
-  if (!user.rootAdmin && user.tenantId !== tenantId.toString()) {
+  if (!ctx.user.rootAdmin && ctx.user.tenantId !== tenantId.toString()) {
     ctx.body = { errors: ['You don\'t have the permission to download this file'] }
     return
   }
@@ -140,20 +117,8 @@ router.get('/dxf-file/:id', async ctx => {
   }
 })
 
-router.delete('/dxf-file/:id', async ctx => {
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
-    return
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
-  if (!user.rootAdmin && !user.tenantAdmin) {
+router.delete('/dxf-file/:id', authenticate, async ctx => {
+  if (!ctx.user.rootAdmin && !ctx.user.tenantAdmin) {
     ctx.body = { errors: ['You dont\'t have the permission to delete dxf files'] }
     return
   }

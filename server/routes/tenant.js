@@ -1,31 +1,20 @@
 const Router = require('koa-router')
 const { ObjectId } = require('mongodb')
+const Promise = require('bluebird')
 
 const Tenant = require('../db/entities/tenant')
 const User = require('../db/entities/user')
 const DxfFile = require('../db/entities/dxfFile')
 const Anotation = require('../db/entities/anotation')
 
-const Promise = require('bluebird')
+const { authenticate } = require('../middleware/auth')
 
 const router = new Router()
 
-router.get('/tenant', async ctx => {
+router.get('/tenant', authenticate, async ctx => {
   const { limit, skip } = ctx.query
 
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
-    return
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
-  if (!user.rootAdmin) {
+  if (!ctx.user.rootAdmin) {
     ctx.body = { errors: ['Only root admin has the permission to view tenants'] }
     return
   }
@@ -64,21 +53,9 @@ router.get('/tenant', async ctx => {
   }
 })
 
-router.get('/tenant/:id', async ctx => {
+router.get('/tenant/:id', authenticate, async ctx => {
   const { id } = ctx.params
   const { findByName } = ctx.query
-
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
-    return
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
 
   const query = findByName ? { name: id } : { _id: ObjectId(id) }
   const { errors, value: [tenant] } = await Tenant.find(query)
@@ -88,12 +65,12 @@ router.get('/tenant/:id', async ctx => {
     return
   }
 
-  if (!user.rootAdmin && !user.tenantAdmin) {
+  if (!ctx.user.rootAdmin && !ctx.user.tenantAdmin) {
     ctx.body = { errors: ['You don\'t have the permission to view this tenant'] }
     return
   }
 
-  if (!user.rootAdmin && user.tenantId !== tenant._id) {
+  if (!ctx.user.rootAdmin && ctx.user.tenantId !== tenant._id) {
     ctx.body = { errors: [`You have the permission to view tenant with id ${tenant._id}`] }
     return
   }
@@ -106,25 +83,15 @@ router.get('/tenant/:id', async ctx => {
   ctx.body = { errors: [], value: tenant }
 })
 
-router.patch('/tenant/:id', async ctx => {
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    return { errors: ['You have to supply jwt token in authorization header'] }
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
+router.patch('/tenant/:id', authenticate, async ctx => {
   const { id } = ctx.params
 
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
-  if (!user.rootAdmin && !user.tenantAdmin) {
+  if (!ctx.user.rootAdmin && !ctx.user.tenantAdmin) {
     ctx.body = { errors: ['You don\'t have the permission to update this tenant'] }
     return
   }
 
-  if (!user.rootAdmin && user.tenantId !== id) {
+  if (!ctx.user.rootAdmin && ctx.user.tenantId !== id) {
     ctx.body = { errors: [`You have the permission to update tenant with id - ${id}`] }
     return
   }
@@ -132,26 +99,15 @@ router.patch('/tenant/:id', async ctx => {
   ctx.body = await Tenant.update({ _id: ObjectId(id) }, { $set: ctx.request.body })
 })
 
-router.delete('/tenant/:id', async ctx => {
+router.delete('/tenant/:id', authenticate, async ctx => {
   const { id } = ctx.params
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    return { errors: ['You have to supply jwt token in authorization header'] }
-  }
 
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
-  if (!user.rootAdmin && !user.tenantAdmin) {
+  if (!ctx.user.rootAdmin && !ctx.user.tenantAdmin) {
     ctx.body = { errors: ['You don\'t have the permission to delete this tenant'] }
     return
   }
 
-  if (!user.rootAdmin && user.tenantId !== id) {
+  if (!ctx.user.rootAdmin && ctx.user.tenantId !== id) {
     ctx.body = { errors: [`You have the permission to delete tenant with id - ${id}`] }
     return
   }

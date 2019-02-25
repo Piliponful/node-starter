@@ -1,27 +1,119 @@
-const Router = require('koa-router')
-const sgMail = require('@sendgrid/mail')
-const config = require('config')
-const shortUUID = require('short-uuid')
-const { ObjectId } = require('mongodb')
+const createUserRouter = (userEntity, tenantEntity, auth) => {
+  const Router = require('koa-router')
+  const sgMail = require('@sendgrid/mail')
+  const config = require('config')
+  const shortUUID = require('short-uuid')
+  const { ObjectId } = require('mongodb')
 
-const User = require('../db/entities/user')
-const Tenant = require('../db/entities/tenant')
-const logger = require('../logger')
+  const logger = require('../logger')
 
-const router = new Router()
+  sgMail.setApiKey(config.email.API_KEY)
 
-sgMail.setApiKey(config.email.API_KEY)
+  const router = new Router()
 
-router.get('/user', async ctx => {
-  const { limit, skip, tenantId } = ctx.query
-  let query = { deleted: false }
-  if (tenantId) {
-    if (!ObjectId.isValid(tenantId)) {
-      ctx.body = { errors: ['The tenantId is invalid'] }
+  router.get('/user', async ctx => {
+    const { limit, skip, tenantId } = ctx.query
+
+    let query = { deleted: false }
+
+    if (tenantId) {
+      if (!ObjectId.isValid(tenantId)) {
+        ctx.body = { errors: ['The tenantId is invalid'] }
+        return
+      }
+
+      const { errors: findTenantErrors, value: [tenant] = [] } = await tenantEntity.find({ _id: ObjectId(tenantId) })
+
+      if (findTenantErrors.length) {
+        ctx.body = { errors: findTenantErrors }
+        return
+      }
+
+      if (!tenant) {
+        ctx.body = { errors: [`Tenant with tenantId - ${tenantId} wasn't found`] }
+        return
+      }
+
+      query['tenantId'] = tenantId
+    }
+
+    const users = await userEntity.find(query, limit, skip, { password: 0 })
+
+    ctx.body = users
+  })
+
+  router.get('/user/:id', async ctx => {
+    const { id } = ctx.params
+
+    const { errors, value: user } = await userEntity.find({ _id: ObjectId(id) })
+
+    if (errors.length) {
+      ctx.body = { errors }
       return
     }
 
-    const { errors: findTenantErrors, value: [tenant] = [] } = await Tenant.find({ _id: ObjectId(tenantId) })
+    if (user) {
+      ctx.body = { errors: [`User with ${id} wasn't found`] }
+      return
+    }
+
+    if (user.deleted) {
+      ctx.body = { errors: [`User with ${id} was deleted`] }
+      return
+    }
+
+    ctx.body = { errors: [], value: user }
+  })
+
+  router.patch('/user/:id', async ctx => {
+    const { id } = ctx.params
+
+    ctx.body = await userEntity.update({ _id: ObjectId(id) }, { $set: ctx.request.body })
+  })
+
+  router.delete('/user/:id', async ctx => {
+    const { id } = ctx.params
+
+    ctx.body = await userEntity.update({ _id: ObjectId(id) }, { $set: { deleted: true } })
+  })
+
+  router.post('/user', auth, async ctx => {
+    logger.info(ctx.request.body, 'Starting registration process, post /user')
+
+    const { firstname, lastname, email, tenantAdmin, tenantName, message = '' } = ctx.request.body
+
+    if (!ctx.user.tenantAdmin && !ctx.user.rootAdmin) {
+      ctx.body = { errors: ['You don\'t have the permission to create users'] }
+      return
+    }
+
+    if (!ctx.user.rootAdmin && tenantAdmin) {
+      ctx.body = { errors: ['You don\'t have the permission to create tenant admin'] }
+      return
+    }
+
+    if (ctx.user.rootAdmin && tenantAdmin) {
+      const { errors: findTenantErrors, value: [tenant] } = await tenantEntity.find({ name: tenantName })
+
+      if (findTenantErrors.length) {
+        ctx.body = { errors: findTenantErrors }
+        return
+      }
+
+      if (tenant) {
+        ctx.body = { errors: [`Tenant with ${tenantName} already exists`] }
+        return
+      }
+
+      const { errors: tenantCreationErrors } = await tenantEntity.create({ name: tenantName })
+
+      if (tenantCreationErrors.length) {
+        ctx.body = { errors: tenantCreationErrors }
+        return
+      }
+    }
+
+    const { errors: findTenantErrors, value: [tenant] } = await tenantEntity.find({ name: tenantName })
 
     if (findTenantErrors.length) {
       ctx.body = { errors: findTenantErrors }
@@ -29,181 +121,85 @@ router.get('/user', async ctx => {
     }
 
     if (!tenant) {
-      ctx.body = { errors: [`Tenant with tenantId - ${tenantId} wasn't found`] }
+      ctx.body = { errors: [`Wasn't able to find tenant by the '${tenantName}' name`] }
       return
     }
 
-    query['tenantId'] = tenantId
-  }
-
-  ctx.body = await User.find(query, limit, skip, { password: 0 })
-})
-
-router.get('/user/:id', async ctx => {
-  const { id } = ctx.params
-
-  const { errors, value: user } = await User.find({ _id: ObjectId(id) })
-
-  if (errors.length) {
-    ctx.body = { errors }
-    return
-  }
-
-  if (user) {
-    ctx.body = { errors: [`User with ${id} wasn't found`] }
-    return
-  }
-
-  if (user.deleted) {
-    ctx.body = { errors: [`User with ${id} was deleted`] }
-    return
-  }
-
-  ctx.body = { errors: [], value: user }
-})
-
-router.patch('/user/:id', async ctx => {
-  const { id } = ctx.params
-
-  ctx.body = await User.update({ _id: ObjectId(id) }, { $set: ctx.request.body })
-})
-
-router.delete('/user/:id', async ctx => {
-  const { id } = ctx.params
-
-  ctx.body = await User.update({ _id: ObjectId(id) }, { $set: { deleted: true } })
-})
-
-router.post('/user', async ctx => {
-  logger.info(ctx.request.body, 'Starting registration process, post /user')
-  const { jwt, firstname, lastname, email, tenantAdmin, tenantName, message = '' } = ctx.request.body
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in body jwt field'] }
-    return
-  }
-
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
-  if (!user.tenantAdmin && !user.rootAdmin) {
-    ctx.body = { errors: ['You don\'t have the permission to create users'] }
-    return
-  }
-
-  if (!user.rootAdmin && tenantAdmin) {
-    ctx.body = { errors: ['You don\'t have the permission to create tenant admin'] }
-    return
-  }
-
-  if (user.rootAdmin && tenantAdmin) {
-    const { errors: findTenantErrors, value: [tenant] } = await Tenant.find({ name: tenantName })
-
-    if (findTenantErrors.length) {
-      ctx.body = { errors: findTenantErrors }
+    if (ctx.user.tenantAdmin && ctx.user.tenantId !== tenant._id.toString()) {
+      ctx.body = { errors: ['You can create users only for tenant you\'re an admin of'] }
       return
     }
 
-    if (tenant) {
-      ctx.body = { errors: [`Tenant with ${tenantName} already exists`] }
+    const finishRegistrationCode = shortUUID.generate()
+    const userCreationRes = await userEntity.create({
+      email,
+      finishRegistrationCode,
+      firstname,
+      lastname,
+      tenant: tenant,
+      tenantAdmin,
+      tenantId: tenant._id.toString()
+    })
+
+    if (!userCreationRes.value) {
+      ctx.body = userCreationRes
       return
     }
 
-    const { errors: tenantCreationErrors } = await Tenant.create({ name: tenantName })
+    const msg = {
+      to: email,
+      from: `${ctx.user.firstname} ${ctx.user.lastname} <${ctx.user.email}>`,
+      subject: '[Arial Point]: Finish registration process',
+      text: message + (message && '\n' + '\n' + '\n') + `link to finish registration, do not share it with anyone - ${config.app.URL}/user-registration?code=${finishRegistrationCode}`
+    }
 
-    if (tenantCreationErrors.length) {
-      ctx.body = { errors: tenantCreationErrors }
+    try {
+      await sgMail.send(msg)
+    } catch (error) {
+      logger.error(error, 'Email invite hasn\'t been sent due to error, post /user')
+      ctx.body = { errors: ['Internal server error has occured'] }
       return
     }
-  }
 
-  const { errors: findTenantErrors, value: [tenant] } = await Tenant.find({ name: tenantName })
+    logger.info(msg, 'Email invite sent, post /user')
 
-  if (findTenantErrors.length) {
-    ctx.body = { errors: findTenantErrors }
-    return
-  }
-
-  if (!tenant) {
-    ctx.body = { errors: [`Wasn't able to find tenant by the '${tenantName}' name`] }
-    return
-  }
-
-  if (user.tenantAdmin && user.tenantId !== tenant._id.toString()) {
-    ctx.body = { errors: ['You can create users only for tenant you\'re an admin of'] }
-    return
-  }
-
-  const finishRegistrationCode = shortUUID.generate()
-  const userCreationRes = await User.create({
-    email,
-    finishRegistrationCode,
-    firstname,
-    lastname,
-    tenant: tenant,
-    tenantAdmin,
-    tenantId: tenant._id.toString(),
+    ctx.body = userCreationRes
   })
 
-  if (!userCreationRes.value) {
-    ctx.body = userCreationRes
-    return
-  }
+  router.post('/user/finish-registration', async ctx => {
+    const { finishRegistrationCode, additionalFields } = ctx.request.body
 
-  const msg = {
-    to: email,
-    from: `${user.firstname} ${user.lastname} <${user.email}>`,
-    subject: '[Arial Point]: Finish registration process',
-    text: message + (message && '\n' + '\n' + '\n') + `link to finish registration, do not share it with anyone - ${config.app.URL}/user-registration?code=${finishRegistrationCode}`
-  }
+    ctx.body = await userEntity.updateWithAdditionalFilds(finishRegistrationCode, additionalFields)
+  })
 
-  try {
-    await sgMail.send(msg)
-  } catch (error) {
-    logger.error(error, 'Email invite hasn\'t been sent due to error, post /user')
-    ctx.body = { errors: ['Internal server error has occured'] }
-    return
-  }
+  router.post('/user/login', async ctx => {
+    const { password, email } = ctx.request.body
+    const { errors: passwordMatchErrors, value: passwordMatch } = await userEntity.doesPasswordMatch(email, password)
 
-  logger.info(msg, 'Email invite sent, post /user')
+    if (passwordMatchErrors.length) {
+      ctx.body = { errors: passwordMatchErrors }
+      return
+    }
 
-  ctx.body = userCreationRes
-})
+    if (!passwordMatch) {
+      ctx.body = { errors: ['Your password doesn\'t match'] }
+      return
+    }
 
-router.post('/user/finish-registration', async ctx => {
-  const { finishRegistrationCode, additionalFields } = ctx.request.body
+    const getJWTFromUserRes = await userEntity.getJWTFromUser(email)
 
-  ctx.body = await User.updateWithAdditionalFilds(finishRegistrationCode, additionalFields)
-})
+    ctx.body = getJWTFromUserRes
+  })
 
-router.post('/user/login', async ctx => {
-  const { password, email } = ctx.request.body
-  const { errors: passwordMatchErrors, value: passwordMatch } = await User.doesPasswordMatch(email, password)
+  router.post('/user/byJwt', async ctx => {
+    const { jwt } = ctx.request.body
 
-  if (passwordMatchErrors.length) {
-    ctx.body = { errors: passwordMatchErrors }
-    return
-  }
+    const getUser = await userEntity.getUserFromJWT(jwt)
 
-  if (!passwordMatch) {
-    ctx.body = { errors: ['Your password doesn\'t match'] }
-    return
-  }
+    ctx.body = getUser
+  })
 
-  const getJWTFromUserRes = await User.getJWTFromUser(email)
+  return router
+}
 
-  ctx.body = getJWTFromUserRes
-})
-
-router.post('/user/byJwt', async ctx => {
-  const { jwt } = ctx.request.body
-
-  const getUser = await User.getUserFromJWT(jwt)
-
-  ctx.body = getUser
-})
-
-module.exports = router
+module.exports = { createUserRouter }

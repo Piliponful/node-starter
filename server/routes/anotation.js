@@ -9,6 +9,7 @@ const DxfFile = require('../db/entities/dxfFile')
 const Anotation = require('../db/entities/anotation')
 const Tenant = require('../db/entities/tenant')
 const User = require('../db/entities/tenant')
+const { authenticate } = require('../middleware/auth')
 
 const logger = require('../logger')
 
@@ -24,19 +25,7 @@ const s3 = new AWS.S3({
 
 const router = new Router()
 
-router.post('/anotation', async ctx => {
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
-    return
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
+router.post('/anotation', authenticate, async ctx => {
   const { fields: { gridPoints, dxfFileId, tenantId }, files } = await asyncBusboy(ctx.req)
 
   if (!['.pdf', '.csv', '.docx'].includes(path.extname(files[0].filename))) {
@@ -120,19 +109,7 @@ router.get('/anotation', async ctx => {
   ctx.body = await Anotation.find(query)
 })
 
-router.get('/anotation/:id', async ctx => {
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
-    return
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
-
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
+router.get('/anotation/:id', authenticate, async ctx => {
   const { errors, value: [{ name: filename, deleted, tenantId }] } = await Anotation.find({ _id: ObjectID(ctx.params.id) })
 
   if (errors.length) {
@@ -145,7 +122,7 @@ router.get('/anotation/:id', async ctx => {
     return
   }
 
-  if (!user.rootAdmin && !user.tenantId !== tenantId) {
+  if (!ctx.user.rootAdmin && !ctx.user.tenantId !== tenantId) {
     ctx.body = { errors: ['You dont\'t have the permission to download anotation files'] }
     return
   }
@@ -159,20 +136,10 @@ router.get('/anotation/:id', async ctx => {
   }
 })
 
-router.delete('/anotation/:id', async ctx => {
-  const jwt = ctx.request.headers['authorization']
-  if (!jwt) {
-    ctx.body = { errors: ['You have to supply jwt token in authorization header'] }
-  }
-  const { errors: getUserFromJWTErrors, value: user } = User.getUserFromJWT(jwt)
+router.delete('/anotation/:id', authenticate, async ctx => {
   const { tenantId } = ctx.req.body
 
-  if (getUserFromJWTErrors.length) {
-    ctx.body = { errors: getUserFromJWTErrors }
-    return
-  }
-
-  if (!user.rootAdmin && !user.tenantId !== tenantId) {
+  if (!ctx.user.rootAdmin && !ctx.user.tenantId !== tenantId) {
     ctx.body = { errors: ['You dont\'t have the permission to delete anotation files'] }
     return
   }

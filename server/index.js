@@ -1,17 +1,28 @@
-const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
+const main = async () => {
+  const Koa = require('koa')
+  const bodyParser = require('koa-bodyparser')
 
-const { initializeDB } = require('./db/connection')
+  const { createDb } = require('./db/connection')
+  const db = await createDb()
 
-const db = initializeDB()
+  const { createUserEntity } = require('./db/entities/user')
+  const userEntity = await createUserEntity(db)
 
-module.exports = { db }
+  const { createTenantEntity } = require('./db/entities/tenant')
+  const tenantEntity = await createTenantEntity(db)
 
-const router = require('./routes')
+  const { createAuthMiddleware } = require('./middleware/auth')
+  const auth = createAuthMiddleware(userEntity)
 
-const app = new Koa()
+  const { createRouter } = require('./routes')
+  const router = createRouter(userEntity, tenantEntity, auth)
 
-app.use(bodyParser())
-app.use(router.routes())
+  const app = new Koa()
 
-app.listen(80)
+  app.use(bodyParser())
+  app.use(router.routes())
+
+  app.listen(80)
+}
+
+main()

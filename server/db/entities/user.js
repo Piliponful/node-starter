@@ -1,211 +1,124 @@
-const joi = require('joi').extend(require('joi-phone-number'))
-const { hashSync, compareSync } = require('bcrypt-nodejs')
-const { decode, encode } = require('jwt-simple')
-const config = require('config')
+const createUserEntity = db => {
+  const joi = require('joi').extend(require('joi-phone-number'))
 
-const { db } = require('../../')
-const logger = require('../../logger')
+  const additionalFields = {
+    address: joi.string().min(5).max(200).required(),
+    city: joi.string().min(5).max(200).required(),
+    state: joi.string().min(5).max(200).required(),
 
-const additionalFields = {
-  // geo
-  address: joi.string().min(5).max(200).required(),
-  city: joi.string().min(5).max(200).required(),
-  state: joi.string().min(5).max(200).required(),
+    firstname: joi.string().min(5).max(200).required(),
+    lastname: joi.string().min(5).max(200).required(),
+    phoneNumber: joi.string().phoneNumber(),
 
-  // basic
-  firstname: joi.string().min(5).max(200).required(),
-  lastname: joi.string().min(5).max(200).required(),
-  phoneNumber: joi.string().phoneNumber(),
+    password: joi.string().min(6).max(50).required(),
+    secretQuestionAnswer: joi.string(),
+    secretQuestionId: joi.number()
+  }
 
-  // secret
-  password: joi.string().min(6).max(50).required(),
-  secretQuestionAnswer: joi.string(),
-  secretQuestionId: joi.number()
-}
+  const userFields = {
+    firstname: joi.string().alphanum().min(3).max(20).required(),
+    lastname: joi.string().alphanum().min(3).max(20).required(),
+    email: joi.string().email({ minDomainAtoms: 2 }).required(),
+    tenantId: joi.string().required(),
+    tenant: joi.object(),
 
-const userFields = {
-  firstname: joi.string().alphanum().min(3).max(20).required(),
-  lastname: joi.string().alphanum().min(3).max(20).required(),
-  email: joi.string().email({ minDomainAtoms: 2 }).required(),
-  tenantId: joi.string().required(),
-  tenant: joi.object(),
+    tenantAdmin: joi.boolean().default(false),
+    rootAdmin: joi.boolean().default(false),
 
-  tenantAdmin: joi.boolean().default(false),
-  rootAdmin: joi.boolean().default(false),
+    finishRegistrationCode: joi.string().required(),
+    deleted: joi.boolean().default(false)
+  }
 
-  finishRegistrationCode: joi.string().required(),
-  deleted: joi.boolean().default(false)
-}
+  const createSpecificFunctions = baseFunctions => {
+    const config = require('config')
+    const { hashSync, compareSync } = require('bcrypt-nodejs')
+    const { decode, encode } = require('jwt-simple')
 
-const userSchema = joi.object().keys(userFields)
+    const doesPasswordMatch = async (email, password) => {
+      const { error } = joi.validate({ password, email }, joi.object().keys({ email: userFields.email, password: additionalFields.password }))
 
-const create = async user => {
-  try {
-    const { error, value } = userSchema.validate(user)
-    if (error) {
-      return { errors: error.details.map(d => d.message) }
+      if (error) {
+        return { errors: error.details.map(d => d.message) }
+      }
+
+      const { errors: findErrors, value: [user] = [] } = await baseFunctions.find({ email })
+
+      if (findErrors.length) {
+        return { errors: findErrors }
+      }
+
+      if (!user) {
+        return { errors: ['Couldn\'t find user by the provided email'] }
+      }
+
+      if (user.finishRegistrationCode) {
+        return { errors: ['You need to finish your registration process'] }
+      }
+
+      return { errors: [], value: compareSync(password, user.password) }
     }
 
-    await (await db).collection('users').insertOne(value)
-    return { errors: [], value: true }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity create function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
+    const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
+      const { error } = joi.validate(fields, additionalFields)
 
-const find = async (query, limit = 0, skip = 0, projection) => {
-  try {
-    const value = await (await db).collection('users').find(query, { limit, skip, projection }).toArray()
-    return { errors: [], value }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity find function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
+      if (error) {
+        return { errors: error.details.map(d => d.message) }
+      }
 
-const update = async (query, fields, createIfAbsent = false) => {
-  try {
-    (await db).collection('users').updateMany(query, fields, { upsert: createIfAbsent })
-    return { errors: [], value: true }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity find function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
+      const { errors, value: [user] = [] } = await baseFunctions.find({ finishRegistrationCode })
 
-const doesPasswordMatch = async (email, password) => {
-  try {
-    const { error } = joi.validate(password, additionalFields.password)
+      if (errors.length) {
+        return { errors }
+      }
 
-    if (error) {
-      return { errors: error.details.map(d => d.message) }
+      if (!user) {
+        return { errors: ['Finish registration code isn\'t valid'] }
+      }
+
+      await baseFunctions.update({ finishRegistrationCode }, {
+        $set: {
+          ...fields,
+          password: hashSync(fields.password),
+          deleted: false
+        },
+        $unset: { finishRegistrationCode: 1 }
+      })
+
+      return { errors: [], value: true }
     }
 
-    const { errors: findByEmailErrors, value: user } = await findByEmail(email)
-    if (user.finishRegistrationCode) {
-      return { errors: ['You need to finish your registration process'] }
+    const getUserFromJWT = jwt => {
+      const user = decode(jwt, config.app.secret)
+
+      return { errors: [], value: user }
     }
 
-    if (findByEmailErrors.length) {
-      return { errors: findByEmailErrors }
+    const getJWTFromUser = async email => {
+      const { errors: findErrors, value: users } = await baseFunctions.find({ email })
+
+      if (findErrors.length) {
+        return { errors: findErrors }
+      }
+
+      const [user] = users
+
+      if (!user) {
+        return { errors: ['Couldn\'t find user by the provided email'] }
+      }
+
+      return { errors: [], value: encode(user, config.app.secret) }
     }
 
-    return { errors: [], value: compareSync(password, user.password) }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity doesPasswordMatch function')
-    return { errors: ['Internal server error has occurred'] }
+    return {
+      doesPasswordMatch,
+      getUserFromJWT,
+      getJWTFromUser,
+      updateWithAdditionalFilds
+    }
   }
+
+  const { createEntity } = require('../entity')
+  return createEntity(db, 'user', userFields, createSpecificFunctions)
 }
 
-const findByEmail = async email => {
-  const { errors: findErrors, value: users } = await find({ email })
-
-  if (findErrors.length) {
-    return { errors: findErrors }
-  }
-
-  const [user] = users
-
-  if (!user) {
-    return { errors: ['Couldn\'t find user by the provided email'] }
-  }
-
-  return { errors: [], value: user }
-}
-
-const updateWithAdditionalFilds = async (finishRegistrationCode, fields) => {
-  try {
-    const errors = await validate()
-
-    if (errors.length) {
-      return { errors }
-    }
-
-    await update({ finishRegistrationCode }, {
-      $set: {
-        ...fields,
-        password: hashSync(fields.password),
-        deleted: false
-      },
-      $unset: { finishRegistrationCode: 1 }
-    })
-
-    return { errors: [], value: true }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity updateWithAdditionalFilds function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-
-  async function validate () {
-    const { error } = joi.validate(fields, additionalFields)
-
-    if (error) {
-      return error.details.map(d => d.message)
-    }
-
-    const { errors, value: [user] = [] } = await find({ finishRegistrationCode })
-
-    if (errors.length) {
-      return errors
-    }
-
-    if (!user) {
-      return ['Finish registration code isn\'t valid']
-    }
-
-    return []
-  }
-}
-
-const getUserFromJWT = jwt => {
-  try {
-    const user = decode(jwt, config.app.secret)
-    return { errors: [], value: user }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity getUserFromJWT function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
-
-const getJWTFromUser = async email => {
-  try {
-    const { errors: findErrors, value: users } = (await find({ email }))
-
-    if (findErrors.length) {
-      return { errors: findErrors }
-    }
-
-    const [user] = users
-
-    if (!user) {
-      return { errors: ['Couldn\'t find user by the provided email'] }
-    }
-
-    return { errors: [], value: encode(user, config.app.secret) }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity getJWTFromUser function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
-
-const count = async query => {
-  try {
-    const userCount = await (await db).collection('users').count(query)
-    return { errors: [], value: userCount }
-  } catch (error) {
-    logger.error(error, 'Something wrong in User entity getJWTFromUser function')
-    return { errors: ['Internal server error has occurred'] }
-  }
-}
-
-module.exports = {
-  create,
-  find,
-  update,
-  count,
-  doesPasswordMatch,
-  getUserFromJWT,
-  getJWTFromUser,
-  updateWithAdditionalFilds
-}
+module.exports = { createUserEntity }
