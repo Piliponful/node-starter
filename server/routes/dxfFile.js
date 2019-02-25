@@ -65,6 +65,18 @@ router.post('/dxf-file', async ctx => {
     return
   }
 
+  const { errors: dxfFileFindErrors, value: [existingDxfFile] = [] } = await DxfFile.find({ name: files[0].filename })
+
+  if (dxfFileFindErrors.length) {
+    ctx.body = { errors: dxfFileFindErrors }
+    return
+  }
+
+  if (existingDxfFile) {
+    ctx.body = { errors: ['File with such name already exists'] }
+    return
+  }
+
   try {
     await s3.upload({ Key: files[0].filename, Body: files[0] }).promise()
     const { errors: dxfFileCreationErrors, value: dxfFileCreationRes } = await DxfFile.create({ name: files[0].filename, tenantId })
