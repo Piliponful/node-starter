@@ -65,7 +65,7 @@ router.post('/dxf-file', async ctx => {
     return
   }
 
-  const { errors: dxfFileFindErrors, value: [existingDxfFile] = [] } = await DxfFile.find({ name: files[0].filename })
+  const { errors: dxfFileFindErrors, value: [existingDxfFile] = [] } = await DxfFile.find({ name: files[0].filename, tenantId: ObjectID(tenantId) })
 
   if (dxfFileFindErrors.length) {
     ctx.body = { errors: dxfFileFindErrors }
