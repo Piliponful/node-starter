@@ -1,4 +1,7 @@
 {
+  "app": {
+    "URL": "APP_URL"
+  },
   "db": {
     "password": "MONGODB_ROOT_PASSWORD"
   },

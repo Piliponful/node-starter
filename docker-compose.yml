@@ -16,9 +16,9 @@ services:
     depends_on:
       - mongodb
     environment:
-      - SECRET=${SECRET}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
       - MONGODB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - SECRET=${SECRET}
       - ACCESS_KEY=${ACCESS_KEY}
       - SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
 

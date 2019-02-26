@@ -1,133 +1,105 @@
-const createUserRouter = (userEntity, tenantEntity, auth) => {
-  const Router = require('koa-router')
-  const sgMail = require('@sendgrid/mail')
-  const config = require('config')
-  const shortUUID = require('short-uuid')
-  const { ObjectId } = require('mongodb')
+const Router = require('koa-router')
+const sgMail = require('@sendgrid/mail')
+const config = require('config')
+const shortUUID = require('short-uuid')
+const { ObjectID } = require('mongodb')
 
-  const logger = require('../logger')
+const logger = require('../logger')
 
-  sgMail.setApiKey(config.email.API_KEY)
+sgMail.setApiKey(config.email.API_KEY)
 
-  const router = new Router()
+const router = new Router()
 
-  router.get('/user', async ctx => {
-    const { limit, skip, tenantId } = ctx.query
-
+const createUserFunctions = async ({ tenantEntity, userEntity }) => {
+  const getUsers = ({ limit, skip, tenantId }) => {
     let query = { deleted: false }
 
     if (tenantId) {
-      if (!ObjectId.isValid(tenantId)) {
-        ctx.body = { errors: ['The tenantId is invalid'] }
-        return
+      if (!ObjectID.isValid(tenantId)) {
+        return { errors: ['tenantId is invalid'] }
       }
 
-      const { errors: findTenantErrors, value: [tenant] = [] } = await tenantEntity.find({ _id: ObjectId(tenantId) })
+      const { errors: findTenantErrors, value: [tenant] = [] } = await tenantEntity.find({ _id: ObjectID(tenantId) })
 
       if (findTenantErrors.length) {
-        ctx.body = { errors: findTenantErrors }
-        return
+        return { errors: findTenantErrors }
       }
 
       if (!tenant) {
-        ctx.body = { errors: [`Tenant with tenantId - ${tenantId} wasn't found`] }
-        return
+        return { errors: [`Tenant wasn't found`] }
+      }
+
+      if (tenant.deleted) {
+        return { errors: [`Tenant deleted`] }
       }
 
       query['tenantId'] = tenantId
     }
 
-    const users = await userEntity.find(query, limit, skip, { password: 0 })
+    return userEntity.find(query, limit, skip, { password: 0 })
+  }
 
-    ctx.body = users
-  })
+  const getUserById = async ({ userId }) => {
+    const { errors: findUserErrors, value: [user] = [] } = await userEntity.find({ _id: ObjectID(userId) })
 
-  router.get('/user/:id', async ctx => {
-    const { id } = ctx.params
-
-    const { errors, value: user } = await userEntity.find({ _id: ObjectId(id) })
-
-    if (errors.length) {
-      ctx.body = { errors }
-      return
+    if (findUserErrors.length) {
+      return { errors: findUserErrors }
     }
 
     if (user) {
-      ctx.body = { errors: [`User with ${id} wasn't found`] }
-      return
+      return { errors: ['User wasn\'t found'] }
     }
 
     if (user.deleted) {
-      ctx.body = { errors: [`User with ${id} was deleted`] }
-      return
+      return { errors: ['User deleted'] }
     }
 
-    ctx.body = { errors: [], value: user }
-  })
+    return { errors: [], value: user }
+  }
 
-  router.patch('/user/:id', async ctx => {
-    const { id } = ctx.params
+  const updateUserById = ({ userId, fieldsToUpdate }) => userEntity.update({ _id: ObjectID(userId) }, { $set: fieldsToUpdate })
 
-    ctx.body = await userEntity.update({ _id: ObjectId(id) }, { $set: ctx.request.body })
-  })
+  const deleteUserById = ({ userId }) => userEntity.update({ _id: ObjectId(id) }, { $set: { deleted: true } })
 
-  router.delete('/user/:id', async ctx => {
-    const { id } = ctx.params
-
-    ctx.body = await userEntity.update({ _id: ObjectId(id) }, { $set: { deleted: true } })
-  })
-
-  router.post('/user', auth, async ctx => {
-    logger.info(ctx.request.body, 'Starting registration process, post /user')
-
-    const { firstname, lastname, email, tenantAdmin, tenantName, message = '' } = ctx.request.body
-
-    if (!ctx.user.tenantAdmin && !ctx.user.rootAdmin) {
-      ctx.body = { errors: ['You don\'t have the permission to create users'] }
-      return
+  const createUser = async ({ user, firstname, lastname, email, tenantAdmin, tenantName, message = '' }) => {
+    if (user.tenantAdmin && user.rootAdmin) {
+      return { errors: ['You don\'t have the permission to create users'] }
     }
 
-    if (!ctx.user.rootAdmin && tenantAdmin) {
-      ctx.body = { errors: ['You don\'t have the permission to create tenant admin'] }
-      return
+    if (!user.rootAdmin && tenantAdmin) {
+      return { errors: ['You don\'t have the permission to create tenant admin'] }
     }
 
-    if (ctx.user.rootAdmin && tenantAdmin) {
-      const { errors: findTenantErrors, value: [tenant] } = await tenantEntity.find({ name: tenantName })
+    if (user.rootAdmin && tenantAdmin) {
+      const { errors: findTenantErrors, value: [tenant] = [] } = await tenantEntity.find({ name: tenantName })
 
       if (findTenantErrors.length) {
-        ctx.body = { errors: findTenantErrors }
-        return
+        return { errors: findTenantErrors }
       }
 
       if (tenant) {
-        ctx.body = { errors: [`Tenant with ${tenantName} already exists`] }
-        return
+        return { errors: [`Tenant with ${tenantName} already exists`] }
       }
 
       const { errors: tenantCreationErrors } = await tenantEntity.create({ name: tenantName })
 
       if (tenantCreationErrors.length) {
-        ctx.body = { errors: tenantCreationErrors }
-        return
+        return { errors: tenantCreationErrors }
       }
     }
 
-    const { errors: findTenantErrors, value: [tenant] } = await tenantEntity.find({ name: tenantName })
+    const { errors: findTenantErrors, value: [tenant] = [] } = await tenantEntity.find({ name: tenantName })
 
     if (findTenantErrors.length) {
-      ctx.body = { errors: findTenantErrors }
-      return
+      return { errors: findTenantErrors }
     }
 
     if (!tenant) {
-      ctx.body = { errors: [`Wasn't able to find tenant by the '${tenantName}' name`] }
-      return
+      return { errors: ['Tenant doesn\'t exist'] }
     }
 
     if (ctx.user.tenantAdmin && ctx.user.tenantId !== tenant._id.toString()) {
-      ctx.body = { errors: ['You can create users only for tenant you\'re an admin of'] }
-      return
+      return { errors: ['You can create users only for tenant you\'re an admin of'] }
     }
 
     const finishRegistrationCode = shortUUID.generate()
@@ -155,15 +127,11 @@ const createUserRouter = (userEntity, tenantEntity, auth) => {
 
     try {
       await sgMail.send(msg)
+      ctx.body = { errors: [], value: finishRegistrationCode }
     } catch (error) {
       logger.error(error, 'Email invite hasn\'t been sent due to error, post /user')
       ctx.body = { errors: ['Internal server error has occured'] }
-      return
     }
-
-    logger.info(msg, 'Email invite sent, post /user')
-
-    ctx.body = userCreationRes
   })
 
   router.post('/user/finish-registration', async ctx => {
@@ -198,8 +166,6 @@ const createUserRouter = (userEntity, tenantEntity, auth) => {
 
     ctx.body = getUser
   })
-
-  return router
 }
 
-module.exports = { createUserRouter }
+module.exports = { createUserFunctions }
