@@ -8,8 +8,13 @@ const main = async () => {
   const { createTenantEntity } = require('./db/entities/tenant')
   const tenantEntity = await createTenantEntity(db)
 
+  const { createUserFunctions } = require('./functions/user')
+  const userFunctions = await createUserFunctions({ userEntity, tenantEntity })
+
   const jayson = require('jayson')
-  const server = jayson.server({})
+  const server = jayson.server({
+    add: (args, cb) => {}
+  })
 
   server.http().listen(80)
 }

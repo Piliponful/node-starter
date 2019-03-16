@@ -1,4 +1,3 @@
-const Router = require('koa-router')
 const sgMail = require('@sendgrid/mail')
 const config = require('config')
 const shortUUID = require('short-uuid')
@@ -8,10 +7,8 @@ const logger = require('../logger')
 
 sgMail.setApiKey(config.email.API_KEY)
 
-const router = new Router()
-
-const createUserFunctions = async ({ tenantEntity, userEntity }) => {
-  const getUsers = ({ limit, skip, tenantId }) => {
+const createUserFunctions = ({ tenantEntity, userEntity }) => {
+  const getUsers = async ({ limit, skip, tenantId }) => {
     let query = { deleted: false }
 
     if (tenantId) {
@@ -59,7 +56,7 @@ const createUserFunctions = async ({ tenantEntity, userEntity }) => {
 
   const updateUserById = ({ userId, fieldsToUpdate }) => userEntity.update({ _id: ObjectID(userId) }, { $set: fieldsToUpdate })
 
-  const deleteUserById = ({ userId }) => userEntity.update({ _id: ObjectId(id) }, { $set: { deleted: true } })
+  const deleteUserById = ({ userId }) => userEntity.update({ _id: ObjectID(userId) }, { $set: { deleted: true } })
 
   const createUser = async ({ user, firstname, lastname, email, tenantAdmin, tenantName, message = '' }) => {
     if (user.tenantAdmin && user.rootAdmin) {
@@ -98,7 +95,7 @@ const createUserFunctions = async ({ tenantEntity, userEntity }) => {
       return { errors: ['Tenant doesn\'t exist'] }
     }
 
-    if (ctx.user.tenantAdmin && ctx.user.tenantId !== tenant._id.toString()) {
+    if (user.tenantAdmin && user.tenantId !== tenant._id.toString()) {
       return { errors: ['You can create users only for tenant you\'re an admin of'] }
     }
 
@@ -114,58 +111,53 @@ const createUserFunctions = async ({ tenantEntity, userEntity }) => {
     })
 
     if (!userCreationRes.value) {
-      ctx.body = userCreationRes
-      return
+      return userCreationRes
     }
 
     const msg = {
       to: email,
-      from: `${ctx.user.firstname} ${ctx.user.lastname} <${ctx.user.email}>`,
+      from: `${user.firstname} ${user.lastname} <${user.email}>`,
       subject: '[Arial Point]: Finish registration process',
       text: message + (message && '\n' + '\n' + '\n') + `link to finish registration, do not share it with anyone - ${config.app.URL}/user-registration?code=${finishRegistrationCode}`
     }
 
     try {
       await sgMail.send(msg)
-      ctx.body = { errors: [], value: finishRegistrationCode }
+      return { errors: [], value: finishRegistrationCode }
     } catch (error) {
       logger.error(error, 'Email invite hasn\'t been sent due to error, post /user')
-      ctx.body = { errors: ['Internal server error has occured'] }
+      return { errors: ['Internal server error has occured'] }
     }
-  })
+  }
 
-  router.post('/user/finish-registration', async ctx => {
-    const { finishRegistrationCode, additionalFields } = ctx.request.body
+  const finishUserRegistration = async ({ finishRegistrationCode, additionalFields }) =>
+    userEntity.updateWithAdditionalFilds(finishRegistrationCode, additionalFields)
 
-    ctx.body = await userEntity.updateWithAdditionalFilds(finishRegistrationCode, additionalFields)
-  })
-
-  router.post('/user/login', async ctx => {
-    const { password, email } = ctx.request.body
+  const login = async ({ password, email }) => {
     const { errors: passwordMatchErrors, value: passwordMatch } = await userEntity.doesPasswordMatch(email, password)
 
     if (passwordMatchErrors.length) {
-      ctx.body = { errors: passwordMatchErrors }
-      return
+      return { errors: passwordMatchErrors }
     }
 
     if (!passwordMatch) {
-      ctx.body = { errors: ['Your password doesn\'t match'] }
-      return
+      return { errors: ['Your password doesn\'t match'] }
     }
 
     const getJWTFromUserRes = await userEntity.getJWTFromUser(email)
 
-    ctx.body = getJWTFromUserRes
-  })
+    return getJWTFromUserRes
+  }
 
-  router.post('/user/byJwt', async ctx => {
-    const { jwt } = ctx.request.body
-
-    const getUser = await userEntity.getUserFromJWT(jwt)
-
-    ctx.body = getUser
-  })
+  return {
+    getUsers,
+    getUserById,
+    createUser,
+    finishUserRegistration,
+    login,
+    deleteUserById,
+    updateUserById
+  }
 }
 
 module.exports = { createUserFunctions }
