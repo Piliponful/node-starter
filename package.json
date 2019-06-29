@@ -1,7 +1,7 @@
 {
-  "name": "arialpoint-server",
+  "name": "srpc-framework-usage-example",
   "version": "1.0.0",
-  "description": "",
+  "description": "srpc-framework usage example",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -19,10 +19,9 @@
     "bluebird": "^3.5.3",
     "bunyan": "^1.8.12",
     "config": "^3.0.1",
-    "joi": "13.7.0",
-    "joi-phone-number": "^2.1.1",
+    "joi": "^14.3.1",
+    "joi-phone-number": "^3.0.2",
     "jwt-simple": "^0.5.5",
-    "lodash": "^4.17.11",
     "mongodb": "^3.1.13",
     "short-uuid": "^3.1.0",
     "srpc-framework": "^1.0.6"
