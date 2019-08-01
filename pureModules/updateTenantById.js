@@ -1,11 +1,11 @@
 const { ObjectId } = require('mongodb')
 
-const userFunctions = require('../entities/user')
+const { getUserFromJwt } = require('./getUserFromJwt')
 
-const updateTenantById = async ({ DBFunctions }, { id, JWT, newTenant }) => {
-  const { tenant } = DBFunctions
+const updateTenantById = async ({ withSidEffects: { db }, input: { id, jwt, newTenant } }) => {
+  const tenantsCollection = db.collection('tenant')
 
-  const { errors, value: caller } = userFunctions.JWTToUser(DBFunctions, { JWT })
+  const { errors, value: caller } = getUserFromJwt({ input: { jwt } })
 
   if (errors) {
     return { errors }
@@ -19,7 +19,9 @@ const updateTenantById = async ({ DBFunctions }, { id, JWT, newTenant }) => {
     return { errors: [`You have the permission to update tenant with id - ${id}`] }
   }
 
-  return tenant.update({ _id: ObjectId(id) }, { $set: newTenant })
+  await tenantsCollection.update({ _id: ObjectId(id) }, { $set: newTenant })
+
+  return { value: true }
 }
 
 module.exports = { updateTenantById }

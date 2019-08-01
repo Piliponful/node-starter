@@ -1,17 +1,14 @@
 const path = require('path')
-const shortUUID = require('short-uuid')
 const { ObjectID } = require('mongodb')
 
-const userFunctions = require('../entities/user')
-const logger = require('../logger')
+const { getUserFromJwt } = require('./getUserFromJwt')
+const { validateDxfFile } = require('./validateDxfFile')
 
-const createDxfFile = async ({ DBFunctions, s3 }, { tenantId, files, JWT }) => {
-  const {
-    tenant,
-    DXFFile
-  } = DBFunctions
+const createDxfFile = async ({ db, s3 }, { tenantId, files, jwt }) => {
+  const tenant = db.collection('tenants')
+  const dxfFile = db.collection('dxfFiles')
 
-  const { errors, value: caller } = userFunctions.JWTToUser(DBFunctions, { JWT })
+  const { errors, value: caller } = getUserFromJwt({ jwt })
 
   if (errors.length) {
     return { errors }
@@ -42,7 +39,7 @@ const createDxfFile = async ({ DBFunctions, s3 }, { tenantId, files, JWT }) => {
   const {
     errors: DXFFileFindErrors,
     value: [existingDxfFile] = []
-  } = await DXFFile.find({ name: files[0].filename, tenantId: ObjectID(tenantId) })
+  } = await dxfFile.find({ name: files[0].filename, tenantId: ObjectID(tenantId) })
 
   if (DXFFileFindErrors.length) {
     return { errors: DXFFileFindErrors }
@@ -52,20 +49,22 @@ const createDxfFile = async ({ DBFunctions, s3 }, { tenantId, files, JWT }) => {
     return { errors: ['File with such name already exists'] }
   }
 
-  try {
-    await s3.upload({ Key: files[0].filename, Body: files[0] }).promise()
+  await s3.upload({ Key: files[0].filename, Body: files[0] }).promise()
 
-    const { errors: DXFFileCreationErrors, value: DXFFileCreationRes } = await DXFFile.create({ name: files[0].filename, tenantId })
+  const dxfFileFields = { name: files[0].filename, tenantId }
+
+  const { errors: dxfFileValidationErrors, value: valid } = validateDxfFile(dxfFileFields)
+
+  if (valid) {
+    const { errors: DXFFileCreationErrors, value: DXFFileCreationRes } = await dxfFile.insert()
 
     if (DXFFileCreationErrors.length) {
       return { errors: DXFFileCreationErrors }
     }
 
     return { errors: [], value: DXFFileCreationRes }
-  } catch (err) {
-    logger.error({ err, id: shortUUID() })
-
-    return { errors: ['Internal server error'] }
+  } else {
+    return { errors: dxfFileValidationErrors }
   }
 }
 

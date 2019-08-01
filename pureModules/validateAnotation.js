@@ -1,6 +1,6 @@
 import joi from 'joi'
 
-const anotationFields = {
+const anotationFieldsCheck = {
   name: joi.string().min(3).max(100).required(),
   gridPoints: joi.array().items(joi.number().required(), joi.number().required()),
   dxfFileId: joi.string().required(),
@@ -10,4 +10,14 @@ const anotationFields = {
   deleted: joi.boolean().default(false)
 }
 
-module.exports = { anotationFields }
+const validateAnotation = async ({ input: { userFields } }) => {
+  const { error } = joi.validate(userFields, anotationFieldsCheck)
+
+  if (error) {
+    return { errors: error.details.map(d => d.message) }
+  }
+
+  return true
+}
+
+module.exports = { validateAnotation }

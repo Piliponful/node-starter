@@ -1,7 +1,7 @@
 const { ObjectID } = require('mongodb')
 
-const findUserById = async ({ DBFunctions }, { userId }) => {
-  const { user } = DBFunctions
+const findUserById = async ({ withSideEffects: { db }, input: { userId } }) => {
+  const user = db.collection('user')
 
   const { errors: findUserErrors, value: [userDoc] = [] } = await user.find({ _id: ObjectID(userId) })
 

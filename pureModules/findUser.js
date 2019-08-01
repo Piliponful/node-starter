@@ -1,7 +1,8 @@
 const { ObjectID } = require('mongodb')
 
-const findUser = async ({ DBFunctions }, { limit, skip, tenantId }) => {
-  const { tenant, user } = DBFunctions
+const findUser = async ({ withSideEffects: { db }, input: { limit, skip, tenantId } }) => {
+  const tenantCollection = db.collection('tenant')
+  const userCollection = db.collection('user')
 
   let query = { deleted: false }
 
@@ -10,7 +11,7 @@ const findUser = async ({ DBFunctions }, { limit, skip, tenantId }) => {
       return { errors: ['tenantId is invalid'] }
     }
 
-    const { errors: findTenantErrors, value: [tenantDoc] = [] } = await tenant.find({ _id: ObjectID(tenantId) })
+    const { errors: findTenantErrors, value: [tenantDoc] = [] } = await tenantCollection.find({ _id: ObjectID(tenantId) })
 
     if (findTenantErrors.length) {
       return { errors: findTenantErrors }
@@ -27,7 +28,9 @@ const findUser = async ({ DBFunctions }, { limit, skip, tenantId }) => {
     query['tenantId'] = tenantId
   }
 
-  return user.find(query, limit, skip, { password: 0 })
+  await userCollection.find(query, limit, skip, { password: 0 })
+
+  return { value: true }
 }
 
 module.exports = { findUser }

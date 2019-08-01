@@ -1,9 +1,12 @@
-const userFunctions = require('../entities/user')
+const { getUserFromJwt } = require('./getUserFromJwt')
 
-const findTenant = async ({ DBFunctions }, { limit, skip, tenantId, files, JWT }) => {
-  const { tenant, DXFFile, user, anotation } = DBFunctions
+const findTenant = async ({ db }, { limit, skip, tenantId, files, JWT }) => {
+  const tenant = db.collection('tenant')
+  const dxfFile = db.collection('dxfFile')
+  const user = db.collection('user')
+  const anotation = db.collection('anotation')
 
-  const { errors, value: caller } = userFunctions.JWTToUser(DBFunctions, { JWT })
+  const { errors, value: caller } = getUserFromJwt({ db }, { JWT })
 
   if (errors.length) {
     return { errors }
@@ -26,7 +29,7 @@ const findTenant = async ({ DBFunctions }, { limit, skip, tenantId, files, JWT }
         throw new Error('Error while counting')
       }
 
-      const dxfFileCount = await DXFFile.count({ tenantId: t._id.toString() })
+      const dxfFileCount = await dxfFile.count({ tenantId: t._id.toString() })
       if (dxfFileCount.errors.length) {
         throw new Error('Error while counting')
       }

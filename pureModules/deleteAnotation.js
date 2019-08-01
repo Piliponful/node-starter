@@ -1,11 +1,11 @@
 const { ObjectID } = require('mongodb')
 
-const userFunctions = require('../entities/user')
+const { getUserFromJWT } = require('./getUserFromJWT')
 
-const deleteAnotation = async ({ DBFunctions }, { tenantId, anotationId, JWT }) => {
-  const { anotation } = DBFunctions
+const deleteAnotation = async ({ withSideEffects: { db }, input: { tenantId, anotationId, jwt } }) => {
+  const anotation = db.collection('anotations')
 
-  const { errors, value: caller } = userFunctions.JWTToUser(DBFunctions, { JWT })
+  const { errors, value: caller } = getUserFromJWT({ jwt })
 
   if (errors.length) {
     return { errors }

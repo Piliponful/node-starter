@@ -1,10 +1,13 @@
 const { ObjectID } = require('mongodb')
 
-const userFunctions = require('../entities/user')
+const { getUserFromJwt } = require('./getUserFromJwt')
 
-const getAnotation = async ({ DBFunctions }, { DXFFileId, createdBy, JWT }) => {
-  const { anotation, DXFFile, user } = DBFunctions
-  const { errors } = userFunctions.JWTToUser(DBFunctions, { JWT })
+const getAnotation = async ({ withSidEffects: { db }, input: { DXFFileId, createdBy, JWT } }) => {
+  const anotationsCollection = db.collection('anotations')
+  const dxfFilesCollection = db.collection('dxfFiles')
+  const usersCollection = db.collection('users')
+
+  const { errors } = getUserFromJwt({ input: { JWT } })
 
   if (errors.length) {
     return { errors }
@@ -19,7 +22,7 @@ const getAnotation = async ({ DBFunctions }, { DXFFileId, createdBy, JWT }) => {
     return { errors: [`DXF file id - ${DXFFileId} is not valid`] }
   }
 
-  const { errors: DXFFileFindErrors, value: [DXFFileDoc] } = await DXFFile.find({ _id: ObjectID(DXFFileId) })
+  const { errors: DXFFileFindErrors, value: [DXFFileDoc] } = await dxfFilesCollection.find({ _id: ObjectID(DXFFileId) })
 
   if (DXFFileFindErrors.length) {
     return { errors: DXFFileFindErrors }
@@ -33,7 +36,7 @@ const getAnotation = async ({ DBFunctions }, { DXFFileId, createdBy, JWT }) => {
     return { errors: [`User with id - ${createdBy} is not valid`] }
   }
 
-  const { errors: userFindErrors, value: [userDoc] } = await user.find({ _id: ObjectID(createdBy) })
+  const { errors: userFindErrors, value: [userDoc] } = await usersCollection.find({ _id: ObjectID(createdBy) })
 
   if (userFindErrors.length) {
     return { errors: userFindErrors }
@@ -43,7 +46,7 @@ const getAnotation = async ({ DBFunctions }, { DXFFileId, createdBy, JWT }) => {
     return { errors: [`User with id - ${createdBy} doesn't exist`] }
   }
 
-  const findAnotationResponse = await anotation.find(query)
+  const findAnotationResponse = await anotationsCollection.find(query)
 
   return findAnotationResponse
 }

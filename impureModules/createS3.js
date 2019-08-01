@@ -1,7 +1,7 @@
 const config = require('config')
 const AWS = require('aws-sdk')
 
-const createS3 = ({ bucketName }) => (new AWS.S3({
+const createS3 = (_, { bucketName }) => (new AWS.S3({
   params: {
     Bucket: bucketName
   },

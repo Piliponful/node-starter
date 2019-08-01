@@ -1,11 +1,11 @@
 const { ObjectId } = require('mongodb')
 
-const userFunctions = require('../entities/user')
+const { getUserFromJwt } = require('./getUserFromJwt')
 
-const findTenantById = async ({ DBFunctions }, { id, findByName, JWT }) => {
-  const { tenant } = DBFunctions
+const findTenantById = async ({ db }, { id, findByName, jwt }) => {
+  const tenant = db.collection('tenant')
 
-  const { errors, value: caller } = userFunctions.JWTToUser(DBFunctions, { JWT })
+  const { errors, value: caller } = getUserFromJwt({ jwt })
 
   if (errors.length) {
     return { errors }
