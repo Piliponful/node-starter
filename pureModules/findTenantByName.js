@@ -1,8 +1,6 @@
-const { ObjectId } = require('mongodb')
-
 const { getUserFromJwt } = require('./getUserFromJwt')
 
-const findTenantById = async ({ withSideEffects: { db }, input: { id, jwt } }) => {
+const findTenantByName = async ({ withSideEffects: { db }, input: { name, jwt } }) => {
   const tenant = db.collection('tenant')
 
   const { errors, value: caller } = getUserFromJwt({ jwt })
@@ -15,7 +13,7 @@ const findTenantById = async ({ withSideEffects: { db }, input: { id, jwt } }) =
     return { errors: ['You don\'t have the permission to view this tenant'] }
   }
 
-  const { errors: findTenantErrors, value: [tenantDoc] } = await tenant.find({ _id: ObjectId(id) })
+  const { errors: findTenantErrors, value: [tenantDoc] } = await tenant.find({ name })
 
   if (findTenantErrors.length) {
     return { errors: findTenantErrors }
@@ -32,4 +30,4 @@ const findTenantById = async ({ withSideEffects: { db }, input: { id, jwt } }) =
   return { errors: [], value: tenantDoc }
 }
 
-module.exports = { findTenantById }
+module.exports = { findTenantByName }

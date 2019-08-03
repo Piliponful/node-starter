@@ -2,7 +2,7 @@ const { ObjectID } = require('mongodb')
 
 const { getUserFromJwt } = require('./getUserFromJwt')
 
-const getAnotation = async ({ withSidEffects: { db }, input: { DXFFileId, createdBy, JWT } }) => {
+const findAnotations = async ({ withSidEffects: { db }, input: { DXFFileId, createdBy, JWT } }) => {
   const anotationsCollection = db.collection('anotations')
   const dxfFilesCollection = db.collection('dxfFiles')
   const usersCollection = db.collection('users')
@@ -51,4 +51,4 @@ const getAnotation = async ({ withSidEffects: { db }, input: { DXFFileId, create
   return findAnotationResponse
 }
 
-module.exports = { getAnotation }
+module.exports = { findAnotations }

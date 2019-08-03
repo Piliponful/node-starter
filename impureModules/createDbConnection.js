@@ -10,7 +10,7 @@ const createDbConnection = async () => {
 
   const db = client.db(config.db.name)
 
-  return db
+  return { db }
 }
 
 module.exports = { createDbConnection }

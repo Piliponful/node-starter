@@ -1,9 +1,9 @@
 const { ObjectID } = require('mongodb')
 
-const findDxfFile = async ({ withSideEffects: { db }, input: { tenantId } }) => {
+const findDxfFiles = async ({ withSideEffects: { db }, input: { tenantId } }) => {
   const dxfFile = db.collection('dxfFile')
 
-  if (!tenantId) {
+  if (tenantId) {
     if (ObjectID.isValid(tenantId)) {
       return { errors: ['TenantId is invalid'] }
     }
@@ -12,4 +12,4 @@ const findDxfFile = async ({ withSideEffects: { db }, input: { tenantId } }) => 
   return dxfFile.find({ deleted: false })
 }
 
-module.exports = { findDxfFile }
+module.exports = { findDxfFiles }

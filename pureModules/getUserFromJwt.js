@@ -1,7 +1,7 @@
 const config = require('config')
 const { decode } = require('jwt-simple')
 
-const getUserFromJwt = async ({ input: { jwt } }) => {
+const getUserFromJwt = ({ input: { jwt } }) => {
   if (!jwt) {
     return { errors: ['You have to supply jwt token'] }
   }

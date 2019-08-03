@@ -2,7 +2,7 @@ const { ObjectID } = require('mongodb')
 
 const { getUserFromJWT } = require('./getUserFromJWT')
 
-const deleteAnotation = async ({ withSideEffects: { db }, input: { tenantId, anotationId, jwt } }) => {
+const deleteAnotation = async ({ withSideEffects: { db }, input: { tenantId, id, jwt } }) => {
   const anotation = db.collection('anotations')
 
   const { errors, value: caller } = getUserFromJWT({ jwt })
@@ -15,7 +15,7 @@ const deleteAnotation = async ({ withSideEffects: { db }, input: { tenantId, ano
     return { errors: ['You dont\'t have the permission to delete anotation files'] }
   }
 
-  await anotation.update({ _id: ObjectID(anotationId) }, { $set: { deleted: true } })
+  await anotation.update({ _id: ObjectID(id) }, { $set: { deleted: true } })
 
   return { value: true }
 }

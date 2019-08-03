@@ -1,4 +1,4 @@
-const { ObjectID } = require('mongodb')
+const { ObjectID: ObjectId } = require('mongodb')
 
 const { getUserFromJwt } = require('./getUserFromJwt')
 
@@ -11,10 +11,10 @@ const findDxfFileById = async ({ withSideEffects: { db, s3 }, input: { id, JWT }
     return { errors }
   }
 
-  const { errors: findDXFFileErrors, value: [{ name: filename, deleted, tenantId }] } = await dxfFile.find({ _id: ObjectID(id) })
+  const { errors: findDxfFileErrors, value: [{ name: filename, deleted, tenantId }] } = await dxfFile.find({ _id: ObjectId(id) })
 
-  if (findDXFFileErrors.length) {
-    return { errors: findDXFFileErrors }
+  if (findDxfFileErrors.length) {
+    return { errors: findDxfFileErrors }
   }
 
   if (deleted) {

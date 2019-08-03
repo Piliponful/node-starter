@@ -2,7 +2,6 @@ const path = require('path')
 const { ObjectID } = require('mongodb')
 
 const { validateAnotation } = require('./createAnotation')
-
 const getUserFromJWT = require('./getUserFromJWT')
 
 const createAnotation = async ({ withSideEffects: { db, s3 }, input: { files, gridPoints, dxfFileId, tenantId, JWT } }) => {

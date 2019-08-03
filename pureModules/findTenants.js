@@ -1,6 +1,6 @@
 const { getUserFromJwt } = require('./getUserFromJwt')
 
-const findTenant = async ({ db }, { limit, skip, tenantId, files, JWT }) => {
+const findTenants = async ({ withSideEffects: { db }, input: { limit, skip, tenantId, files, JWT } }) => {
   const tenant = db.collection('tenant')
   const dxfFile = db.collection('dxfFile')
   const user = db.collection('user')
@@ -46,4 +46,4 @@ const findTenant = async ({ db }, { limit, skip, tenantId, files, JWT }) => {
   }
 }
 
-module.exports = { findTenant }
+module.exports = { findTenants }

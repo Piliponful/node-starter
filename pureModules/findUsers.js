@@ -1,6 +1,6 @@
 const { ObjectID } = require('mongodb')
 
-const findUser = async ({ withSideEffects: { db }, input: { limit, skip, tenantId } }) => {
+const findUsers = async ({ withSideEffects: { db }, input: { limit, skip, tenantId } }) => {
   const tenantCollection = db.collection('tenant')
   const userCollection = db.collection('user')
 
@@ -33,4 +33,4 @@ const findUser = async ({ withSideEffects: { db }, input: { limit, skip, tenantI
   return { value: true }
 }
 
-module.exports = { findUser }
+module.exports = { findUsers }
