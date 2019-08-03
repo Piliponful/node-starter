@@ -1,13 +1,13 @@
 const { createSrpcServer } = require('srpc-framework/impureModules/createSrpcServer')
 const { createFunctionCaller } = require('srpc-framework/pureModules/createFunctionCaller')
-const R = require('rambda')
+const { pCompose } = require('../pureModules/pCompose')
 
 const { createDbConnection } = require('./createDbConnection')
 const { addIndexesToDb } = require('./addIndexesToDb')
 const { createLogger } = require('./createLogger')
 const { createS3 } = require('./createS3')
 
-const db = R.compose(addIndexesToDb, createDbConnection)()
+const db = pCompose(addIndexesToDb, createDbConnection)()
 const logger = createLogger()
 const s3 = createS3()
 
