@@ -1,5 +1,5 @@
 const pCompose = (...args) => startValue => {
-  args.reduce(async (value, curr) => {
+  return args.reduce(async (value, curr) => {
     const awaitedValue = await value
     curr(awaitedValue)
   }, startValue)
