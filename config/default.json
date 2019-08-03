@@ -1,11 +1,13 @@
 {
   "app": {
     "secret": "secret",
-    "URL": "localhost"
+    "url": "localhost"
   },
   "db": {
-    "username": "root",
-    "password": "password",
+    "user": {
+      "user": "root",
+      "password": "password"
+    },
     "name": "staging"
   }
 }

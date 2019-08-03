@@ -1,15 +1,17 @@
 {
   "app": {
-    "URL": "APP_URL"
+    "url": "APP_URL",
+    "secret": "APP_SECRET"
   },
   "db": {
-    "password": "MONGODB_ROOT_PASSWORD"
+    "user": {
+      "name": "MONGODB_USERNAME",
+      "password": "MONGODB_PASSWORD"
+    },
+    "name": "MONGODB_DATABASE"
   },
   "email": {
-    "API_KEY": "SENDGRID_API_KEY"
-  },
-  "app": {
-    "secret": "APP_SECRET"
+    "apiKey": "SENDGRID_API_KEY"
   },
   "aws": {
     "accessKey": "ACCESS_KEY",

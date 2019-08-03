@@ -4,8 +4,8 @@
   "description": "srpc-framework usage example",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node ./pureModules/main.js",
+    "dev": "nodemon ./pureModules/main.js",
     "logs": "tail -f logs/log | bunyan",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
