@@ -1,13 +1,13 @@
 const { createSrpcServer } = require('srpc-framework/impureModules/createSrpcServer')
 const { createFunctionCaller } = require('srpc-framework/pureModules/createFunctionCaller')
-const compose = require('fp-compose')
+const compose = require('@rikhoffbauer/compose')
 
 const { createDbConnection } = require('./createDbConnection')
 const { addIndexesToDb } = require('./addIndexesToDb')
 const { createLogger } = require('./createLogger')
 const { createS3 } = require('./createS3')
 
-const db = compose(createDbConnection, addIndexesToDb)()
+const db = compose(addIndexesToDb, createDbConnection)()
 const logger = createLogger()
 const s3 = createS3()
 
