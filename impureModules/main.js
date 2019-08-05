@@ -12,14 +12,14 @@ const { deleteUserById } = require('../pureModules/deleteUserById')
 const { findAnotationById } = require('../pureModules/findAnotationById')
 const { findAnotations } = require('../pureModules/findAnotations')
 
-const { findDxfFileById } = require('../pureModules/findDxfFile')
+const { findDxfFileById } = require('../pureModules/findDxfFileById')
 const { findDxfFiles } = require('../pureModules/findDxfFiles')
 
 const { findTenantById } = require('../pureModules/findTenantById')
 const { findTenantByName } = require('../pureModules/findTenantByName')
 const { findTenants } = require('../pureModules/findTenants')
 
-const { findUserById } = require('../pureModules/findUser')
+const { findUserById } = require('../pureModules/findUserById')
 const { findUsers } = require('../pureModules/findUsers')
 
 const { finishUserRegistration } = require('../pureModules/finishUserRegistration')

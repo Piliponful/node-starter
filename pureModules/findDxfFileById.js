@@ -2,10 +2,10 @@ const { ObjectID: ObjectId } = require('mongodb')
 
 const { getUserFromJwt } = require('./getUserFromJwt')
 
-const findDxfFileById = async ({ withSideEffects: { db, s3 }, input: { id, JWT } }) => {
+const findDxfFileById = async ({ withSideEffects: { db, s3 }, input: { id, jwt } }) => {
   const dxfFile = db.collection('dxfFile')
 
-  const { errors, value: caller } = getUserFromJwt({ JWT })
+  const { errors, value: caller } = getUserFromJwt({ jwt })
 
   if (errors.length) {
     return { errors }
