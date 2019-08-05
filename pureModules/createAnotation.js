@@ -2,14 +2,14 @@ const path = require('path')
 const { ObjectID } = require('mongodb')
 
 const { validateAnotation } = require('./createAnotation')
-const getUserFromJWT = require('./getUserFromJWT')
+const getUserFromJwt = require('./getUserFromJwt')
 
-const createAnotation = async ({ withSideEffects: { db, s3 }, input: { files, gridPoints, dxfFileId, tenantId, JWT } }) => {
+const createAnotation = async ({ withSideEffects: { db, s3 }, input: { files, gridPoints, dxfFileId, tenantId, jwt } }) => {
   const tenant = db.collection('tenant')
   const dxfFile = db.collection('dxfFile')
   const anotation = db.collection('anotation')
 
-  const { errors, value: caller } = getUserFromJWT({ JWT })
+  const { errors, value: caller } = getUserFromJwt({ jwt })
 
   if (errors.length) {
     return { errors }

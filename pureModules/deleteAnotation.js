@@ -1,11 +1,11 @@
 const { ObjectID } = require('mongodb')
 
-const { getUserFromJWT } = require('./getUserFromJWT')
+const { getUserFromJwt } = require('./getUserFromJwt')
 
 const deleteAnotation = async ({ withSideEffects: { db }, input: { tenantId, id, jwt } }) => {
   const anotation = db.collection('anotations')
 
-  const { errors, value: caller } = getUserFromJWT({ jwt })
+  const { errors, value: caller } = getUserFromJwt({ jwt })
 
   if (errors.length) {
     return { errors }

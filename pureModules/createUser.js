@@ -1,7 +1,7 @@
 const shortUUID = require('short-uuid')
 const config = require('config')
 
-const { getUserFromJWT } = require('./getUserFromJWT')
+const { getUserFromJwt } = require('./getUserFromJwt')
 const { validateUser } = require('./validateUser')
 
 const createUser = async ({
@@ -22,7 +22,7 @@ const createUser = async ({
   const tenantCollection = db.collection('tenant')
   const userCollection = db.collection('user')
 
-  const { errors, value: caller } = getUserFromJWT({ jwt })
+  const { errors, value: caller } = getUserFromJwt({ jwt })
 
   if (errors) {
     return { errors }
