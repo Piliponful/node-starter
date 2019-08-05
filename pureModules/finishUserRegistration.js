@@ -1,5 +1,5 @@
 const { hashSync } = require('bcrypt-nodejs')
-const joi = require('joi')
+const joi = require('joi').extend(require('joi-phone-number'))
 
 const finishUserRegistration = async ({ withSidEffects: { db }, input: { finishRegistrationCode, fields } }) => {
   const additionalFields = {
