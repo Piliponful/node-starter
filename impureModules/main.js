@@ -1,24 +1,5 @@
 const { createSrpcServer } = require('srpc-framework/impureModules/createSrpcServer')
-const { createFunctionCaller } = require('srpc-framework/pureModules/createFunctionCaller')
-const { pCompose } = require('../pureModules/pCompose')
-
-const { createDbConnection } = require('./createDbConnection')
-const { addIndexesToDb } = require('./addIndexesToDb')
-const { createLogger } = require('./createLogger')
-const { createS3 } = require('./createS3')
-
-const db = pCompose(addIndexesToDb, createDbConnection)()
-const logger = createLogger()
-const s3 = createS3()
-
-const withSideEffects = { db, logger, s3 }
-
-const createFunctionCallerWithSideEffects = ({ functions, jsonString }) => {
-  const functionsWithSideEffects = Object.entries(functions).reduce((funcList, [funcName, func]) => {
-    funcList[funcName] = input => func({ withSideEffects, input })
-  }, {})
-  return createFunctionCaller({ functions: functionsWithSideEffects, jsonString })
-}
+const { callFunction } = require('srpc-framework/pureModules/createFunctionCaller')
 
 const { createAnotation } = require('../pureModules/createAnotation')
 const { createDxfFile } = require('../pureModules/createDxfFile')
@@ -47,6 +28,8 @@ const { updateTenantById } = require('../pureModules/updateTenantById')
 const { updateUserById } = require('../pureModules/updateUserById')
 
 const { login } = require('../pureModules/login')
+
+const { createSideEffects } = require('./createSideEffects')
 
 const functions = {
   createAnotation,
@@ -81,8 +64,19 @@ const functions = {
 const port = 8080
 const onStartText = `Server successfully launched on port ${port}`
 
+const callFunctionWithSideEffects = async ({ functions, jsonString }) => {
+  const withSideEffects = await createSideEffects()
+
+  const functionsWithSideEffects = Object.entries(functions)
+    .reduce((funcList, [funcName, func]) => {
+      funcList[funcName] = input => func({ withSideEffects, input })
+    }, {})
+
+  return callFunction({ functions: functionsWithSideEffects, jsonString })
+}
+
 createSrpcServer({
-  createFunctionCaller: createFunctionCallerWithSideEffects,
+  callFunction: callFunctionWithSideEffects,
   functions,
   port,
   onStartText
